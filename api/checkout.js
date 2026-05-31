@@ -33,11 +33,14 @@ export default async function handler(req, res) {
   try {
     const stripe = new Stripe(key);
     const base = process.env.PUBLIC_BASE_URL || ('https://' + req.headers.host);
+    // Meeting Room pass purchases redirect to the room, not the Gideon portal.
+    // ONE_TIME_PRICES covers the daily pass; the monthly pass is a subscription
+    // so its price ID is listed explicitly here. Add any new pass IDs to this check.
     const session = await stripe.checkout.sessions.create({
       mode: ONE_TIME_PRICES.has(priceId) ? 'payment' : 'subscription',
       line_items: [{ price: priceId, quantity: 1 }],
       customer_email: email || undefined,
-      success_url: base + '/gdn-ai-portal.html?paid=1',
+      success_url: (ONE_TIME_PRICES.has(priceId) || priceId === 'price_1Td6vUFDVJ23RHCnFN69OQMb') ? base + '/gdn-ai-meeting-room.html?paid=1' : base + '/gdn-ai-portal.html?paid=1',
       cancel_url: base + '/gdn-ai-membership-portal.html?canceled=1',
       allow_promotion_codes: true
     });

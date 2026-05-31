@@ -208,7 +208,7 @@ body{font-family:'Archivo',system-ui,sans-serif;background:var(--bg);color:var(-
           <ul><li>Unlimited usage</li><li>Private deployment and data</li><li>GDN document integration</li><li>Dedicated onboarding</li></ul>
           <button class="ghost" onclick="selectTier('Enterprise')">Contact GDN</button></div>
       </div>
-      <div class="plans-note">Pricing shown is indicative for this preview. Returning member? Choose any tier and sign in with your email.</div>
+      <div class="plans-note">Pricing shown is indicative for this preview. Returning member? Choose any tier and sign in with your email.</div><div class="plans-h" style="margin-top:48px">Meeting Room passes</div><div class="plans-note" style="margin-top:0">Run a four-seat AI meeting using your own provider keys. A day pass opens a 24-hour window; the monthly pass renews automatically.</div><div class="tiers" style="grid-template-columns:repeat(2,1fr)"><div class="tier"><div class="badge"></div><div class="name">Meeting Room — Day Pass</div><div class="price"><b>Day pass</b></div><div class="price-sub">24-hour access, one-time</div><ul><li>Four AI seats in one room</li><li>Bring your own provider keys</li><li>24-hour working window</li></ul><button class="primary" onclick="selectPass('Meeting Room — Day Pass','price_1Td6sTFDVJ23RHCn3pOpFSx8')">Book a day pass</button></div><div class="tier"><div class="badge"></div><div class="name">Meeting Room — Monthly</div><div class="price"><b>Monthly</b></div><div class="price-sub">recurring subscription</div><ul><li>Everything in the day pass</li><li>Renews automatically each month</li><li>Cancel anytime</li></ul><button class="primary" onclick="selectPass('Meeting Room — Monthly','price_1Td6vUFDVJ23RHCnFN69OQMb')">Subscribe monthly</button></div></div>
     </div>
   </div>
 
@@ -259,7 +259,7 @@ body{font-family:'Archivo',system-ui,sans-serif;background:var(--bg);color:var(-
   function scrollPlans(){document.getElementById('plans').scrollIntoView({behavior:'smooth'});}
   function show(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');}
   function monthly(d){return d*30;}function annual(d){return Math.round(d*365*0.7);}function fmt(n){return '$'+n.toLocaleString('en-US');}
-  function selectTier(t){selectedTier=t;billing='monthly';
+  function selectPass(name,priceId){selectedTier=name;billing='monthly';window.PASS_PRICE=priceId;document.getElementById('modal-title').textContent='Hire Gideon';document.getElementById('billing-block').style.display='none';document.querySelector('#overlay .sub').innerHTML='Pass selected: <b>'+name+'</b>. Enter your details to continue to secure checkout.';document.getElementById('auth-err').textContent='';document.getElementById('overlay').classList.add('active');document.getElementById('in-name').focus();}function selectTier(t){selectedTier=t;billing='monthly';window.PASS_PRICE=null;
     document.getElementById('modal-title').textContent=(t==='Enterprise')?'Contact GDN':'Hire Gideon';
     const bb=document.getElementById('billing-block');
     if(t==='Enterprise'){bb.style.display='none';document.querySelector('#overlay .sub').innerHTML='Tier selected: <b>Enterprise</b>. Enterprise plans are arranged directly with GDN. Enter your details and the team will be in touch.';}
@@ -274,7 +274,7 @@ body{font-family:'Archivo',system-ui,sans-serif;background:var(--bg);color:var(-
   async function doSignIn(){const name=document.getElementById('in-name').value.trim();const email=document.getElementById('in-email').value.trim().toLowerCase();const err=document.getElementById('auth-err');err.style.color='';
     if(!name){err.textContent='Please enter your name.';return;}if(!email||!email.includes('@')){err.textContent='Please enter a valid email.';return;}
     if(selectedTier==='Enterprise'){err.style.color='var(--ink-2)';err.textContent='Thank you. The GDN team will be in touch about Enterprise access.';return;}
-    const map=PRICES[selectedTier];const priceId=map?map[billing]:null;if(!priceId){err.textContent='Could not match a plan. Please try again.';return;}
+    const map=PRICES[selectedTier];const priceId=window.PASS_PRICE?window.PASS_PRICE:(map?map[billing]:null);if(!priceId){err.textContent='Could not match a plan. Please try again.';return;}
     err.style.color='var(--ink-2)';err.textContent='Redirecting to secure checkout...';
     try{await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});const res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({priceId,email})});const d=await res.json();if(d.url){window.location.href=d.url;}else{err.style.color='';err.textContent='Checkout could not start. Please try again.';}}catch(e){err.style.color='';err.textContent='Checkout could not start. Please try again.';}}
   async function enterPortal(){history=(await store.get('gdn:history:'+user.email))||[];const u=(await store.get('gdn:usage:'+user.email))||{count:0};usageCount=u.count||0;
