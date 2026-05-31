@@ -53,6 +53,23 @@ export default async function handler(req, res) {
         }
       }
     }
+    if (event.type === 'invoice.payment_succeeded') {
+      // Monthly Meeting Room renewal: each new billing cycle restores the four sessions.
+      // Skip the very first invoice (billing_reason 'subscription_create') because
+      // checkout.session.completed already wrote the fresh pass record for that purchase.
+      const inv = event.data.object;
+      const reason = inv.billing_reason;
+      if (reason === 'subscription_cycle' || reason === 'subscription_update') {
+        const email = (inv.customer_email || '').toLowerCase();
+        if (email) {
+          const existing = await kv.get('pass:' + email);
+          // Only refresh monthly passes; leave daily passes and memberships untouched.
+          if (existing && existing.type === 'monthly') {
+            await kv.set('pass:' + email, { ...existing, startedAt: null, passesRemaining: 4 });
+          }
+        }
+      }
+    }
     if (event.type === 'customer.subscription.deleted') {
       // To revoke on cancellation, look up the customer email via the Stripe API
       // using event.data.object.customer, then kv.del('member:' + email).
