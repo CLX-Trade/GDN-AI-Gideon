@@ -1,15 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GDN AI · Gideon — Membership</title>
+</head>
+<body>
 <!-- GDN AI featuring Gideon. Cream and charcoal identity. -->
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap');
 :root{--bg:#2d2d31;--bg-2:#3a3a41;--bg-3:#26262a;--ink:#efe9df;--ink-2:#c4bfb6;--ink-soft:#938d85;--hair:#4b4b53;--hair-2:#3a3a41;--leather:#bb8a5d;--leather-2:#d0a472;}
 *{box-sizing:border-box;margin:0;padding:0;}html,body{height:100%;}
 body{font-family:'Archivo',system-ui,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
-#app{position:relative;height:100vh;display:flex;flex-direction:column;max-width:1080px;margin:0 auto;overflow:hidden;background:radial-gradient(125% 85% at 68% 34%,#4a4a49,#2f2f32 46%,#232327 100%);box-shadow:0 0 0 1px rgba(41,36,42,0.05);}
+#app{position:relative;height:100vh;display:flex;flex-direction:column;max-width:1280px;margin:0 auto;overflow:hidden;background:radial-gradient(125% 85% at 68% 34%,#4a4a49,#2f2f32 46%,#232327 100%);box-shadow:0 0 0 1px rgba(41,36,42,0.05);}
 .credstrip{display:flex;justify-content:space-between;align-items:center;padding:10px 30px;border-bottom:1px solid var(--hair);font-size:9.5px;letter-spacing:2.6px;text-transform:uppercase;color:var(--ink-soft);font-weight:600;}
 .credstrip .l{color:var(--ink);font-weight:700;}
 .view{flex:1;display:none;position:relative;}.view.active{display:flex;}
 #view-landing{flex-direction:column;overflow-y:auto;animation:fade .6s ease both;}
-.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:24px;align-items:end;max-width:1000px;margin:0 auto;width:100%;padding:42px 36px 0;}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:24px;align-items:end;max-width:1180px;margin:0 auto;width:100%;padding:42px 36px 0;}
 .hero-text{padding-bottom:34px;}
 .wm{font-weight:900;font-size:62px;letter-spacing:-1.5px;line-height:.88;color:var(--ink);}
 .wm-sub{font-size:14px;letter-spacing:6px;text-transform:uppercase;color:var(--ink-soft);font-weight:600;margin-top:12px;}
@@ -29,11 +37,11 @@ body{font-family:'Archivo',system-ui,sans-serif;background:var(--bg);color:var(-
 .feat .ft{font-size:12.5px;letter-spacing:2px;text-transform:uppercase;color:var(--ink);font-weight:600;line-height:1.35;}
 .hero-fig{display:flex;justify-content:center;align-items:flex-end;}
 .hero-fig img{max-height:600px;width:auto;display:block;}
-.greet-bubble{max-width:1000px;margin:6px auto 0;padding:0 36px;}
+.greet-bubble{max-width:1180px;margin:6px auto 0;padding:0 36px;}
 .greet-inner{background:var(--bg-2);border:1px solid var(--hair);border-left:3px solid var(--leather);border-radius:3px;padding:18px 22px;font-size:15px;line-height:1.6;color:var(--ink-2);display:none;}
 .greet-inner.show{display:block;animation:rise .35s ease both;}
 .greet-inner .who{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--leather);font-weight:700;margin-bottom:7px;}
-#plans{max-width:1000px;margin:0 auto;width:100%;padding:46px 36px 48px;}
+#plans{max-width:1180px;margin:0 auto;width:100%;padding:46px 36px 48px;}
 .plans-h{font-weight:800;font-size:26px;letter-spacing:-.5px;color:var(--ink);text-align:center;}
 .plans-sub{text-align:center;font-size:13px;color:var(--ink-soft);margin:8px 0 28px;letter-spacing:.3px;}
 .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
@@ -126,7 +134,18 @@ body{font-family:'Archivo',system-ui,sans-serif;background:var(--bg);color:var(-
 #plans{padding:34px 20px 40px;}.tiers{grid-template-columns:1fr;}
 .app-head{padding:12px 16px;flex-wrap:wrap;gap:10px;}.meter{width:90px;}#scroll{padding:22px 16px 12px;}.composer-wrap{padding:12px 16px 8px;}
 }
-.vid-wrap{position:relative;display:inline-block;}.vid-wrap video{max-height:600px;width:auto;display:block;}.unmute{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(41,36,42,.82);color:#f4f2ec;border:1px solid rgba(244,242,236,.28);padding:9px 16px;border-radius:30px;font-family:Archivo;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .2s;backdrop-filter:blur(4px);white-space:nowrap;}.unmute:hover{background:var(--leather);}.unmute.hide{display:none;}.unmute span{font-size:9px;}@media(max-width:760px){.vid-wrap video{max-height:380px;}}</style>
+.vid-wrap{position:relative;display:inline-block;}.vid-wrap video{max-height:600px;width:auto;display:block;}.unmute{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:rgba(41,36,42,.82);color:#f4f2ec;border:1px solid rgba(244,242,236,.28);padding:9px 16px;border-radius:30px;font-family:Archivo;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .2s;backdrop-filter:blur(4px);white-space:nowrap;}.unmute:hover{background:var(--leather);}.unmute.hide{display:none;}.unmute span{font-size:9px;}@media(max-width:760px){.vid-wrap video{max-height:380px;}}
+/* full-width desktop + mobile responsiveness (GDN amend) */
+@media (max-width: 760px){
+  #app{max-width:100% !important;width:100% !important;border-radius:0 !important;box-shadow:none !important;}
+  .bubble{font-size:15px;}
+  .bubble{max-width:88% !important;}
+}
+@media (max-width: 520px){
+  .bubble{padding:12px 14px;}
+  .doc-actions-label{display:none;}
+}
+</style>
 
 <div id="app">
   <div class="credstrip"><span class="l">GDN &middot; Global Trade Group</span><span class="r">Brisbane &middot; Dubai &middot; Orlando &middot; S&atilde;o Paulo</span></div>
@@ -268,3 +287,6 @@ body{font-family:'Archivo',system-ui,sans-serif;background:var(--bg);color:var(-
   input.addEventListener('input',()=>{input.style.height='auto';input.style.height=Math.min(input.scrollHeight,150)+'px';});
   document.getElementById('in-email').addEventListener('keydown',e=>{if(e.key==='Enter')doSignIn();});
 function unmuteVid(){var v=document.getElementById("gid-vid");if(!v)return;v.muted=false;v.currentTime=0;var p=v.play();var b=document.getElementById("unmute-btn");if(b)b.classList.add("hide");}window.addEventListener("load",function(){var v=document.getElementById("gid-vid");if(v){v.muted=true;var p=v.play();if(p&&p.catch)p.catch(function(){});}});</script>
+
+</body>
+</html>
