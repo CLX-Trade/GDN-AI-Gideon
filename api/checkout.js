@@ -22,8 +22,8 @@ export default async function handler(req, res) {
       mode: 'subscription',
       line_items: [{ price: priceId, quantity: 1 }],
       customer_email: email || undefined,
-      success_url: base + '/app.html?paid=1',
-      cancel_url: base + '/membership.html?canceled=1',
+      success_url: base + '/gdn-ai-portal.html?paid=1',
+      cancel_url: base + '/gdn-ai-membership-portal.html?canceled=1',
       allow_promotion_codes: true
     });
     return res.status(200).json({ url: session.url });
