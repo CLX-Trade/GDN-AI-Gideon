@@ -94,7 +94,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;pa
 .gdn-chip .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .gdn-chip button{margin-left:auto;background:transparent;border:none;color:var(--ink-soft);cursor:pointer;font-size:14px;line-height:1;padding:2px 6px;}
 .gdn-chip button:hover{color:var(--ink);}
-</style>
+.composer-wrap.drag-over,.composer.drag-over{outline:2px dashed var(--ink);outline-offset:3px;border-radius:10px;}</style>
 
 <div id="app">
   <div class="credstrip"><span class="l">GDN &middot; Global Trade Group</span><span class="r">Brisbane &middot; Dubai &middot; Orlando &middot; S&atilde;o Paulo</span></div>
@@ -226,7 +226,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;pa
   // Build the small control row shown beneath each Gideon answer.
   window.__gdnAddDocControls = function(bubbleEl, getText){
     var row=document.createElement('div'); row.className='doc-actions';
-    var label=document.createElement('span'); label.className='doc-actions-label'; label.textContent='Save as'; row.appendChild(label);
+    var label=document.createElement('span'); label.className='doc-actions-label'; label.textContent=''; row.appendChild(label);
     function mk(txt, fn){
       var b=document.createElement('button'); b.type='button'; b.className='doc-btn'; b.textContent=txt;
       b.addEventListener('click', function(){
@@ -238,8 +238,8 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;pa
       });
       return b;
     }
-    row.appendChild(mk('PDF', downloadPdf));
-    row.appendChild(mk('Word', function(t){ downloadWord(t); }));
+    row.appendChild(mk('Copy', function(t){ return (navigator.clipboard&&navigator.clipboard.writeText)?navigator.clipboard.writeText(t):Promise.reject(new Error('no clipboard')); }));row.appendChild(mk('Repeat', function(t){ try{ if('speechSynthesis' in window) speechSynthesis.cancel(); }catch(e){} if(typeof __sayBrowser==='function') __sayBrowser(t); }));
+    
     return row;
   };
   window.__gdnDocGen = true;
@@ -284,7 +284,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;pa
   send.addEventListener('click',handleSend);
   input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();handleSend();}});
   input.addEventListener('input',()=>{input.style.height='auto';input.style.height=Math.min(input.scrollHeight,150)+'px';});
-  (async function(){addMessage('assistant',GREETING);try{const r=await fetch('/api/status');const d=await r.json();if(typeof d.trialUsed==='number')used=d.trialUsed;}catch(e){}updateMeter();}())
+  (async function(){addMessage('assistant',GREETING);try{const r=await fetch('/api/status');const d=await r.json();if(typeof d.trialUsed==='number')used=d.trialUsed;}catch(e){}updateMeter();}());
 
 (function(){
   if(window.__gdnFileInit) return;
@@ -296,7 +296,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;pa
   function readFile(file){if(!OK[file.type]){alert('Please attach a PDF or an image (PNG, JPEG, WebP or GIF).');return;}if(file.size>MAXB){alert('That file is '+(file.size/1048576).toFixed(1)+' MB. Please attach a file under 3 MB, or paste the text instead.');return;}var r=new FileReader();r.onload=function(){var b64=String(r.result).split(',')[1]||'';var block=file.type==='application/pdf'?{type:'document',source:{type:'base64',media_type:'application/pdf',data:b64}}:{type:'image',source:{type:'base64',media_type:file.type,data:b64}};window.__gdnPendingAttachment={block:block,name:file.name};showChip(file.name);};r.onerror=function(){alert('Could not read that file. Please try another.');};r.readAsDataURL(file);}
   function wire(){var btn=document.getElementById('gdn-attach'),inp=document.getElementById('gdn-file');if(btn&&inp&&!btn.__w){btn.__w=1;btn.addEventListener('click',function(){inp.click();});inp.addEventListener('change',function(){if(inp.files&&inp.files[0])readFile(inp.files[0]);});}}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
-  window.__gdnFileInit=true;
+  function wireDrop(){var zone=document.querySelector('.composer-wrap')||document.querySelector('.composer');if(!zone||zone.__drop)return;zone.__drop=1;function stop(e){e.preventDefault();e.stopPropagation();}['dragenter','dragover'].forEach(function(ev){zone.addEventListener(ev,function(e){stop(e);zone.classList.add('drag-over');});});['dragleave','dragend'].forEach(function(ev){zone.addEventListener(ev,function(e){stop(e);zone.classList.remove('drag-over');});});zone.addEventListener('drop',function(e){stop(e);zone.classList.remove('drag-over');var dt=e.dataTransfer;if(dt&&dt.files&&dt.files[0]){readFile(dt.files[0]);}});}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wireDrop);else wireDrop();window.__gdnFileInit=true;
 })();
 </script>
 
