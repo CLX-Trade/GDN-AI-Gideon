@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GQ8KSQX46N"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    // Consent Mode v2: default everything to denied until the user accepts.
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied',
+      'wait_for_update': 500
+    });
+    gtag('js', new Date());
+    gtag('config', 'G-GQ8KSQX46N');
+    // Re-apply stored consent on subsequent visits.
+    try {
+      if (localStorage.getItem('gdn_consent') === 'granted') {
+        gtag('consent', 'update', {
+          'ad_storage': 'granted',
+          'ad_user_data': 'granted',
+          'ad_personalization': 'granted',
+          'analytics_storage': 'granted'
+        });
+      }
+    } catch (e) {}
+  </script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GDN AI · Meeting Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0e0f12;--panel:#16181d;--panel-2:#1d2026;--ink:#e9e9e9;--ink-soft:#b9bcc4;--ink-2:#8a8f99;--line:#2a2e36;--leather:#c79a5b;--accent:#c79a5b;--ok:#5bbd7a;--err:#e0675f;}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Archivo',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.5;}
+a{color:var(--leather);}
+.topbar{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line);background:var(--panel);}
+.topbar .brand{font-weight:800;letter-spacing:.5px;}
+.topbar .brand span{color:var(--leather);}
+.topbar nav{margin-left:auto;display:flex;gap:16px;font-size:14px;}
+.topbar nav a{color:var(--ink-soft);text-decoration:none;}
+.topbar nav a:hover{color:var(--ink);}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 20px 80px;}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px;}
+h1{font-size:26px;margin:.2em 0 .4em;}
+h2{font-size:18px;margin:.2em 0 .6em;}
+.muted{color:var(--ink-2);font-size:13px;}
+.pill{display:inline-block;background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:12px;color:var(--ink-soft);}
+.btn{background:var(--leather);color:#1a1a1a;border:none;border-radius:8px;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;}
+.btn:hover{filter:brightness(1.06);}
+.btn.secondary{background:transparent;color:var(--ink-soft);border:1px solid var(--line);}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+input,select,textarea{font-family:inherit;background:var(--panel-2);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:14px;}
+input:focus,select,textarea:focus{outline:1px solid var(--leather);}
+textarea{width:100%;resize:vertical;min-height:64px;}
+label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
+.hidden{display:none !important;}
+/* Gate */
+#gate .gate-inner{text-align:center;padding:30px 10px;}
+/* Seats */
+.seats{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;}
+.seat{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:12px;}
+.seat .seat-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.seat .field{margin-bottom:8px;}
+.seat select,.seat input{width:100%;}
+.seat .custom-model{margin-top:6px;}
+/* Key panel */
+#keyPanel .knote{font-size:12px;color:var(--ink-2);background:rgba(199,154,91,.08);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:12px;}
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;}
+/* Composer */
+#composer textarea{min-height:80px;}
+/* Transcript */
+.turn{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:var(--panel-2);}
+.turn .turn-h{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:13px;color:var(--ink-soft);}
+.turn .turn-h .who{font-weight:700;color:var(--ink);}
+.turn .turn-h .role{color:var(--ink-2);}
+.turn .turn-body{white-space:pre-wrap;}
+.turn.err{border-color:var(--err);}
+.turn.err .turn-body{color:var(--err);}
+.turn .to-doc{margin-left:auto;background:transparent;border:1px solid var(--line);color:var(--ink-soft);border-radius:6px;padding:2px 10px;font-size:12px;cursor:pointer;}
+/* Document pane */
+#docPane textarea{min-height:200px;}
+.timer{font-variant-numeric:tabular-nums;font-weight:700;color:var(--leather);}
+.footer{border-top:1px solid var(--line);padding:18px 20px;color:var(--ink-2);font-size:12px;text-align:center;}
+  #gdn-cookie{position:fixed;left:16px;right:16px;bottom:16px;z-index:2147483647;max-width:760px;margin:0 auto;background:#1c1c1c;color:#e9e9e9;border:1px solid #3a3a3a;border-radius:12px;padding:18px 20px;box-shadow:0 10px 40px rgba(0,0,0,.45);font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:14px;line-height:1.5;display:none}
+  #gdn-cookie.show{display:block}
+  #gdn-cookie p{margin:0 0 14px}
+  #gdn-cookie a{color:#d4a35a;text-decoration:underline}
+  #gdn-cookie .gdn-cc-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+  #gdn-cookie button{cursor:pointer;border-radius:8px;padding:9px 18px;font-size:14px;font-weight:600;border:1px solid #4a4a4a;background:transparent;color:#e9e9e9}
+  #gdn-cookie button.gdn-cc-accept{background:#d4a35a;border-color:#d4a35a;color:#1a1a1a}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">GDN <span>AI</span></div>
+  <nav>
+    <a href="/index.html">Home</a>
+    <a href="/gdn-ai-trial.html">Free Trial</a>
+    <a href="/gdn-ai-membership-portal.html">Membership</a>
+    <a href="/gdn-ai-meeting-room.html">Meeting Room</a>
+  </nav>
+</div>
+
+<div class="wrap">
+  <h1>Meeting Room</h1>
+  <p class="muted" id="statusLine">Checking your pass…</p>
+
+  <!-- GATE: shown when no pass -->
+  <div class="card hidden" id="gate">
+    <div class="gate-inner">
+      <h2>You need a Meeting Room pass</h2>
+      <p class="muted">A day pass opens a 24-hour window where you can run a four-seat AI meeting using your own provider keys.</p>
+      <p><a class="btn" href="/gdn-ai-membership-portal.html">Book a day pass</a></p>
+    </div>
+  </div>
+
+  <!-- ROOM: shown for look-around and active states -->
+  <div id="room" class="hidden">
+    <div class="card">
+      <div class="row" style="justify-content:space-between;">
+        <div>
+          <span class="pill" id="passState">Look around</span>
+          <span class="muted" id="sessionsLine"></span>
+        </div>
+        <div class="muted">Window: <span class="timer" id="timer">--:--:--</span></div>
+      </div>
+    </div>
+
+    <div class="card" id="keyPanel">
+      <h2>Your provider keys</h2>
+      <div class="knote">
+        Keys are kept in memory only for this tab. They are <strong>never saved</strong> to your browser storage and <strong>never sent to GDN</strong> — each seat calls its provider directly from your browser.
+        Keep your keys in your own private notes so you can paste them again next time.
+      </div>
+      <div class="kgrid">
+        <div><label>Anthropic (Claude) API key</label><input type="password" id="key_anthropic" placeholder="sk-ant-…" autocomplete="off"></div>
+        <div><label>OpenAI (ChatGPT) API key</label><input type="password" id="key_openai" placeholder="sk-…" autocomplete="off"></div>
+        <div><label>Google (Gemini) API key</label><input type="password" id="key_gemini" placeholder="AIza…" autocomplete="off"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Seats</h2>
+      <p class="muted">Up to four seats. The lead speaks first; each later seat sees the running transcript and reacts in its role.</p>
+      <div class="seats" id="seats"></div>
+    </div>
+
+    <div class="card" id="composer">
+      <h2>Start the meeting</h2>
+      <label>Topic or first command</label>
+      <textarea id="prompt" placeholder="e.g. Draft a go-to-market plan for our new product and stress-test it."></textarea>
+      <div class="row" style="margin-top:10px;">
+        <button class="btn" id="runBtn">Send</button>
+        <span class="muted" id="runHint">Sending your first command starts your 24-hour window.</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row" style="justify-content:space-between;">
+        <h2 style="margin:0;">Transcript</h2>
+        <div class="row">
+          <button class="btn secondary" id="saveBtn">Save transcript</button>
+          <button class="btn secondary" id="loadBtn">Load previous</button>
+        </div>
+      </div>
+      <div id="transcript" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="card" id="docPane">
+      <div class="row" style="justify-content:space-between;">
+        <h2 style="margin:0;">Document</h2>
+        <div class="row">
+          <button class="btn secondary" id="exportPdf">Export PDF</button>
+          <button class="btn secondary" id="exportWord">Export Word</button>
+        </div>
+      </div>
+      <p class="muted">Use “→ Document” on any turn to append it here.</p>
+      <textarea id="docText" placeholder="Your working document…"></textarea>
+    </div>
+  </div>
+</div>
+
+<div class="footer">Powered by Claude (Anthropic) · GDN Enterprise Pty Ltd</div>
+
+<div id="gdn-cookie" role="dialog" aria-live="polite" aria-label="Cookie consent">
+  <p>We use cookies to analyse site traffic and improve your experience. You can accept analytics cookies or continue with only essential cookies.</p>
+  <div class="gdn-cc-btns">
+    <button type="button" class="gdn-cc-reject" id="gdn-cc-reject">Reject</button>
+    <button type="button" class="gdn-cc-accept" id="gdn-cc-accept">Accept</button>
+  </div>
+<script>
+(function(){
+  function g(){ return (typeof window.gtag==='function') ? window.gtag : function(){ (window.dataLayer=window.dataLayer||[]).push(arguments); }; }
+  var el = document.getElementById('gdn-cookie');
+  var stored;
+  try { stored = localStorage.getItem('gdn_consent'); } catch(e){}
+  if (!stored) { el.classList.add('show'); }
+  function set(v){
+    try { localStorage.setItem('gdn_consent', v); } catch(e){}
+    var granted = (v === 'granted');
+    g()('consent','update',{
+      'ad_storage': granted?'granted':'denied',
+      'ad_user_data': granted?'granted':'denied',
+      'ad_personalization': granted?'granted':'denied',
+      'analytics_storage': granted?'granted':'denied'
+    });
+    el.classList.remove('show');
+  }
+  document.getElementById('gdn-cc-accept').addEventListener('click', function(){ set('granted'); });
+  document.getElementById('gdn-cc-reject').addEventListener('click', function(){ set('denied'); });
+})();
+</script>
+
+<script>
+(function(){
+  "use strict";
+  var DAY_MS = 24*60*60*1000;
+  var passData = null;        // {type, passesRemaining, startedAt, expiresAt}
+  var windowExpiresAt = null; // ms
+  var sessionStarted = false; // has pass-start been called this load
+  var timerInt = null;
+
+  // ---------- Seat model ----------
+  var PROVIDERS = {
+    claude:  { label:'Claude (Anthropic)', models:['claude-3-5-sonnet-latest','claude-3-5-haiku-latest'] },
+    chatgpt: { label:'ChatGPT (OpenAI)',   models:['gpt-4o','gpt-4o-mini'] },
+    gemini:  { label:'Gemini (Google)',    models:['gemini-1.5-pro','gemini-1.5-flash'] },
+    gideon:  { label:'Gideon (by GDN)',    models:['gideon-default'] }
+  };
+  var ROLES = ['lead','critic','synthesizer','specialist'];
+  var defaultSeats = [
+    {provider:'claude',  model:'claude-3-5-sonnet-latest', role:'lead',        name:'Lead'},
+    {provider:'chatgpt', model:'gpt-4o',                   role:'critic',      name:'Critic'},
+    {provider:'gemini',  model:'gemini-1.5-pro',           role:'synthesizer', name:'Synthesizer'},
+    {provider:'gideon',  model:'gideon-default',           role:'specialist',  name:'Specialist'}
+  ];
+
+  var $ = function(id){ return document.getElementById(id); };
+
+  function renderSeats(){
+    var host = $('seats'); host.innerHTML='';
+    defaultSeats.forEach(function(seat, i){
+      var el = document.createElement('div'); el.className='seat'; el.dataset.idx=i;
+      var provOpts = Object.keys(PROVIDERS).map(function(p){
+        return '<option value="'+p+'"'+(p===seat.provider?' selected':'')+'>'+PROVIDERS[p].label+'</option>';
+      }).join('');
+      var roleOpts = ROLES.map(function(r){
+        return '<option value="'+r+'"'+(r===seat.role?' selected':'')+'>'+r+'</option>';
+      }).join('');
+      el.innerHTML =
+        '<div class="seat-h"><strong>Seat '+(i+1)+'</strong><span class="pill">'+seat.role+'</span></div>'+
+        '<div class="field"><label>Name</label><input class="s-name" value="'+seat.name+'"></div>'+
+        '<div class="field"><label>Provider</label><select class="s-prov">'+provOpts+'</select></div>'+
+        '<div class="field"><label>Model</label><select class="s-model"></select>'+
+          '<input class="s-custom custom-model" placeholder="custom model id (optional)"></div>'+
+        '<div class="field"><label>Role</label><select class="s-role">'+roleOpts+'</select></div>';
+      host.appendChild(el);
+      fillModels(el, seat.provider, seat.model);
+      el.querySelector('.s-prov').addEventListener('change', function(e){
+        fillModels(el, e.target.value, null);
+      });
+    });
+  }
+  function fillModels(el, provider, selected){
+    var sel = el.querySelector('.s-model');
+    var models = PROVIDERS[provider].models;
+    sel.innerHTML = models.map(function(m){
+      return '<option value="'+m+'"'+(m===selected?' selected':'')+'>'+m+'</option>';
+    }).join('') + '<option value="__custom__">Custom…</option>';
+  }
+  function readSeats(){
+    return Array.prototype.map.call(document.querySelectorAll('.seat'), function(el){
+      var prov = el.querySelector('.s-prov').value;
+      var model = el.querySelector('.s-model').value;
+      var custom = el.querySelector('.s-custom').value.trim();
+      if(model==='__custom__' || custom) model = custom || model;
+      return {
+        provider:prov, model:model,
+        role:el.querySelector('.s-role').value,
+        name:el.querySelector('.s-name').value.trim() || ('Seat')
+      };
+    });
+  }
+
+  // ---------- Provider adapters (browser -> provider directly) ----------
+  function getKey(p){
+    if(p==='claude')  return $('key_anthropic').value.trim();
+    if(p==='chatgpt') return $('key_openai').value.trim();
+    if(p==='gemini')  return $('key_gemini').value.trim();
+    return '';
+  }
+  async function callClaude(model, sys, user){
+    var key = getKey('claude'); if(!key) throw new Error('No Anthropic key');
+    var r = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:model,max_tokens:1024,system:sys,messages:[{role:'user',content:user}]})
+    });
+    if(!r.ok) throw new Error('Anthropic '+r.status+' '+(await r.text()).slice(0,160));
+    var j = await r.json();
+    return (j.content||[]).map(function(c){return c.text||'';}).join('').trim();
+  }
+  async function callOpenAI(model, sys, user){
+    var key = getKey('chatgpt'); if(!key) throw new Error('No OpenAI key');
+    var r = await fetch('https://api.openai.com/v1/chat/completions',{
+      method:'POST',
+      headers:{'content-type':'application/json','authorization':'Bearer '+key},
+      body:JSON.stringify({model:model,messages:[{role:'system',content:sys},{role:'user',content:user}]})
+    });
+    if(!r.ok) throw new Error('OpenAI '+r.status+' '+(await r.text()).slice(0,160));
+    var j = await r.json();
+    return (((j.choices||[])[0]||{}).message||{}).content || '';
+  }
+  async function callGemini(model, sys, user){
+    var key = getKey('gemini'); if(!key) throw new Error('No Gemini key');
+    var url = 'https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(model)+':generateContent';
+    var r = await fetch(url,{
+      method:'POST',
+      headers:{'content-type':'application/json','x-goog-api-key':key},
+      body:JSON.stringify({system_instruction:{parts:[{text:sys}]},contents:[{role:'user',parts:[{text:user}]}]})
+    });
+    if(!r.ok) throw new Error('Gemini '+r.status+' '+(await r.text()).slice(0,160));
+    var j = await r.json();
+    var c = ((j.candidates||[])[0]||{}).content||{};
+    return (c.parts||[]).map(function(p){return p.text||'';}).join('').trim();
+  }
+  async function callGideon(model, sys, user){
+    var r = await fetch('/api/chat',{
+      method:'POST', headers:{'content-type':'application/json'},
+      body:JSON.stringify({message:user, system:sys})
+    });
+    if(!r.ok) throw new Error('Gideon '+r.status+' '+(await r.text()).slice(0,160));
+    var j = await r.json().catch(function(){return {};});
+    return j.reply || j.text || j.message || JSON.stringify(j).slice(0,500);
+  }
+  async function callSeat(seat, sys, user){
+    if(seat.provider==='claude')  return callClaude(seat.model, sys, user);
+    if(seat.provider==='chatgpt') return callOpenAI(seat.model, sys, user);
+    if(seat.provider==='gemini')  return callGemini(seat.model, sys, user);
+    return callGideon(seat.model, sys, user);
+  }
+
+  // ---------- Transcript rendering ----------
+  function addTurn(seat, text, isErr){
+    var wrap = $('transcript');
+    var el = document.createElement('div'); el.className='turn'+(isErr?' err':'');
+    var head = document.createElement('div'); head.className='turn-h';
+    head.innerHTML = '<span class="who">'+esc(seat.name)+'</span><span class="role">· '+esc(seat.role)+' · '+esc(seat.provider)+'/'+esc(seat.model)+'</span>';
+    var toDoc = document.createElement('button'); toDoc.className='to-doc'; toDoc.textContent='→ Document';
+    toDoc.onclick = function(){ $('docText').value += (($('docText').value?'\n\n':'')+seat.name+' ('+seat.role+'):\n'+text); };
+    head.appendChild(toDoc);
+    var body = document.createElement('div'); body.className='turn-body'; body.textContent=text;
+    el.appendChild(head); el.appendChild(body); wrap.appendChild(el);
+    wrap.scrollIntoView({block:'end'});
+  }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+
+  // ---------- Turn loop ----------
+  function roleInstruction(role){
+    if(role==='lead') return 'You are the LEAD. Open the discussion with a clear, structured first take on the user request.';
+    if(role==='critic') return 'You are the CRITIC. Read the running transcript and challenge weak points, risks, and gaps. React, do not merely agree.';
+    if(role==='synthesizer') return 'You are the SYNTHESIZER. Read the running transcript and reconcile the views into a coherent position.';
+    return 'You are a SPECIALIST. Read the running transcript and add concrete, domain-specific detail others missed.';
+  }
+  async function runMeeting(){
+    var prompt = $('prompt').value.trim();
+    if(!prompt){ $('runHint').textContent='Type a topic or command first.'; return; }
+    $('runBtn').disabled = true;
+
+    if(!sessionStarted){
+      var started = await startSession();
+      if(!started){ $('runBtn').disabled=false; return; }
+    }
+
+    var seats = readSeats();
+    var transcript = 'USER REQUEST:\n'+prompt+'\n';
+    for(var i=0;i<seats.length;i++){
+      var seat = seats[i];
+      var sys = roleInstruction(seat.role)+' Keep it focused and useful.';
+      var user = (i===0)
+        ? prompt
+        : ('Running transcript so far:\n'+transcript+'\n\nNow add your '+seat.role+' contribution.');
+      try{
+        var out = await callSeat(seat, sys, user);
+        if(!out) out='(empty response)';
+        addTurn(seat, out, false);
+        transcript += '\n'+seat.name+' ('+seat.role+'):\n'+out+'\n';
+      }catch(err){
+        addTurn(seat, (err && err.message) || 'Provider call failed', true);
+        // continue with remaining seats
+      }
+    }
+    $('runBtn').disabled = false;
+  }
+
+  // ---------- Pass start ----------
+  async function startSession(){
+    try{
+      var r = await fetch('/api/pass-start',{method:'POST',headers:{'content-type':'application/json'},body:'{}'});
+      var j = await r.json().catch(function(){return {};});
+      if(j.ok){
+        sessionStarted = true;
+        windowExpiresAt = j.expiresAt || (Date.now()+DAY_MS);
+        if(typeof j.passesRemaining==='number'){ passData = passData||{}; passData.passesRemaining=j.passesRemaining; }
+        setActiveUI();
+        startTimer();
+        return true;
+      }
+      if(j.reason==='not_signed_in'){
+        $('runHint').textContent='Please sign in on the membership page first.';
+        return false;
+      }
+      // no_pass / no_sessions_left -> gate
+      showGate();
+      return false;
+    }catch(e){
+      $('runHint').textContent='Could not start session. Try again.';
+      return false;
+    }
+  }
+
+  // ---------- UI states ----------
+  function showGate(){
+    $('gate').classList.remove('hidden');
+    $('room').classList.add('hidden');
+    $('statusLine').textContent='No active pass.';
+  }
+  function showRoom(){
+    $('gate').classList.add('hidden');
+    $('room').classList.remove('hidden');
+  }
+  function setLookAroundUI(){
+    showRoom();
+    $('passState').textContent='Look around (free)';
+    $('statusLine').textContent='You can configure seats and paste keys. Your 24-hour window starts when you send your first command.';
+    updateSessions();
+  }
+  function setActiveUI(){
+    showRoom();
+    $('passState').textContent='Active';
+    $('runHint').textContent='Window active — re-running during the window is free.';
+    updateSessions();
+  }
+  function updateSessions(){
+    var n = passData && typeof passData.passesRemaining==='number' ? passData.passesRemaining : null;
+    $('sessionsLine').textContent = (n!==null) ? ('· '+n+' session'+(n===1?'':'s')+' remaining') : '';
+  }
+  function startTimer(){
+    if(timerInt) clearInterval(timerInt);
+    function tick(){
+      var ms = windowExpiresAt - Date.now();
+      if(ms<=0){ $('timer').textContent='00:00:00'; clearInterval(timerInt); return; }
+      var h=Math.floor(ms/3600000), m=Math.floor(ms%3600000/60000), s=Math.floor(ms%60000/1000);
+      $('timer').textContent=[h,m,s].map(function(x){return (x<10?'0':'')+x;}).join(':');
+    }
+    tick(); timerInt=setInterval(tick,1000);
+  }
+
+  // ---------- Save / load / export ----------
+  function gatherTranscriptText(){
+    return Array.prototype.map.call(document.querySelectorAll('.turn'), function(t){
+      var who=t.querySelector('.who').textContent;
+      var body=t.querySelector('.turn-body').textContent;
+      return who+':\n'+body;
+    }).join('\n\n');
+  }
+  function saveTranscript(){
+    try{ localStorage.setItem('gdn_room_transcript', $('transcript').innerHTML);
+         localStorage.setItem('gdn_room_doc', $('docText').value);
+         $('saveBtn').textContent='Saved'; setTimeout(function(){$('saveBtn').textContent='Save transcript';},1200);
+    }catch(e){}
+  }
+  function loadTranscript(){
+    try{ var t=localStorage.getItem('gdn_room_transcript'); if(t) $('transcript').innerHTML=t;
+         var d=localStorage.getItem('gdn_room_doc'); if(d) $('docText').value=d;
+    }catch(e){}
+  }
+  function exportText(filename, mime){
+    var content = $('docText').value || gatherTranscriptText();
+    var blob = new Blob([content],{type:mime});
+    var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+  }
+
+  // ---------- Load behaviour ----------
+  async function init(){
+    renderSeats();
+    $('runBtn').addEventListener('click', runMeeting);
+    $('saveBtn').addEventListener('click', saveTranscript);
+    $('loadBtn').addEventListener('click', loadTranscript);
+    $('exportPdf').addEventListener('click', function(){ exportText('meeting.txt','application/pdf'); });
+    $('exportWord').addEventListener('click', function(){ exportText('meeting.doc','application/msword'); });
+
+    try{
+      var r = await fetch('/api/status');
+      var j = await r.json().catch(function(){return {};});
+      passData = j.pass || null;
+      if(!passData){ showGate(); return; }
+      var now = Date.now();
+      if(passData.startedAt && now < passData.startedAt + DAY_MS){
+        // already active window
+        sessionStarted = true;
+        windowExpiresAt = passData.startedAt + DAY_MS;
+        setActiveUI(); startTimer();
+      } else {
+        setLookAroundUI();
+      }
+    }catch(e){
+      showGate();
+    }
+  }
+  init();
+})();
+</script>
+</body>
+</html>
