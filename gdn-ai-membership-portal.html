@@ -204,11 +204,11 @@ body{font-family:'Archivo',system-ui,sans-serif;background:var(--bg);color:var(-
   const store={async get(k){try{const r=await window.storage.get(k);return r?r.value:(k in mem?mem[k]:null);}catch(e){return (k in mem)?mem[k]:null;}},async set(k,v){mem[k]=v;try{await window.storage.set(k,v);}catch(e){}}};
   const TIERS={'Simple Access':{daily:2,limit:100},'Professional':{daily:7,limit:1000},'Enterprise':{daily:null,limit:Infinity}};
   let user=null,history=[],usageCount=0,selectedTier='Professional',billing='monthly';
-  const GREETING="Hello, my name is Gideon. I am your new assistant in trading and business. I specialise in international trade, but I can assist with any business query. I use Claude as my source, but I am built on decades of experience in international trade. What can I help you with today?";
+  const GREETING="Hi, I am Gideon, your business assistant. I can help across strategy, operations, finance, marketing, trade and commodities, research, writing, drafting documents and general analysis, and I am glad to take on everyday questions too. What would you like to work on?";
   let ttsOn=true;
   function pickVoice(){const v=window.speechSynthesis?speechSynthesis.getVoices():[];return v.find(x=>/en-GB/i.test(x.lang))||v.find(x=>/en-AU/i.test(x.lang))||v.find(x=>/^en/i.test(x.lang))||v[0];}
-  function speak(t){if(!ttsOn||!('speechSynthesis' in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);const vc=pickVoice();if(vc)u.voice=vc;u.rate=.98;u.pitch=.92;speechSynthesis.speak(u);}catch(e){}}
-  function toggleTTS(){ttsOn=!ttsOn;document.getElementById('tts-btn').classList.toggle('on',ttsOn);if(!ttsOn&&'speechSynthesis' in window)speechSynthesis.cancel();}
+  var __gideonAudio=null;function speak(t){if(!ttsOn)return;try{if(__gideonAudio){__gideonAudio.pause();__gideonAudio=null;}}catch(e){}if('speechSynthesis' in window){try{speechSynthesis.cancel();}catch(e){}}fetch('/api/speak',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:t})}).then(function(res){if(!res.ok)throw new Error('tts');return res.blob();}).then(function(b){var url=URL.createObjectURL(b);__gideonAudio=new Audio(url);__gideonAudio.play().catch(function(){__sayBrowser(t);});}).catch(function(){__sayBrowser(t);});}function __sayBrowser(t){if(!('speechSynthesis' in window))return;try{var u=new SpeechSynthesisUtterance(t);var vc=pickVoice();if(vc)u.voice=vc;u.rate=.98;u.pitch=.92;speechSynthesis.speak(u);}catch(e){}}
+  function toggleTTS(){ttsOn=!ttsOn;document.getElementById('tts-btn').classList.toggle('on',ttsOn);if(!ttsOn){if('speechSynthesis' in window){try{speechSynthesis.cancel();}catch(e){}}try{if(__gideonAudio){__gideonAudio.pause();__gideonAudio=null;}}catch(e){}}}
   function greet(){const b=document.getElementById('greet-bubble');if(b){document.getElementById('greet-text').textContent=GREETING;b.classList.add('show');b.scrollIntoView({behavior:'smooth',block:'nearest'});}speak(GREETING);}
   function scrollPlans(){document.getElementById('plans').scrollIntoView({behavior:'smooth'});}
   function show(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');}
@@ -235,7 +235,7 @@ body{font-family:'Archivo',system-ui,sans-serif;background:var(--bg);color:var(-
     document.getElementById('who-name').textContent=user.name;
     document.getElementById('who-tier').textContent=user.tier+(TIERS[user.tier].daily?' \u00B7 '+(user.billing==='annual'?'Annual':'Monthly'):'');
     renderUsage();const sc=document.getElementById('scroll');sc.innerHTML='';
-    if(history.length===0){const first="Hello "+user.name.split(' ')[0]+", and welcome aboard. I use Claude as my source, but I am built on decades of experience in international trade. What can I help you with today?";addMessage('assistant',first);speak(first);}
+    if(history.length===0){const first="Hi "+user.name.split(' ')[0]+", welcome aboard. I can help across strategy, operations, finance, trade, research, writing, drafting documents and general analysis, and everyday questions too. What would you like to work on?";addMessage('assistant',first);speak(first);}
     else{addMessage('assistant',"Welcome back, "+user.name.split(' ')[0]+". I have your previous work right here. Where would you like to continue?");history.forEach(m=>addMessage(m.role==='assistant'?'assistant':'user',m.content));}
     show('view-app');document.getElementById('input').focus();}
   function signOut(){if('speechSynthesis' in window)speechSynthesis.cancel();user=null;history=[];usageCount=0;show('view-landing');}
