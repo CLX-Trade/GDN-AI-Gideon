@@ -1,5 +1,4 @@
 import Stripe from 'stripe';
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Only these price IDs may be charged. From your Stripe products.
 const ALLOWED = new Set([
@@ -11,12 +10,20 @@ const ALLOWED = new Set([
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const key = (process.env.STRIPE_SECRET_KEY || '').trim();
+  if (!key) {
+    console.error('STRIPE_SECRET_KEY is missing or empty at runtime');
+    return res.status(500).json({ error: 'Stripe is not configured (missing secret key).' });
+  }
+
   const body = req.body || {};
   const priceId = body.priceId;
   const email = body.email;
   if (!ALLOWED.has(priceId)) return res.status(400).json({ error: 'Unknown price' });
 
   try {
+    const stripe = new Stripe(key);
     const base = process.env.PUBLIC_BASE_URL || ('https://' + req.headers.host);
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
@@ -28,7 +35,7 @@ export default async function handler(req, res) {
     });
     return res.status(200).json({ url: session.url });
   } catch (e) {
-    console.error(e);
-    return res.status(500).json({ error: 'Checkout failed' });
+    console.error('Stripe checkout error:', e && e.message, e && e.type);
+    return res.status(500).json({ error: 'Checkout failed', detail: (e && e.message) || 'unknown' });
   }
 }
