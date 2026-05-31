@@ -12,7 +12,9 @@ const ALLOWED = new Set([
 ]);
 
 // One-time Meeting Room passes are charged as a single payment, not a subscription.
-const PASS_PRICES = new Set(['price_1Td6sTFDVJ23RHCn3pOpFSx8', 'price_1Td6vUFDVJ23RHCnFN69OQMb']);
+// One-time prices use Stripe 'payment' mode; recurring prices use 'subscription'.
+// The daily Meeting Room pass is one-time; the monthly pass is a recurring subscription.
+const ONE_TIME_PRICES = new Set(['price_1Td6sTFDVJ23RHCn3pOpFSx8']);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -32,7 +34,7 @@ export default async function handler(req, res) {
     const stripe = new Stripe(key);
     const base = process.env.PUBLIC_BASE_URL || ('https://' + req.headers.host);
     const session = await stripe.checkout.sessions.create({
-      mode: PASS_PRICES.has(priceId) ? 'payment' : 'subscription',
+      mode: ONE_TIME_PRICES.has(priceId) ? 'payment' : 'subscription',
       line_items: [{ price: priceId, quantity: 1 }],
       customer_email: email || undefined,
       success_url: base + '/gdn-ai-portal.html?paid=1',
