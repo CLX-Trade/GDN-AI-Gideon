@@ -6,8 +6,27 @@
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    // Consent Mode v2: default everything to denied until the user accepts.
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied',
+      'wait_for_update': 500
+    });
     gtag('js', new Date());
     gtag('config', 'G-GQ8KSQX46N');
+    // Re-apply stored consent on subsequent visits.
+    try {
+      if (localStorage.getItem('gdn_consent') === 'granted') {
+        gtag('consent', 'update', {
+          'ad_storage': 'granted',
+          'ad_user_data': 'granted',
+          'ad_personalization': 'granted',
+          'analytics_storage': 'granted'
+        });
+      }
+    } catch (e) {}
   </script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -296,5 +315,45 @@ body{font-family:'Archivo',system-ui,sans-serif;background:var(--bg);color:var(-
   document.getElementById('in-email').addEventListener('keydown',e=>{if(e.key==='Enter')doSignIn();});
 function unmuteVid(){var v=document.getElementById("gid-vid");if(!v)return;v.muted=false;v.currentTime=0;var p=v.play();var b=document.getElementById("unmute-btn");if(b)b.classList.add("hide");}window.addEventListener("load",function(){var v=document.getElementById("gid-vid");if(v){v.muted=true;var p=v.play();if(p&&p.catch)p.catch(function(){});}});</script>
 
+
+<!-- Cookie consent banner -->
+<style>
+  #gdn-cookie{position:fixed;left:16px;right:16px;bottom:16px;z-index:2147483647;max-width:760px;margin:0 auto;background:#1c1c1c;color:#e9e9e9;border:1px solid #3a3a3a;border-radius:12px;padding:18px 20px;box-shadow:0 10px 40px rgba(0,0,0,.45);font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:14px;line-height:1.5;display:none}
+  #gdn-cookie.show{display:block}
+  #gdn-cookie p{margin:0 0 14px}
+  #gdn-cookie a{color:#d4a35a;text-decoration:underline}
+  #gdn-cookie .gdn-cc-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+  #gdn-cookie button{cursor:pointer;border-radius:8px;padding:9px 18px;font-size:14px;font-weight:600;border:1px solid #4a4a4a;background:transparent;color:#e9e9e9}
+  #gdn-cookie button.gdn-cc-accept{background:#d4a35a;border-color:#d4a35a;color:#1a1a1a}
+</style>
+<div id="gdn-cookie" role="dialog" aria-live="polite" aria-label="Cookie consent">
+  <p>We use cookies to analyse site traffic and improve your experience. You can accept analytics cookies or continue with only essential cookies.</p>
+  <div class="gdn-cc-btns">
+    <button type="button" class="gdn-cc-reject" id="gdn-cc-reject">Reject</button>
+    <button type="button" class="gdn-cc-accept" id="gdn-cc-accept">Accept</button>
+  </div>
+</div>
+<script>
+(function(){
+  function g(){ return (typeof window.gtag==='function') ? window.gtag : function(){ (window.dataLayer=window.dataLayer||[]).push(arguments); }; }
+  var el = document.getElementById('gdn-cookie');
+  var stored;
+  try { stored = localStorage.getItem('gdn_consent'); } catch(e){}
+  if (!stored) { el.classList.add('show'); }
+  function set(v){
+    try { localStorage.setItem('gdn_consent', v); } catch(e){}
+    var granted = (v === 'granted');
+    g()('consent','update',{
+      'ad_storage': granted?'granted':'denied',
+      'ad_user_data': granted?'granted':'denied',
+      'ad_personalization': granted?'granted':'denied',
+      'analytics_storage': granted?'granted':'denied'
+    });
+    el.classList.remove('show');
+  }
+  document.getElementById('gdn-cc-accept').addEventListener('click', function(){ set('granted'); });
+  document.getElementById('gdn-cc-reject').addEventListener('click', function(){ set('denied'); });
+})();
+</script>
 </body>
 </html>
