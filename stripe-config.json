@@ -1,0 +1,22 @@
+{
+  "_note": "GDN AI (Gideon) Stripe products. Amounts shown are the intended values; confirm each matches what is set in the Stripe dashboard. Live vs test mode keys are configured separately in the backend env, not here.",
+  "currency": "USD",
+  "products": {
+    "simple": {
+      "name": "Gideon Simple Access",
+      "productId": "prod_UcDtDSaFlqAKTY",
+      "prices": {
+        "monthly": { "priceId": "price_1TczRdFDVJ23RHCnpLU6lkAf", "expectedAmount": 60 },
+        "annual":  { "priceId": "price_1TczW2FDVJ23RHCnwRGRc2Kf", "expectedAmount": 504 }
+      }
+    },
+    "professional": {
+      "name": "Gideon Professional",
+      "productId": "prod_UcDxRo8ZjLdA1I",
+      "prices": {
+        "monthly": { "priceId": "price_1TczVZFDVJ23RHCnhSs461kt", "expectedAmount": 210 },
+        "annual":  { "priceId": "price_1TczVZFDVJ23RHCn8bJl925S", "expectedAmount": 1764 }
+      }
+    }
+  }
+}
