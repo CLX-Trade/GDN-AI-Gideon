@@ -30,7 +30,28 @@ export default async function handler(req, res) {
     if (event.type === 'checkout.session.completed') {
       const s = event.data.object;
       const email = (s.customer_email || (s.customer_details && s.customer_details.email) || '').toLowerCase();
-      if (email) await kv.set('member:' + email, true);
+      if (email) {
+        // Determine whether this purchase was a Meeting Room pass (one-time) or a membership.
+        const DAILY = 'price_1Td6sTFDVJ23RHCn3pOpFSx8';
+        const MONTHLY = 'price_1Td6vUFDVJ23RHCnFN69OQMb';
+        let passType = null;
+        try {
+          const items = await stripe.checkout.sessions.listLineItems(s.id, { limit: 1 });
+          const priceId = items && items.data && items.data[0] && items.data[0].price && items.data[0].price.id;
+          if (priceId === DAILY) passType = 'daily';
+          else if (priceId === MONTHLY) passType = 'monthly';
+        } catch (e) { console.error('listLineItems failed:', e && e.message); }
+        if (passType) {
+          await kv.set('pass:' + email, {
+            type: passType,
+            purchasedAt: Date.now(),
+            startedAt: null,
+            passesRemaining: passType === 'monthly' ? 4 : 1
+          });
+        } else {
+          await kv.set('member:' + email, true);
+        }
+      }
     }
     if (event.type === 'customer.subscription.deleted') {
       // To revoke on cancellation, look up the customer email via the Stripe API

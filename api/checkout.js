@@ -5,8 +5,14 @@ const ALLOWED = new Set([
   'price_1TczRdFDVJ23RHCnpLU6lkAf', // Gideon Simple Access - monthly
   'price_1TczW2FDVJ23RHCnwRGRc2Kf', // Gideon Simple Access - annual
   'price_1TczVZFDVJ23RHCnhSs461kt', // Gideon Professional - monthly
-  'price_1TczVZFDVJ23RHCn8bJl925S'  // Gideon Professional - annual
+
+  'price_1TczVZFDVJ23RHCn8bJl925S',  // Gideon Professional - annual
+  'price_1Td6sTFDVJ23RHCn3pOpFSx8', // Meeting Room Access - daily (one-time)
+  'price_1Td6vUFDVJ23RHCnFN69OQMb' // Meeting Room Access - monthly (one-time)
 ]);
+
+// One-time Meeting Room passes are charged as a single payment, not a subscription.
+const PASS_PRICES = new Set(['price_1Td6sTFDVJ23RHCn3pOpFSx8', 'price_1Td6vUFDVJ23RHCnFN69OQMb']);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
@@ -26,7 +32,7 @@ export default async function handler(req, res) {
     const stripe = new Stripe(key);
     const base = process.env.PUBLIC_BASE_URL || ('https://' + req.headers.host);
     const session = await stripe.checkout.sessions.create({
-      mode: 'subscription',
+      mode: PASS_PRICES.has(priceId) ? 'payment' : 'subscription',
       line_items: [{ price: priceId, quantity: 1 }],
       customer_email: email || undefined,
       success_url: base + '/gdn-ai-portal.html?paid=1',
