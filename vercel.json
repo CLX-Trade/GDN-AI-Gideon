@@ -1,6 +1,6 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/", "destination": "/gdn-ai-portal.html" }
+    { "source": "/", "destination": "/index.html" }
   ]
 }
