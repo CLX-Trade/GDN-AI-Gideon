@@ -620,6 +620,18 @@ body.gdn-sb-collapsed #gdn-sb-reopen{display:flex;}
 }
 #send:hover{background:var(--leather)!important;color:#1c1c1a!important;transform:translateY(-1px)!important;}
 #send:active{transform:translateY(0)!important;}
+
+/* MOBILE FUNCTION-BAR FIX: sidebar defaults closed on phones, content full-width, burger visible */
+@media (max-width: 760px){
+  body{padding-left:0 !important;}
+  #gdn-sb{box-shadow:0 0 40px rgba(0,0,0,.5);}
+  body:not(.gdn-sb-open) #gdn-sb{transform:translateX(calc(-1 * var(--gdn-sb-w))) !important;}
+  body:not(.gdn-sb-open) #gdn-sb-reopen{display:flex !important;}
+  body.gdn-sb-open #gdn-sb{transform:translateX(0) !important;}
+  #gdn-sb-reopen{top:14px;left:12px;}
+  #app{max-width:100% !important;width:100% !important;}
+}
+
 </style>
 </body>
 </html>
