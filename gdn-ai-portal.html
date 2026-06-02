@@ -513,7 +513,7 @@ body.gdn-sb-collapsed #gdn-sb-reopen{display:flex;}
     try{localStorage.setItem(LS_COL,v?'1':'0');}catch(e){}
   }
   function init(){
-    document.body.classList.add('gdn-sb-open');
+      if(window.matchMedia('(min-width: 761px)').matches)document.body.classList.add('gdn-sb-open');
     if(localStorage.getItem(LS_COL)==='1')document.body.classList.add('gdn-sb-collapsed');
     hookAddMessage();
     document.getElementById('gdn-sb-collapse').addEventListener('click',function(){setCollapsed(true);});
