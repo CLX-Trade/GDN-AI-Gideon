@@ -10,7 +10,7 @@
 import { writeFileSync } from 'fs';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const { runImprovementAgent, formatSummary } = require('../lib/ai-agent.js');
+const { runImprovementAgent, formatSummary } = require('../lib/ai-agent.cjs');
 
 async function main() {
     console.log('[runner] GDN AI Organism starting...');
