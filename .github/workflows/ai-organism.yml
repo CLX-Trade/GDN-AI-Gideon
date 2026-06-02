@@ -31,7 +31,7 @@ jobs:
         run: |
           git config --global user.name "GDN AI Agent"
           git config --global user.email "ai-agent@gdn-ai.com"
-          git add gdn-ai-trial.html public/sitemap.xml ai-improvements.json agent-output.txt || true
+          git add -A
           if git diff --staged --quiet; then
             echo "No changes to commit"
             exit 0
