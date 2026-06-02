@@ -618,5 +618,25 @@ body.gdn-sb-collapsed #gdn-sb-reopen{display:flex;}
   #gdn-sb{width:min(60vw,260px) !important;}
 }
 </style>
+<style id="gdn-mobile-portrait-fix-v2">
+/* ===== Gideon portrait phone polish (v2) ===== */
+@media (max-width:760px){
+  /* Make the sidebar-open burger clearly visible & tappable in portrait */
+  #gdn-sb-reopen{
+    background:#3a3a41 !important;
+    color:#efe9df !important;
+    border:1px solid #4b4b53 !important;
+    border-radius:8px !important;
+    width:38px !important;
+    height:38px !important;
+    box-shadow:0 2px 8px rgba(0,0,0,.45) !important;
+    z-index:9999 !important;
+    top:calc(8px + env(safe-area-inset-top)) !important;
+    left:calc(8px + env(safe-area-inset-left)) !important;
+  }
+  /* Stop the top credential strip / logo from sitting under the burger */
+  .credstrip{padding-left:56px !important;}
+}
+</style>
 </body>
 </html>
