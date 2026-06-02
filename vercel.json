@@ -1,1 +1,33 @@
-{"cleanUrls":true,"rewrites":[{"source":"/","destination":"/gdn-ai-trial.html"},{"source":"/app","destination":"/gdn-ai-portal.html"}]}
+{
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/gdn-ai-trial.html"
+    },
+    {
+      "source": "/app",
+      "destination": "/gdn-ai-portal.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate, s-maxage=0"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.html)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate, s-maxage=0"
+        }
+      ]
+    }
+  ]
+}
