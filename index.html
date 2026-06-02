@@ -682,6 +682,26 @@ body.gdn-sb-collapsed #gdn-sb-reopen{display:flex;}
   /* Stop the top credential strip / logo from sitting under the burger */
   .credstrip{padding-left:56px !important;}
 }
+/* ===== Mobile sidebar tap-outside-to-close backdrop ===== */
+#gdn-sb-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8999;display:none;}
+@media (max-width:760px){
+    body.gdn-sb-open:not(.gdn-sb-collapsed) #gdn-sb-backdrop{display:block;}
+}
 </style>
+  <div id="gdn-sb-backdrop"></div>
+  <script>
+    (function(){
+        var bd = document.getElementById('gdn-sb-backdrop');
+        if(bd){
+              bd.addEventListener('click', function(){
+                      document.body.classList.add('gdn-sb-collapsed');
+              });
+        }
+        if(window.matchMedia('(max-width:760px)').matches){
+              document.body.classList.add('gdn-sb-collapsed');
+        }
+    })();
+  </script>
+
 </body>
 </html>
