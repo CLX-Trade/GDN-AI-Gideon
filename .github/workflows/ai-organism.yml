@@ -1,49 +1,49 @@
 name: GDN AI Organism
 on:
   schedule:
-      - cron: '0 8 * * *'
-          - cron: '0 14 * * *'
-              - cron: '0 20 * * *'
-                workflow_dispatch:
-                permissions:
-                  contents: write
-                  jobs:
-                    ai-organism:
-                        runs-on: ubuntu-latest
-                            name: Run AI Improvement Agent
-                                steps:
-                                      - name: Checkout repository
-                                              uses: actions/checkout@v4
-                                                      with:
-                                                                token: ${{ secrets.GITHUB_TOKEN }}
-                                                                          fetch-depth: 0
-                                                                                - name: Setup Node.js
-                                                                                        uses: actions/setup-node@v4
-                                                                                                with:
-                                                                                                          node-version: '20'
-                                                                                                                - name: Install dependencies
-                                                                                                                        run: npm install --legacy-peer-deps
-                                                                                                                              - name: Run AI Agent
-                                                                                                                                      env:
-                                                                                                                                                ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-                                                                                                                                                        run: node scripts/run-ai-agent.mjs
-                                                                                                                                                              - name: Commit improvements to main
-                                                                                                                                                                      run: |
-                                                                                                                                                                                git config --global user.name "GDN AI Agent"
-                                                                                                                                                                                          git config --global user.email "ai-agent@gdn-ai.com"
-                                                                                                                                                                                                    git add gdn-ai-trial.html public/sitemap.xml ai-improvements.json agent-output.txt || true
-                                                                                                                                                                                                              if git diff --staged --quiet; then
-                                                                                                                                                                                                                          echo "No changes to commit"
-                                                                                                                                                                                                                                      exit 0
-                                                                                                                                                                                                                                                fi
-                                                                                                                                                                                                                                                          DATESTAMP=$(date -u +%Y-%m-%d-%H%M)
-                                                                                                                                                                                                                                                                    git commit -m "AI improvements for $DATESTAMP"
-                                                                                                                                                                                                                                                                              if ! git pull --rebase origin main; then
-                                                                                                                                                                                                                                                                                          git rebase --abort || true
-                                                                                                                                                                                                                                                                                                      git push --force-with-lease origin main
-                                                                                                                                                                                                                                                                                                                else
-                                                                                                                                                                                                                                                                                                                            git push origin main
-                                                                                                                                                                                                                                                                                                                                      fi
-                                                                                                                                                                                                                                                                                                                                                echo "Changes pushed to main"
-                                                                                                                                                                                                                                                                                                                                                      - name: Summary
-                                                                                                                                                                                                                                                                                                                                                              run: echo "GDN AI Organism run complete" >> $GITHUB_STEP_SUMMARY
+    - cron: '0 8 * * *'
+    - cron: '0 14 * * *'
+    - cron: '0 20 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  ai-organism:
+    runs-on: ubuntu-latest
+    name: Run AI Improvement Agent
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+      - name: Run AI Agent
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/run-ai-agent.mjs
+      - name: Commit improvements to main
+        run: |
+          git config --global user.name "GDN AI Agent"
+          git config --global user.email "ai-agent@gdn-ai.com"
+          git add gdn-ai-trial.html public/sitemap.xml ai-improvements.json agent-output.txt || true
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          DATESTAMP=$(date -u +%Y-%m-%d-%H%M)
+          git commit -m "AI improvements for $DATESTAMP"
+          if ! git pull --rebase origin main; then
+            git rebase --abort || true
+            git push --force-with-lease origin main
+          else
+            git push origin main
+          fi
+          echo "Changes pushed to main"
+      - name: Summary
+        run: echo "GDN AI Organism run complete" >> $GITHUB_STEP_SUMMARY
