@@ -602,6 +602,7 @@ body.gdn-sb-collapsed #gdn-sb-reopen{display:flex;}
   #gdn-sb-reopen{top:calc(10px + env(safe-area-inset-top)) !important;left:calc(10px + env(safe-area-inset-left)) !important;}
   /* Keep the sidebar from being wider than the screen */
   #gdn-sb{width:min(86vw,300px) !important;}
+  #gdn-sb{transform:translateX(-100%) !important;transition:transform .22s ease !important;z-index:9000 !important;} body.gdn-sb-open #gdn-sb{transform:translateX(0) !important;} #gdn-sb-reopen{display:flex !important;z-index:9001 !important;} body.gdn-sb-open::after{content:"";position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8999;} body.gdn-sb-open{padding-left:0 !important;}
   /* Prevent any accidental horizontal scrolling */
   html,body{max-width:100%;overflow-x:hidden;}
   /* Comfortable tap targets */
