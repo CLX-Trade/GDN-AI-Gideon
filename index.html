@@ -690,17 +690,22 @@ body.gdn-sb-collapsed #gdn-sb-reopen{display:flex;}
 </style>
   <div id="gdn-sb-backdrop"></div>
   <script>
-    (function(){
-        var bd = document.getElementById('gdn-sb-backdrop');
-        if(bd){
-              bd.addEventListener('click', function(){
-                      document.body.classList.add('gdn-sb-collapsed');
-              });
-        }
-        if(window.matchMedia('(max-width:760px)').matches){
-              document.body.classList.add('gdn-sb-collapsed');
-        }
-    })();
+  (function(){
+        var aside = document.getElementById('gdn-sb');
+        var reopen = document.getElementById('gdn-sb-reopen');
+        function isMobile(){ return window.matchMedia('(max-width:760px)').matches; }
+        function closeSidebar(){ document.body.classList.add('gdn-sb-collapsed'); }
+        // Tap anywhere outside the sidebar (on mobile, when open) to close it.
+        document.addEventListener('click', function(e){
+                if(!isMobile()) return;
+                if(document.body.classList.contains('gdn-sb-collapsed')) return;
+                if(aside && aside.contains(e.target)) return;
+                if(reopen && reopen.contains(e.target)) return;
+                closeSidebar();
+        }, true);
+        // Start collapsed on mobile so the chat opens full-width.
+        if(isMobile()) closeSidebar();
+  })();
   </script>
 
 </body>
