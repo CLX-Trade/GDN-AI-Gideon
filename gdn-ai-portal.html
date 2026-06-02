@@ -589,5 +589,34 @@ body.gdn-sb-collapsed #gdn-sb-reopen{display:flex;}
 }
 
 </style>
+<style id="gdn-mobile-responsive-fix">
+/* ===== Gideon mobile responsiveness fix (portrait + landscape) ===== */
+/* Use dynamic viewport height so the composer/input bar is always reachable
+   on mobile browsers whose URL bar shrinks/grows. Falls back to vh. */
+#app{height:100vh;height:100dvh;}
+#gdn-sb{height:100vh;height:100dvh;}
+
+@media (max-width:760px){
+  /* Respect device safe areas (notch / home indicator) */
+  .composer-wrap{padding-bottom:calc(8px + env(safe-area-inset-bottom)) !important;}
+  #gdn-sb-reopen{top:calc(10px + env(safe-area-inset-top)) !important;left:calc(10px + env(safe-area-inset-left)) !important;}
+  /* Keep the sidebar from being wider than the screen */
+  #gdn-sb{width:min(86vw,300px) !important;}
+  /* Prevent any accidental horizontal scrolling */
+  html,body{max-width:100%;overflow-x:hidden;}
+  /* Comfortable tap targets */
+  .composer .icon-btn,#send{min-width:40px;min-height:40px;}
+}
+
+/* ===== Landscape phones: short viewport height ===== */
+@media (max-height:480px) and (orientation:landscape){
+  header{padding-top:7px !important;padding-bottom:7px !important;}
+  #scroll{padding-top:12px !important;padding-bottom:8px !important;gap:14px !important;}
+  .composer-wrap{padding-top:8px !important;padding-bottom:calc(6px + env(safe-area-inset-bottom)) !important;}
+  .composer{padding-top:5px !important;padding-bottom:5px !important;}
+  .credstrip{display:none !important;}
+  #gdn-sb{width:min(60vw,260px) !important;}
+}
+</style>
 </body>
 </html>
