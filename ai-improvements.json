@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-06-03T18:17:39.502Z",
+  "runDate": "2026-06-03T22:29:14.004Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your AI-powered trade and business assistant. Get instant answers, voice chat, and professional support for your operations. Try three free searches today.\"><meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Instant AI answers, voice chat, and unlimited workspace access for business owners, traders, and professionals. Start with three free searches.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:site_name\" content=\"GDN AI\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta name=\"twitter:description\" content=\"Your Claude-powered assistant for trade and business. Try three free searches, then unlock unlimited access.\">",
-      "rationale": "Clear meta descriptions improve click-through rates from search results by communicating the core value proposition immediately. Open Graph and Twitter Card tags ensure professional, branded previews when the homepage is shared on LinkedIn, Facebook, or Twitter—critical for a B2B audience. The copy highlights the free trial, key features, and target audience without making unverified claims.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try three free searches, then join from US$2/day.\">\n<meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\">\n<meta property=\"og:description\" content=\"Meet Gideon, the Claude-powered assistant built for business owners, traders, and professionals. Instant AI answers, voice chat, and unlimited workspace access.\">\n<meta property=\"og:type\" content=\"website\">\n<meta property=\"og:image\" content=\"https://yourdomain.com/og-image.jpg\">\n<meta property=\"og:url\" content=\"https://yourdomain.com/\">\n<meta name=\"twitter:card\" content=\"summary_large_image\">",
+      "rationale": "A compelling meta description improves click-through rates from search results by clearly stating what Gideon is, who it serves, and the free trial offer. Open Graph tags ensure professional, branded previews when shared on LinkedIn, Twitter, and Facebook—critical for B2B audiences. Including the price anchors value early and the free searches reduce friction.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-03T18:17:29.533Z"
+      "generatedAt": "2026-06-03T22:29:04.084Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "Hero Headline: \"Meet Gideon — Your AI Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and a dedicated workspace to run your business smarter. Try three free searches and see Gideon in action.\"",
-      "rationale": "The headline immediately introduces the product by name and clearly states what it does, building brand recognition. The subheading highlights three key value props (instant answers, voice chat, workspace) without overpromising, then creates a low-friction entry point by emphasizing the free trial. This approach reduces hesitation and drives users toward their first interaction with Gideon.",
+      "suggestion": "Hero Headline: \"Meet Gideon — Your AI-Powered Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and a dedicated workspace built for business owners and traders. Try three searches free — no card required.\"",
+      "rationale": "This headline immediately introduces Gideon by name and clearly states what it does, building brand recognition. The subheading highlights three core value props (instant answers, voice chat, workspace) while addressing the target audience directly. Ending with the free trial offer and 'no card required' removes friction and encourages visitors to engage before hitting the paywall.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-03T18:17:34.657Z"
+      "generatedAt": "2026-06-03T22:29:08.894Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches with Gideon, you'll be invited to become a member to continue. Membership starts at just US$2 per day, billed monthly—or save 30 percent with an annual plan. As a member, you unlock unlimited access to Gideon's workspace, voice chat, and professional trade and business support.",
-      "rationale": "This FAQ directly addresses the most common friction point for trial users: understanding what happens at the paywall. By clearly explaining the transition from free to paid, stating exact pricing, and highlighting the value unlocked, it reduces uncertainty and builds trust—key factors in converting hesitant visitors into paying members.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to join GDN AI as a member. Membership starts at just US$2 per day, giving you unlimited access to Gideon's voice chat, members workspace, and professional trade and business support. Choose annual billing to save 30 percent.",
+      "rationale": "This FAQ directly addresses the most common friction point in the user journey—the transition from free trial to paid membership. By clearly explaining what happens next and reinforcing the low entry price and value, it reduces uncertainty and supports conversion at the paywall moment.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-03T18:17:39.500Z"
+      "generatedAt": "2026-06-03T22:29:14.001Z"
     }
   ]
 }
