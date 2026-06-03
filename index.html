@@ -666,6 +666,21 @@ body.gdn-sb-collapsed #gdn-sb-reopen{display:flex;}
 <style id="gdn-mobile-portrait-fix-v2">
 /* ===== Gideon portrait phone polish (v2) ===== */
 @media (max-width:760px){
+  /* === Fix: keep chat input placeholder fully visible on mobile (last word was being clipped) === */
+  #input{
+    line-height:1.4 !important;
+    min-height:48px !important;
+    height:48px !important;
+    padding-top:14px !important;
+    padding-bottom:14px !important;
+    box-sizing:border-box !important;
+    white-space:nowrap !important;
+    overflow-x:hidden !important;
+    text-overflow:ellipsis !important;
+  }
+  #input::placeholder{ line-height:1.4 !important; white-space:nowrap !important; }
+  .composer, .composer-wrap{ align-items:center !important; }
+
   /* Make the sidebar-open burger clearly visible & tappable in portrait */
   #gdn-sb-reopen{
     background:#3a3a41 !important;
