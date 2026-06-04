@@ -31,6 +31,7 @@ export default async function handler(req, res) {
       const s = event.data.object;
       const email = (s.customer_email || (s.customer_details && s.customer_details.email) || '').toLowerCase();
       if (email) await kv.set('member:' + email, true);
+        try { const amt = s.amount_total || 0; const proTier = (amt === 21000 || amt === 176400); if (email) await kv.set('tier:' + email, proTier ? 'professional' : 'simple'); } catch (e) {}
     }
     if (event.type === 'customer.subscription.deleted') {
       // To revoke on cancellation, look up the customer email via the Stripe API

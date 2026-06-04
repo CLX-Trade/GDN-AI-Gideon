@@ -2,6 +2,7 @@ import { kv } from '@vercel/kv';
 import { parse, serialize } from 'cookie';
 
 const MODEL = process.env.CLAUDE_MODEL || 'claude-sonnet-4-6';
+const MODEL_PRO = process.env.CLAUDE_MODEL_PRO || MODEL; // set CLAUDE_MODEL_PRO to upgrade the Professional tier
 const FREE_LIMIT = parseInt(process.env.FREE_TRIAL_LIMIT || '3', 10);
 
 const SYSTEM = "You are Gideon, a sharp, capable and broad business assistant. You help across strategy, operations, finance, marketing and sales, trade and commodities, research, writing, drafting documents, and general analysis, and you are glad to help with everyday questions too. Your voice is precise, professional, warm and commercially direct. Lead with the answer, stay concise, and use clean prose with no dash punctuation. Do not describe yourself as any particular company's AI, and do not bring up who operates you unless the user directly asks; if they ask who is behind you, you may say you are provided by GDN. When a question turns on legal, tax, regulatory or financial certainty, give your best analysis and note that a qualified professional should review before acting.";
@@ -24,6 +25,8 @@ export default async function handler(req, res) {
 
   let isMember = false;
   if (email) { try { isMember = (await kv.get('member:' + email.toLowerCase())) === true; } catch (e) {} }
+  let proTier = false;
+  if (email) { try { proTier = (await kv.get('tier:' + email.toLowerCase())) === 'professional'; } catch (e) {} }
 
   if (!isMember) {
     let used = 0;
@@ -47,7 +50,7 @@ export default async function handler(req, res) {
         'x-api-key': process.env.ANTHROPIC_API_KEY,
         'anthropic-version': '2023-06-01'
       },
-      body: JSON.stringify({ model: MODEL, max_tokens: 4096, system: SYSTEM, messages })
+      body: JSON.stringify({ model: (proTier ? MODEL_PRO : MODEL), max_tokens: 4096, system: SYSTEM, messages })
     });
     const data = await r.json();
     if (!r.ok) { console.error('Claude error', data); return res.status(502).json({ error: 'Upstream error' }); }
