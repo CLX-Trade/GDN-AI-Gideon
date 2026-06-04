@@ -703,6 +703,20 @@ body.gdn-sb-collapsed #gdn-sb-reopen{display:flex;}
 @media (max-width:760px){
     body.gdn-sb-open:not(.gdn-sb-collapsed) #gdn-sb-backdrop{display:block;}
 }
+
+/* === GDN mobile header consolidation v3 (clean override, wins cascade) === */
+@media (max-width:760px){
+  #gdn-sb-reopen{top:calc(10px + env(safe-area-inset-top)) !important;left:calc(10px + env(safe-area-inset-left)) !important;width:36px !important;height:36px !important;border-radius:8px !important;z-index:9001 !important;}
+  .credstrip{display:block !important;padding:8px 14px 8px 58px !important;white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;font-size:11px !important;}
+  .hn{font-size:20px !important;line-height:1.15 !important;}
+  .s{white-space:nowrap !important;overflow:hidden !important;text-overflow:ellipsis !important;max-width:46vw !important;font-size:10.5px !important;}
+  .trial{display:flex !important;flex-direction:column !important;align-items:flex-end !important;gap:2px !important;}
+  .trial .pill{font-size:10px !important;padding:3px 9px !important;white-space:nowrap !important;}
+  .trial .left{font-size:10px !important;white-space:nowrap !important;}
+  .loginbtn{white-space:nowrap !important;font-size:11px !important;padding:7px 12px !important;}
+  #input{font-size:15px !important;}
+}
+
 </style>
   <div id="gdn-sb-backdrop"></div>
   <script>
@@ -723,6 +737,9 @@ body.gdn-sb-collapsed #gdn-sb-reopen{display:flex;}
         if(isMobile()) closeSidebar();
   })();
   </script>
+
+
+<script>(function(){function fit(){var el=document.getElementById('input');if(!el)return;el.placeholder=window.matchMedia('(max-width:760px)').matches?'Ask Gideon...':'Ask Gideon a question to try him out...';}fit();window.addEventListener('resize',fit);})();</script>
 
 </body>
 </html>
