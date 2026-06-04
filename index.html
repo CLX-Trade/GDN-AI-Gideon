@@ -151,7 +151,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;pa
       <div class="pw-plan feat"><div class="pw-name">Professional</div><div class="pw-price">$7<span> / day</span></div></div>
     </div>
     <button class="pw-btn" onclick="goMembership()">Become a member</button>
-    <button class="pw-reset" onclick="resetTrial()">Reset trial (preview only)</button>
+    <button id="pw-reset-btn" class="pw-reset" style="display:none" onclick="resetTrial()">Reset trial (preview only)</button><script>(function(){var h=location.hostname;if(h==="localhost"||h==="127.0.0.1"||h.endsWith(".github.dev")){var b=document.getElementById("pw-reset-btn");if(b)b.style.display="";}})();</script>
   </div></div>
 </div>
 <script>
