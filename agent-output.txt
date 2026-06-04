@@ -5,7 +5,7 @@ GDN AI Improvement Run - 2026-06-04
 2. Hero Headline and Subheading [high]
    Hero Headline: "Meet Gideon — Your AI-Powered Trade & Business Assistant"
 
-Subheading: "Get instant answers, voice chat support, and a dedicated workspace for y
+Subheading: "Get instant answers, voice chat support, and a dedicated workspace built
 3. FAQ Entry [high]
    Q: What happens after my three free searches?
 
