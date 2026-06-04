@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta name="description" content="Gideon is GDN AI's business assistant for strategy, operations, finance, trade and commodities, research, analysis and document drafting.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="GDN AI">
+  <meta property="og:title" content="GDN AI · Gideon, Your AI Employee">
+  <meta property="og:description" content="Gideon is GDN AI's business assistant for strategy, operations, finance, trade and commodities, research, analysis and document drafting.">
+  <meta property="og:url" content="https://www.gdn-ai.com/">
+  <meta property="og:image" content="https://www.gdn-ai.com/gideon-avatar.jpg">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="GDN AI · Gideon, Your AI Employee">
+  <meta name="twitter:description" content="Gideon is GDN AI's business assistant for strategy, operations, finance, trade and commodities, research, analysis and document drafting.">
+  <meta name="twitter:image" content="https://www.gdn-ai.com/gideon-avatar.jpg">
+
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-GQ8KSQX46N"></script>
   <script>
@@ -147,8 +159,8 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;pa
     <h2>You have used your three free searches with Gideon.</h2>
     <p>Become a member to keep working with him. Gideon is available from $2 per day, billed monthly or annually.</p>
     <div class="pw-plans">
-      <div class="pw-plan"><div class="pw-name">Simple Access</div><div class="pw-price">$2<span> / day</span></div></div>
-      <div class="pw-plan feat"><div class="pw-name">Professional</div><div class="pw-price">$7<span> / day</span></div></div>
+      <div class="pw-plan"><div class="pw-name">Simple Access</div><div class="pw-price">$2<span> / day</span></div><div style="font-size:10px;opacity:.62;margin-top:3px;letter-spacing:.3px;white-space:nowrap;">$60/mo or $504/yr</div></div>
+      <div class="pw-plan feat"><div class="pw-name">Professional</div><div class="pw-price">$7<span> / day</span></div><div style="font-size:10px;opacity:.62;margin-top:3px;letter-spacing:.3px;white-space:nowrap;">$210/mo or $1764/yr</div></div>
     </div>
     <button class="pw-btn" onclick="goMembership()">Become a member</button>
     <button id="pw-reset-btn" class="pw-reset" style="display:none" onclick="resetTrial()">Reset trial (preview only)</button><script>(function(){var h=location.hostname;if(h==="localhost"||h==="127.0.0.1"||h.endsWith(".github.dev")){var b=document.getElementById("pw-reset-btn");if(b)b.style.display="";}})();</script>
@@ -741,5 +753,7 @@ body.gdn-sb-collapsed #gdn-sb-reopen{display:flex;}
 
 <script>(function(){function fit(){var el=document.getElementById('input');if(!el)return;el.placeholder=window.matchMedia('(max-width:760px)').matches?'Ask Gideon...':'Ask Gideon a question to try him out...';}fit();window.addEventListener('resize',fit);})();</script>
 
+
+<script>(function(){try{document.querySelectorAll('.gdn-soon').forEach(function(b){var i=b.closest('.gdn-item');if(i)i.style.display='none';});}catch(e){}})();</script>
 </body>
 </html>
