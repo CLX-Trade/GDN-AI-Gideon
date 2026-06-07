@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-06-07T10:18:35.821Z",
+  "runDate": "2026-06-07T15:18:44.511Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try three free searches, then join from US$2/day.\">\n<meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\">\n<meta property=\"og:description\" content=\"Instant AI answers for business owners, traders, and professionals. Voice chat, unlimited workspace, and expert trade support. Start with 3 free searches.\">\n<meta property=\"og:type\" content=\"website\">\n<meta property=\"og:image\" content=\"https://yourdomain.com/og-gideon-preview.jpg\">\n<meta property=\"og:url\" content=\"https://yourdomain.com/\">\n<meta name=\"twitter:card\" content=\"summary_large_image\">",
-      "rationale": "A clear meta description improves click-through rates from search results by communicating the core value prop and free trial offer. Open Graph tags ensure professional, consistent previews when the link is shared on LinkedIn, Twitter, or Facebook—critical for B2B audiences. Including the price anchor (US$2/day) sets expectations and qualifies intent before the click.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your AI-powered trade and business assistant. Get instant answers, voice chat, and professional support for operations and trade decisions. Try three free searches today.\"><meta property=\"og:title\" content=\"Gideon – AI Trade & Business Assistant | GDN AI\"><meta property=\"og:description\" content=\"Your Claude-powered assistant for trade and business. Instant AI answers, voice chat, and unlimited workspace access for professionals. Start with three free searches.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:image\" content=\"https://gdn.ai/og-gideon-preview.png\"><meta property=\"og:url\" content=\"https://gdn.ai/\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"Gideon – AI Trade & Business Assistant\"><meta name=\"twitter:description\" content=\"Instant AI answers and professional trade support. Try Gideon free today.\">",
+      "rationale": "A compelling meta description under 160 characters improves click-through rates from search results by clearly communicating the value proposition. Open Graph and Twitter Card tags ensure professional, branded previews when the homepage is shared on LinkedIn, Facebook, or Twitter—critical for B2B audiences. Including the three free searches offer creates a low-friction call to action. These tags are foundational SEO elements currently missing from static HTML pages.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-07T10:18:27.044Z"
+      "generatedAt": "2026-06-07T15:18:35.567Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "Hero Headline: \"Meet Gideon — Your AI Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and a professional workspace built for traders and business owners. Try three free searches today.\"",
-      "rationale": "This headline immediately introduces the product by name and clearly defines what it does (AI assistant for trade and business). The subheading reinforces key value props—instant answers, voice chat, and workspace—while highlighting the free trial offer to reduce friction. The copy is direct, avoids hype, and speaks to the target audience's needs without making unverifiable claims.",
+      "suggestion": "Hero Headline: \"Meet Gideon — Your AI Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and a powerful workspace built for professionals. Try three free searches today.\"",
+      "rationale": "This headline immediately introduces the product by name while clearly stating its purpose. The subheading highlights three key value props (instant answers, voice chat, workspace) and ends with a clear, low-friction CTA that emphasizes the free trial without pressure. The copy is concise, professional, and builds trust by being specific rather than vague.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-07T10:18:31.476Z"
+      "generatedAt": "2026-06-07T15:18:39.533Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to join GDN AI as a member. Membership starts from just US$2 per day, giving you unlimited access to Gideon's voice chat, your personal workspace, and professional trade and business support. Choose annual billing to save 30 percent.",
-      "rationale": "This FAQ directly addresses the most common friction point—the paywall moment. By clearly explaining what happens next and reinforcing value and affordability, it reduces abandonment and builds trust at the critical conversion decision point.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to become a member to continue accessing Gideon. Membership starts at just US$2 per day, billed monthly—or save 30% with an annual plan. As a member, you'll unlock unlimited searches, voice chat, and a dedicated workspace built for serious business and trade professionals.",
+      "rationale": "This FAQ directly addresses the key conversion point where free users hit the paywall. By clearly explaining what happens next and immediately reinforcing the low entry price and member benefits, it reduces friction and anxiety at the decision moment, helping convert trial users into paying members.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-07T10:18:35.818Z"
+      "generatedAt": "2026-06-07T15:18:44.508Z"
     }
   ]
 }
