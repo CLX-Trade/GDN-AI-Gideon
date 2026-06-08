@@ -34,7 +34,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0e0f12;--panel:#16181d;--panel-2:#1d2026;--ink:#e9e9e9;--ink-soft:#b9bcc4;--ink-2:#8a8f99;--line:#2a2e36;--leather:#c79a5b;--accent:#c79a5b;--ok:#5bbd7a;--err:#e0675f;}
+:root{--bg:#F6FAFF;--panel:#FFFFFF;--panel-2:#EAF2FC;--ink:#0E2748;--ink-soft:#90A4BE;--ink-2:#5C7393;--line:#E0EAF6;--leather:#0A4FB0;--accent:#1E7FE0;--ok:#109E6A;--err:#D7484B;}
 *{box-sizing:border-box;}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:'Archivo',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;line-height:1.5;}
 a{color:var(--leather);}
@@ -50,7 +50,7 @@ h1{font-size:26px;margin:.2em 0 .4em;}
 h2{font-size:18px;margin:.2em 0 .6em;}
 .muted{color:var(--ink-2);font-size:13px;}
 .pill{display:inline-block;background:var(--panel-2);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:12px;color:var(--ink-soft);}
-.btn{background:var(--leather);color:#1a1a1a;border:none;border-radius:8px;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;}
+.btn{background:var(--leather);color:#ffffff;border:none;border-radius:8px;padding:10px 18px;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;}
 .btn:hover{filter:brightness(1.06);}
 .btn.secondary{background:transparent;color:var(--ink-soft);border:1px solid var(--line);}
 .btn:disabled{opacity:.5;cursor:not-allowed;}
@@ -87,13 +87,13 @@ label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
 #docPane textarea{min-height:200px;}
 .timer{font-variant-numeric:tabular-nums;font-weight:700;color:var(--leather);}
 .footer{border-top:1px solid var(--line);padding:18px 20px;color:var(--ink-2);font-size:12px;text-align:center;}
-  #gdn-cookie{position:fixed;left:16px;right:16px;bottom:16px;z-index:2147483647;max-width:760px;margin:0 auto;background:#1c1c1c;color:#e9e9e9;border:1px solid #3a3a3a;border-radius:12px;padding:18px 20px;box-shadow:0 10px 40px rgba(0,0,0,.45);font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:14px;line-height:1.5;display:none}
+  #gdn-cookie{position:fixed;left:16px;right:16px;bottom:16px;z-index:2147483647;max-width:760px;margin:0 auto;background:#FFFFFF;color:#0E2748;border:1px solid #3a3a3a;border-radius:12px;padding:18px 20px;box-shadow:0 10px 40px rgba(0,0,0,.45);font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:14px;line-height:1.5;display:none}
   #gdn-cookie.show{display:block}
   #gdn-cookie p{margin:0 0 14px}
-  #gdn-cookie a{color:#d4a35a;text-decoration:underline}
+  #gdn-cookie a{color:#0A4FB0;text-decoration:underline}
   #gdn-cookie .gdn-cc-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-  #gdn-cookie button{cursor:pointer;border-radius:8px;padding:9px 18px;font-size:14px;font-weight:600;border:1px solid #4a4a4a;background:transparent;color:#e9e9e9}
-  #gdn-cookie button.gdn-cc-accept{background:#d4a35a;border-color:#d4a35a;color:#1a1a1a}
+  #gdn-cookie button{cursor:pointer;border-radius:8px;padding:9px 18px;font-size:14px;font-weight:600;border:1px solid #4a4a4a;background:transparent;color:#0E2748}
+  #gdn-cookie button.gdn-cc-accept{background:#0A4FB0;border-color:#0A4FB0;color:#ffffff}
 </style>
 </head>
 <body>
@@ -117,6 +117,7 @@ label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
       <h2>You need a Meeting Room pass</h2>
       <p class="muted">A day pass opens a 24-hour window where you can run a four-seat AI meeting using your own provider keys.</p>
       <p><a class="btn" href="/gdn-ai-membership-portal.html">Book a day pass</a></p>
+      <p><button class="btn secondary" id="lookBtn" type="button">Look around the room (free preview)</button></p>
     </div>
   </div>
 
@@ -496,6 +497,7 @@ label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
     $('loadBtn').addEventListener('click', loadTranscript);
     $('exportPdf').addEventListener('click', function(){ exportText('meeting.txt','application/pdf'); });
     $('exportWord').addEventListener('click', function(){ exportText('meeting.doc','application/msword'); });
+    var lb=$('lookBtn'); if(lb) lb.addEventListener('click', function(){ setLookAroundUI(); $('passState').textContent='Preview'; $('runHint').textContent='Preview only - book a pass to start a meeting.'; });
 
     try{
       var r = await fetch('/api/status');
