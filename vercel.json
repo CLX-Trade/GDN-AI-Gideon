@@ -11,7 +11,7 @@
     },
     {
       "source": "/invest",
-      "destination": "/gideon.html"
+      "destination": "/gideon"
     }
   ],
   "headers": [
