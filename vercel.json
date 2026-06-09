@@ -1,49 +1,35 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    {
-      "source": "/",
-      "destination": "/gdn-ai-trial.html"
-    },
-    {
-      "source": "/app",
-      "destination": "/gdn-ai-portal.html"
-    }
+    { "source": "/", "destination": "/gdn-ai-trial.html" },
+    { "source": "/app", "destination": "/gdn-ai-portal.html" },
+    { "source": "/invest", "destination": "/gideon.html" }
   ],
   "headers": [
     {
       "source": "/",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store, max-age=0"
-        },
-        {
-          "key": "CDN-Cache-Control",
-          "value": "no-store"
-        },
-        {
-          "key": "Vercel-CDN-Cache-Control",
-          "value": "no-store"
-        }
+        { "key": "Cache-Control", "value": "no-store, max-age=0" },
+        { "key": "CDN-Cache-Control", "value": "no-store" },
+        { "key": "Vercel-CDN-Cache-Control", "value": "no-store" }
       ]
     },
     {
       "source": "/(.*\\.html)",
       "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-store, max-age=0"
-        },
-        {
-          "key": "CDN-Cache-Control",
-          "value": "no-store"
-        },
-        {
-          "key": "Vercel-CDN-Cache-Control",
-          "value": "no-store"
-        }
+        { "key": "Cache-Control", "value": "no-store, max-age=0" },
+        { "key": "CDN-Cache-Control", "value": "no-store" },
+        { "key": "Vercel-CDN-Cache-Control", "value": "no-store" }
       ]
     }
   ]
 }
+Commit. Vercel redeploys in ~1 minute and gdn-ai.com/invest goes live.
+Even simpler alternative (no JSON): rename your local copy of the page to invest.html and upload it the same way you just did. Because the site has clean URLs on, invest.html automatically becomes gdn-ai.com/invest — no vercel.json change needed. (Slight downside: two copies of the page in the repo.)
+
+Either one works. Once you've done it, say the word and I'll confirm gdn-ai.com/invest is live and that the link-preview card unfurls correctly.
+
+One reminder for when you're ready to share widely: the Register form won't email gnardo@gdngroup.com.au until the Resend key is added in Vercel — worth doing first so the leads actually reach you.
+
+
+
