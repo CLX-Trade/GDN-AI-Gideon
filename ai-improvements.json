@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-06-09T21:48:56.802Z",
+  "runDate": "2026-06-10T11:28:35.225Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try three free searches today.\"><meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Instant AI answers, voice chat, and unlimited workspace access for business owners and traders. Powered by Claude.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:url\" content=\"https://gdn.ai\"><meta property=\"og:image\" content=\"https://gdn.ai/og-image.jpg\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"GDN AI – Gideon | AI Trade & Business Assistant\"><meta name=\"twitter:description\" content=\"Your Claude-powered assistant for trade and business. Try three free searches.\">",
-      "rationale": "Search engines and social platforms use these tags to generate previews. A clear meta description improves click-through rates from search results, while OG and Twitter tags ensure professional, branded previews when links are shared on LinkedIn, Facebook, or Twitter—key channels for reaching business professionals and traders.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and unlimited workspace access. Try three free searches today.\"><meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Meet Gideon, the Claude-powered assistant built for business owners, traders, and professionals. Instant AI answers, voice chat, and a dedicated workspace to streamline your operations.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:image\" content=\"https://gdn.ai/og-image.png\"><meta property=\"og:url\" content=\"https://gdn.ai/\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"GDN AI – Gideon | AI Trade & Business Assistant\"><meta name=\"twitter:description\" content=\"Your Claude-powered assistant for trade and business. Try three free searches, then unlock unlimited access.\">",
+      "rationale": "Search engines and social platforms rely on meta descriptions and OG tags for previews. A clear, benefit-driven meta description improves click-through rates from search results, while properly formatted Open Graph tags ensure professional, branded previews when shared on LinkedIn, Twitter, and other platforms—critical for a B2B audience of traders and professionals.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-09T21:48:46.776Z"
+      "generatedAt": "2026-06-10T11:28:25.854Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "Hero Headline: \"Meet Gideon — Your AI-Powered Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and a dedicated workspace for your business operations. Try three free searches — no credit card required.\"",
-      "rationale": "This headline immediately introduces the product name and its core function, building brand recognition. The subheading highlights three key value props (instant answers, voice chat, workspace) while clearly communicating the risk-free trial offer. The 'no credit card required' implication removes friction and encourages visitors to engage before hitting the paywall.",
+      "suggestion": "Hero Headline: \"Meet Gideon — Your AI-Powered Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat, and professional support for your business operations. Try 3 free searches today.\"",
+      "rationale": "This headline immediately introduces the product name and core function, building brand recognition. The subheading highlights three key value props (instant answers, voice chat, professional support) and ends with a clear, low-friction CTA that emphasizes the free trial without mentioning price, reducing hesitation for first-time visitors.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-09T21:48:51.964Z"
+      "generatedAt": "2026-06-10T11:28:30.425Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches with Gideon, you'll be invited to become a member to continue accessing unlimited AI-powered trade and business support. Memberships start from just US$2 per day, with flexible monthly or annual billing options—annual plans save you 30 percent.",
-      "rationale": "This FAQ directly addresses the most common friction point in the user journey—the transition from free trial to paid membership. It sets clear expectations, reinforces value, and highlights the accessible entry price and savings opportunity, reducing hesitation at the paywall.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches with Gideon, you'll be invited to become a member to continue. Membership starts at just US$2 per day, giving you unlimited access to Gideon's AI-powered trade and business support, voice chat, and your own members workspace. Choose annual billing and save 30 percent.",
+      "rationale": "This FAQ directly addresses the most common friction point in the user journey—the transition from free trial to paid membership. By clearly explaining what happens next and immediately reinforcing the low entry price and value, it reduces uncertainty, builds trust, and encourages conversion at the paywall moment.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-09T21:48:56.799Z"
+      "generatedAt": "2026-06-10T11:28:35.222Z"
     }
   ]
 }
