@@ -40,7 +40,7 @@ export default async function handler(req, res) {
       mode: ONE_TIME_PRICES.has(priceId) ? 'payment' : 'subscription',
       line_items: [{ price: priceId, quantity: 1 }],
       customer_email: email || undefined,
-      success_url: (ONE_TIME_PRICES.has(priceId) || priceId === 'price_1Td6vUFDVJ23RHCnFN69OQMb') ? base + '/gdn-ai-meeting-room.html?paid=1' : base + '/gdn-ai-portal.html?paid=1',
+      success_url: (ONE_TIME_PRICES.has(priceId) || priceId === 'price_1Td6vUFDVJ23RHCnFN69OQMb') ? base + '/gdn-ai-meeting-room.html?paid=1&session_id={CHECKOUT_SESSION_ID}' : base + '/gdn-ai-portal.html?paid=1&session_id={CHECKOUT_SESSION_ID}',
       cancel_url: base + '/gdn-ai-membership-portal.html?canceled=1',
       allow_promotion_codes: true
     });

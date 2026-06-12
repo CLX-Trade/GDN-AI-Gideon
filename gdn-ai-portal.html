@@ -31,6 +31,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GDN AI · Gideon — Workspace</title>
+<!-- Google Ads purchase conversion - fires only on successful checkout return (?paid=1) -->
+<script>
+(function () {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('paid') === '1' && !sessionStorage.getItem('gdn_conv_fired')) {
+      gtag('event', 'conversion', {
+        'send_to': 'AW-18205283835/CgrjCMa9w7ccEPur-uhD',
+        'value': 1.0,
+        'currency': 'AUD',
+        'transaction_id': params.get('session_id') || ''
+      });
+      sessionStorage.setItem('gdn_conv_fired', '1');
+    }
+  } catch (e) {}
+})();
+</script>
+
 </head>
 <body>
 <!-- GDN AI featuring Gideon. Standalone chat, cream and charcoal. -->

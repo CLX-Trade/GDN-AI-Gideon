@@ -95,6 +95,24 @@ label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
   #gdn-cookie button{cursor:pointer;border-radius:8px;padding:9px 18px;font-size:14px;font-weight:600;border:1px solid #4a4a4a;background:transparent;color:#0E2748}
   #gdn-cookie button.gdn-cc-accept{background:#0A4FB0;border-color:#0A4FB0;color:#ffffff}
 </style>
+<!-- Google Ads purchase conversion - fires only on successful checkout return (?paid=1) -->
+<script>
+(function () {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('paid') === '1' && !sessionStorage.getItem('gdn_conv_fired')) {
+      gtag('event', 'conversion', {
+        'send_to': 'AW-18205283835/CgrjCMa9w7ccEPur-uhD',
+        'value': 1.0,
+        'currency': 'AUD',
+        'transaction_id': params.get('session_id') || ''
+      });
+      sessionStorage.setItem('gdn_conv_fired', '1');
+    }
+  } catch (e) {}
+})();
+</script>
+
 </head>
 <body>
 <div class="topbar">
