@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-06-12T21:47:46.528Z",
+  "runDate": "2026-06-13T10:19:05.681Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try three free searches today.\"><meta property=\"og:title\" content=\"GDN AI – Meet Gideon, Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Instant AI answers, voice chat, and unlimited workspace access for business owners and traders. Start with three free searches.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:url\" content=\"https://gdn.ai\"><meta property=\"og:image\" content=\"https://gdn.ai/og-image.jpg\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"GDN AI – Meet Gideon, Your AI Trade & Business Assistant\"><meta name=\"twitter:description\" content=\"Claude-powered AI assistant for trade and business professionals. Try three free searches.\">",
-      "rationale": "Search engines display meta descriptions in results, directly influencing click-through rates. Open Graph and Twitter Card tags ensure professional, branded previews when the link is shared on LinkedIn, Facebook, or Twitter—critical channels for reaching business professionals. The copy highlights the free trial offer and core value props without inventing claims, encouraging clicks and shares.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try three free searches today.\"><meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Claude-powered AI assistant for business owners, traders, and professionals. Instant answers, voice chat, and unlimited workspace. Start with three free searches.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:image\" content=\"https://gdn.ai/og-image.png\"><meta property=\"og:url\" content=\"https://gdn.ai/\"><meta name=\"twitter:card\" content=\"summary_large_image\">",
+      "rationale": "A compelling meta description improves click-through rates from search results by clearly communicating the core value proposition and free trial offer. Open Graph tags ensure professional, branded previews when the site is shared on LinkedIn, Facebook, and Twitter—critical channels for reaching business professionals. The copy highlights key differentiators (Claude-powered, voice chat, trade focus) while the free search mention reduces friction and encourages clicks.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-12T21:47:37.213Z"
+      "generatedAt": "2026-06-13T10:18:56.397Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "<h1>Your AI-Powered Trade & Business Assistant</h1><p>Meet Gideon — instant answers, voice chat, and professional support for business owners and traders. Try three free searches, no credit card required.</p>",
-      "rationale": "This headline immediately communicates what Gideon is (AI assistant for trade/business), while the subheading highlights three key value props (instant answers, voice chat, professional support) and removes friction with the free trial callout. The copy is concise, speaks directly to the target audience, and creates a clear path to action.",
+      "suggestion": "Hero Headline: \"Meet Gideon — Your AI-Powered Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and a dedicated workspace to streamline your operations. Try three free searches — no commitment required.\"",
+      "rationale": "This copy immediately names the product (Gideon), clearly states what it does (AI assistant for trade and business), and highlights three key value props (instant answers, voice chat, workspace). The subheading removes friction by emphasizing the free trial with no commitment, encouraging visitors to engage before hitting the paywall. Professional tone aligns with the target audience of business owners and traders.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-12T21:47:41.435Z"
+      "generatedAt": "2026-06-13T10:19:01.123Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches with Gideon, you'll be invited to choose a membership plan to continue. Plans start from just US$2 per day, billed monthly or annually—with annual billing saving you 30 percent. As a member, you'll unlock unlimited access to Gideon's AI-powered trade and business support, voice chat, and your own dedicated workspace.",
-      "rationale": "This FAQ directly addresses the most common friction point—the paywall visitors encounter after the free trial. By clearly explaining what happens next and reinforcing the low entry price and value (unlimited access, voice chat, workspace), it reduces uncertainty and positions the upgrade as a logical next step rather than a barrier.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to choose a membership plan to continue accessing Gideon. Plans start at just US$2 per day, billed monthly—or save 30% with annual billing. As a member, you'll unlock unlimited searches, voice chat, and a dedicated workspace built for trade and business professionals.",
+      "rationale": "This FAQ directly addresses the most common friction point in the conversion funnel—what happens at the paywall. By clearly explaining the transition from free trial to paid membership and reinforcing the value (unlimited access, voice chat, workspace), it reduces uncertainty and helps prospective members make a confident decision.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-12T21:47:46.525Z"
+      "generatedAt": "2026-06-13T10:19:05.679Z"
     }
   ]
 }
