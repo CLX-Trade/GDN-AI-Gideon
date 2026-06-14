@@ -7,6 +7,6 @@ GDN AI Improvement Run - 2026-06-14
 
 Subheading: "Get instant answers, voice chat support, and a dedicated workspace for y
 3. FAQ Entry [high]
-   Q: What happens after my three free searches?
+   **Q: What happens after my three free searches?**
 
-A: Once you've used your three complimentary searches, you'll be invited to become a Gideon member. Membership st
+A: Once you've used your three complimentary searches with Gideon, you'll be invited to become a member to co
