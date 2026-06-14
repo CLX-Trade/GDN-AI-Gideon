@@ -39,18 +39,35 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'messages array required' });
   }
 
-  try {
-    const r = await fetch('https://api.anthropic.com/v1/messages', {
+  function callClaude(useTools) {
+    const payload = { model: MODEL, max_tokens: 8192, system: SYSTEM, messages };
+    if (useTools) payload.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5 }];
+    return fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
         'x-api-key': process.env.ANTHROPIC_API_KEY,
         'anthropic-version': '2023-06-01'
       },
-      body: JSON.stringify({ model: MODEL, max_tokens: 8192, system: SYSTEM, messages, tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5 }] })
+      body: JSON.stringify(payload)
     });
-    const data = await r.json();
-    if (!r.ok) { console.error('Claude error', data); return res.status(502).json({ error: 'Upstream error' }); }
+  }
+
+  try {
+    let r = await callClaude(true);
+    let data = await r.json();
+    // If web search is disabled/blocked on the account, the whole request fails.
+    // Retry once without it so Gideon always answers (just without live web search).
+    if (!r.ok) {
+      console.error('Claude error (with web search)', data);
+      r = await callClaude(false);
+      data = await r.json();
+    }
+    if (!r.ok) {
+      console.error('Claude error (no tools)', data);
+      const detail = (data && data.error && (data.error.message || data.error.type)) || 'unknown';
+      return res.status(502).json({ error: 'Upstream error', detail });
+    }
     const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n').trim();
 
     let trialUsed = 0;
