@@ -46,6 +46,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:cent
   padding:15px 30px;background:rgba(255,255,255,.78);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 nav .brand{display:flex;align-items:center;gap:9px;font-family:'Chakra Petch',monospace;font-weight:700;letter-spacing:.04em;font-size:1.05rem;color:var(--deep)}
 nav .brand .mk{width:26px;height:26px;border-radius:7px;background:linear-gradient(150deg,var(--sky),var(--deep));display:grid;place-items:center;color:#fff;font-size:.8rem;box-shadow:0 4px 12px rgba(10,79,176,.35)}
+nav .brand .mkimg{width:32px;height:32px;object-fit:contain;display:block}
 nav .links{display:flex;gap:26px;align-items:center}
 nav a{color:var(--muted);text-decoration:none;font-size:.86rem;transition:.25s;font-weight:500}
 nav a:hover{color:var(--royal)}
@@ -204,7 +205,7 @@ footer .locs{font-family:'Chakra Petch',monospace;letter-spacing:.08em;color:var
 <canvas id="net"></canvas>
 
 <nav>
-  <div class="brand"><span class="mk">◆</span>Gideon</div>
+  <div class="brand"><img class="mkimg" src="/gideon-mark.png" alt="Gideon logo">Gideon</div>
   <div class="links">
     <a href="#caps">Capabilities</a>
     <a href="#room-sec">Meeting Room</a>
