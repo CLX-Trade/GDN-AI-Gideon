@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-06-14T15:43:08.377Z",
+  "runDate": "2026-06-14T21:15:07.342Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try 3 free searches, then unlock unlimited access from US$2/day.\"><meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Claude-powered AI assistant for business owners, traders, and professionals. Instant answers, voice chat, and unlimited workspace access. Start with 3 free searches.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:image\" content=\"https://gdnai.com/og-image.jpg\"><meta property=\"og:url\" content=\"https://gdnai.com\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"GDN AI – Gideon | AI Trade & Business Assistant\"><meta name=\"twitter:description\" content=\"Your Claude-powered assistant for trade and business. Try 3 free searches, then unlock unlimited AI support from US$2/day.\">",
-      "rationale": "These tags optimize the homepage for search engines and social sharing. The meta description is under 160 characters, includes the product name, key features, and a clear value proposition with pricing. The OG tags ensure professional previews when shared on LinkedIn, Facebook, or Twitter—critical for B2B audiences. Including the free trial offer in descriptions encourages click-through. All claims are factual and drawn directly from the site context.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try 3 free searches, then unlock unlimited access from US$2/day.\"><meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Meet Gideon, the Claude-powered assistant built for business owners, traders, and professionals. Instant AI answers, voice chat, and unlimited workspace access.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:image\" content=\"https://gdn.ai/og-image.jpg\"><meta property=\"og:url\" content=\"https://gdn.ai/\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"GDN AI – Gideon | AI-Powered Trade & Business Assistant\"><meta name=\"twitter:description\" content=\"Your Claude-powered assistant for trade and business. Try 3 free searches, then join from US$2/day.\">",
+      "rationale": "These meta tags improve search engine visibility by clearly communicating the product value proposition within character limits. The OG and Twitter tags ensure professional, consistent previews when shared on LinkedIn, Facebook, and Twitter—critical channels for reaching business professionals. Including the free trial and pricing creates urgency and sets expectations before click-through.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-14T15:42:59.018Z"
+      "generatedAt": "2026-06-14T21:14:56.530Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "Hero Headline: \"Meet Gideon — Your AI-Powered Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and a dedicated workspace for your business operations. Try three free searches — no credit card required.\"",
-      "rationale": "This headline clearly introduces the product name and its core function, building immediate recognition. The subheading highlights three key value props (instant answers, voice chat, workspace) while emphasizing the risk-free trial offer, which reduces friction for first-time visitors and encourages engagement before the paywall.",
+      "suggestion": "<h1>Meet Gideon — Your AI Trade & Business Assistant</h1><p>Get instant answers, voice chat support, and a professional workspace built for business owners and traders. Try three searches free — no card required.</p>",
+      "rationale": "This headline immediately names the product and its purpose, establishes credibility by specifying the target user, and highlights three key value props (instant answers, voice chat, workspace). The subheading reduces friction by emphasizing the free trial with no commitment, driving conversions.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-14T15:43:03.371Z"
+      "generatedAt": "2026-06-14T21:15:00.969Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "**Q: What happens after my three free searches?**\n\nA: Once you've used your three complimentary searches with Gideon, you'll be invited to become a member to continue. Membership starts from just US$2 per day, giving you unlimited access to Gideon's AI-powered trade and business support, voice chat, and your own members workspace. Choose annual billing to save 30 percent.",
-      "rationale": "This FAQ directly addresses the most common friction point in the conversion funnel—the paywall moment. By clearly explaining what happens next and reinforcing the low entry price and value, it reduces uncertainty and objections, helping convert trial users into paying members.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches with Gideon, you'll be invited to become a member to continue. Membership starts from just US$2 per day, giving you unlimited access to Gideon's AI-powered trade and business support, voice chat, and your own members workspace. Choose monthly or annual billing—annual plans save you 30 percent.",
+      "rationale": "This FAQ directly addresses the most common friction point in the conversion funnel: the paywall experience after the free trial. By clearly explaining what happens next and reinforcing the value and low entry price, it reduces uncertainty and encourages prospects to commit to membership rather than abandoning at the paywall.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-14T15:43:08.374Z"
+      "generatedAt": "2026-06-14T21:15:07.339Z"
     }
   ]
 }
