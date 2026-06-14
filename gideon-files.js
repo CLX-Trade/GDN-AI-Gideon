@@ -42,6 +42,8 @@
     for (var i = 0; i < audios.length; i++) { try { audios[i].pause(); audios[i].currentTime = 0; } catch (e) {} }
     audios.length = 0;
     try { if (typeof __gideonAudio !== 'undefined' && __gideonAudio) { __gideonAudio.pause(); } } catch (e) {}
+    try { if (window.__gideonAudio) { window.__gideonAudio.pause(); } } catch (e) {}
+    try { var aa = document.getElementsByTagName('audio'); for (var k = 0; k < aa.length; k++) { aa[k].pause(); } } catch (e) {}
   }
   window.__gideonStopVoice = stopVoice;
 
@@ -227,7 +229,7 @@
 
   function buildRec() {
     if (!SRC) return null;
-    var r = new SRC(); r.lang = 'en-AU'; r.continuous = true; r.interimResults = false; r.maxAlternatives = 1;
+    var r = new SRC(); r.lang = 'en-AU'; r.continuous = true; r.interimResults = false; r.maxAlternatives = 1; r.onspeechstart = function () { stopVoice(); };
     r.onresult = function (e) {
       var txt = '';
       for (var i = e.resultIndex; i < e.results.length; i++) { if (e.results[i].isFinal) txt += e.results[i][0].transcript; }
