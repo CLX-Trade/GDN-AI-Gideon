@@ -33,7 +33,7 @@
   try {
     var NA = window.Audio;
     if (NA && !NA.__gfWrapped) {
-      var W = function (s) { var a = new NA(s); try { audios.push(a); } catch (e) {} return a; };
+      var W = function (s) { var a = new NA(s); try { audios.push(a); } catch (e) {} try { a.addEventListener('playing', function () { speaking = true; if (rec && recOn) { try { rec.stop(); } catch (e) {} recOn = false; } }); var endh = function () { if (!speaking) return; speaking = false; if (wantListen) setTimeout(function () { if (speaking) return; try { if (rec) { rec.start(); recOn = true; } } catch (e) {} }, 250); }; a.addEventListener('ended', endh); a.addEventListener('pause', endh); a.addEventListener('error', endh); } catch (e) {} return a; };
       W.prototype = NA.prototype; W.__gfWrapped = true; window.Audio = W;
     }
   } catch (e) {}
@@ -225,12 +225,13 @@
 
   var mode = 'text', pill = null;
   var SRC = window.SpeechRecognition || window.webkitSpeechRecognition;
-  var rec = null, recOn = false, wantListen = false;
+  var rec = null, recOn = false, wantListen = false, speaking = false;
 
   function buildRec() {
     if (!SRC) return null;
     var r = new SRC(); r.lang = 'en-AU'; r.continuous = true; r.interimResults = false; r.maxAlternatives = 1; r.onspeechstart = function () { stopVoice(); };
     r.onresult = function (e) {
+      if (speaking || (window.speechSynthesis && speechSynthesis.speaking)) return;
       var txt = '';
       for (var i = e.resultIndex; i < e.results.length; i++) { if (e.results[i].isFinal) txt += e.results[i][0].transcript; }
       txt = txt.trim();
@@ -241,7 +242,7 @@
       var snd = el('send'); if (snd) snd.click();
     };
     r.onerror = function () {};
-    r.onend = function () { recOn = false; if (wantListen) { setTimeout(function () { try { if (wantListen) { r.start(); recOn = true; } } catch (e) {} }, 350); } };
+    r.onend = function () { recOn = false; if (wantListen && !speaking) { setTimeout(function () { try { if (wantListen && !speaking) { r.start(); recOn = true; } } catch (e) {} }, 350); } };
     return r;
   }
   function startListen() { if (!SRC) return; wantListen = true; if (!rec) rec = buildRec(); if (rec && !recOn) { try { rec.start(); recOn = true; } catch (e) {} } if (pill) pill.classList.add('listening'); }
