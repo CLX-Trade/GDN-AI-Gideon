@@ -163,6 +163,28 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;pa
       <div class="pw-plan feat"><div class="pw-name">Professional</div><div class="pw-price">$7<span> / day</span></div><div style="font-size:10px;opacity:.62;margin-top:3px;letter-spacing:.3px;white-space:nowrap;">$210/mo or $1764/yr</div></div>
     </div>
     <button class="pw-btn" onclick="goMembership()">Become a member</button>
+    <style>
+      .pw-code{margin-top:14px}
+      .pw-code-toggle{background:none;border:0;color:#0A4FB0;font-weight:600;font-size:.85rem;cursor:pointer;text-decoration:underline;padding:6px}
+      .pw-code-form{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+      .pw-code-form input{padding:11px 13px;border:1px solid #cdd8e8;border-radius:8px;font-size:.95rem;font-family:inherit;width:100%;box-sizing:border-box}
+      .pw-code-form input:focus{outline:none;border-color:#0A4FB0}
+      .pw-code-msg{font-size:.82rem;min-height:1.1em;text-align:center;margin-top:2px}
+      .pw-code-msg.err{color:#c0392b}.pw-code-msg.ok{color:#1d8a4e}
+    </style>
+    <div class="pw-code">
+      <button type="button" class="pw-code-toggle" onclick="toggleCode()">Have an access code?</button>
+      <div id="pw-code-form" class="pw-code-form" style="display:none">
+        <input id="pw-code-email" type="email" placeholder="Your email" autocomplete="email">
+        <input id="pw-code-input" type="text" placeholder="Access code" autocomplete="off">
+        <button type="button" class="pw-btn" onclick="redeemCode()">Unlock access</button>
+        <div id="pw-code-msg" class="pw-code-msg"></div>
+      </div>
+    </div>
+    <script>
+      function toggleCode(){var f=document.getElementById('pw-code-form');if(f)f.style.display=(f.style.display==='none'?'flex':'none');}
+      async function redeemCode(){var email=(document.getElementById('pw-code-email').value||'').trim();var code=(document.getElementById('pw-code-input').value||'').trim();var msg=document.getElementById('pw-code-msg');msg.className='pw-code-msg';msg.textContent='';if(!email||email.indexOf('@')<0){msg.classList.add('err');msg.textContent='Please enter a valid email.';return;}if(!code){msg.classList.add('err');msg.textContent='Please enter your access code.';return;}msg.textContent='Checking...';try{var r=await fetch('/api/redeem',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,code:code})});var d=await r.json();if(r.ok&&d.ok){msg.classList.add('ok');msg.textContent='Unlocked for '+d.days+' days. Taking you in...';setTimeout(function(){window.location.href='gdn-ai-portal.html';},900);}else{msg.classList.add('err');msg.textContent=(d&&d.error)||'That code did not work.';}}catch(e){msg.classList.add('err');msg.textContent='Something went wrong, please try again.';}}
+    </script>
     <button id="pw-reset-btn" class="pw-reset" style="display:none" onclick="resetTrial()">Reset trial (preview only)</button><script>(function(){var h=location.hostname;if(h==="localhost"||h==="127.0.0.1"||h.endsWith(".github.dev")){var b=document.getElementById("pw-reset-btn");if(b)b.style.display="";}})();</script>
   </div></div>
 </div>
