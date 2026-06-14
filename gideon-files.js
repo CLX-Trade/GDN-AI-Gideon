@@ -132,23 +132,29 @@
           var tk = ws[i]; doc.setFont('helvetica', tk.b ? 'bold' : 'normal'); doc.setTextColor(color[0], color[1], color[2]);
           var sw = lineStart ? 0 : doc.getTextWidth(' '), wW = doc.getTextWidth(tk.t);
           if (!lineStart && cx + sw + wW > availR) { y += lineH; ensure(lineH); cx = x0; lineStart = true; sw = 0; }
-          ensure(lineH); doc.text(tk.t, cx + sw, y); cx += sw + wW; lineStart = false;
+          ensure(lineH); doc.text((lineStart ? '' : ' ') + tk.t, cx, y); cx += sw + wW; lineStart = false;
         }
         y += lineH;
       }
       function table(rows) {
         if (!rows.length) return; var cols = 0; rows.forEach(function (r) { if (r.length > cols) cols = r.length; });
-        var colW = (availR - mx) / cols, pad = 5, rowH = 19;
+        var colW = (availR - mx) / cols, pad = 6, lh = 12; y += 4; doc.setFontSize(9.5);
         for (var r = 0; r < rows.length; r++) {
-          ensure(rowH); var head = r === 0;
-          if (head) { doc.setFillColor(31, 42, 68); doc.rect(mx, y - 13, availR - mx, rowH, 'F'); }
-          else if (r % 2 === 0) { doc.setFillColor(245, 247, 250); doc.rect(mx, y - 13, availR - mx, rowH, 'F'); }
-          doc.setFont('helvetica', head ? 'bold' : 'normal'); doc.setFontSize(9.5);
-          if (head) doc.setTextColor(255, 255, 255); else doc.setTextColor(INK[0], INK[1], INK[2]);
-          for (var c = 0; c < cols; c++) { var cell = (rows[r][c] || '').replace(/\*\*/g, ''); var cl = doc.splitTextToSize(cell, colW - pad * 2); doc.text(cl[0] || '', mx + c * colW + pad, y); }
-          y += rowH;
+          var head = r === 0; doc.setFont('helvetica', head ? 'bold' : 'normal');
+          var cellLines = [], maxLines = 1;
+          for (var c = 0; c < cols; c++) { var cell = (rows[r][c] || '').split('**').join(''); var wr = doc.splitTextToSize(cell, colW - pad * 2); cellLines.push(wr); if (wr.length > maxLines) maxLines = wr.length; }
+          var rowH = maxLines * lh + pad * 2;
+          if (y + rowH > ph - my) { doc.addPage(); y = my; }
+          var top = y;
+          if (head) { doc.setFillColor(31, 42, 68); doc.rect(mx, top, availR - mx, rowH, 'F'); doc.setTextColor(255, 255, 255); }
+          else { if (r % 2 === 1) { doc.setFillColor(246, 248, 251); doc.rect(mx, top, availR - mx, rowH, 'F'); } doc.setTextColor(INK[0], INK[1], INK[2]); }
+          for (var c2 = 0; c2 < cols; c2++) { var lines = cellLines[c2]; for (var li2 = 0; li2 < lines.length; li2++) { doc.text(lines[li2], mx + c2 * colW + pad, top + pad + lh * li2 + 9); } }
+          doc.setDrawColor(223, 228, 235); doc.setLineWidth(0.4);
+          for (var cc = 1; cc < cols; cc++) { doc.line(mx + cc * colW, top, mx + cc * colW, top + rowH); }
+          doc.rect(mx, top, availR - mx, rowH);
+          y = top + rowH;
         }
-        y += 8;
+        y += 12;
       }
 
       var lines = String(text).replace(/\r/g, '').split('\n');
