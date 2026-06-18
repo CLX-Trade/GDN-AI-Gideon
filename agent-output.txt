@@ -1,12 +1,12 @@
-GDN AI Improvement Run - 2026-06-17
+GDN AI Improvement Run - 2026-06-18
 
 1. SEO Meta Description and OG Tags [high]
-   <meta name="description" content="Gideon is your AI-powered trade and business assistant. Get instant answers, voice chat, and professional support for operatio
+   <meta name="description" content="Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. 
 2. Hero Headline and Subheading [high]
-   Hero Headline: "Your AI Trade & Business Partner, Powered by Claude"
+   Hero Headline: "Meet Gideon — Your AI-Powered Trade & Business Assistant"
 
-Subheading: "Get instant, expert answers for trade and operations. Try Gideon free—no card
+Subheading: "Get instant answers, voice chat, and professional support for your busin
 3. FAQ Entry [high]
    Q: What happens after my three free searches?
 
-A: Once you've used your three complimentary searches, you'll be prompted to choose a membership plan to continue
+A: Once you've used your three complimentary searches, you'll be invited to become a member. Membership starts at
