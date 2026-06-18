@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-06-18T16:51:33.849Z",
+  "runDate": "2026-06-18T22:11:02.010Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and unlimited workspace access. Try three free searches today.\"><meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Meet Gideon, the Claude-powered assistant built for business owners and traders. Instant AI answers, voice chat, and professional support—start with three free searches.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:site_name\" content=\"GDN AI\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"GDN AI – Gideon | AI-Powered Trade & Business Assistant\"><meta name=\"twitter:description\" content=\"Gideon delivers instant AI answers, voice chat, and unlimited workspace for business owners and traders. Try three free searches now.\">",
-      "rationale": "Search engines display meta descriptions in results, directly impacting click-through rates. Open Graph and Twitter Card tags ensure professional, branded previews when the homepage is shared on LinkedIn, Facebook, or Twitter—critical channels for reaching business professionals. The copy highlights the free trial offer to encourage clicks and clearly states the Claude-powered AI benefit without making unsupported claims.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try three free searches today.\"><meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Claude-powered AI assistant for business owners, traders, and professionals. Instant answers, voice chat, and unlimited workspace access with membership.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:site_name\" content=\"GDN AI\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"GDN AI – Gideon | AI-Powered Trade & Business Assistant\"><meta name=\"twitter:description\" content=\"Get instant AI answers for trade and business. Try three free searches, then unlock full access with flexible membership plans.\">",
+      "rationale": "A compelling meta description improves click-through rates from search results by clearly communicating the value proposition and free trial offer. Open Graph and Twitter Card tags ensure professional, branded previews when the homepage is shared on LinkedIn, Facebook, or Twitter—critical channels for reaching business professionals. These tags establish credibility before users even visit the site.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-18T16:51:24.587Z"
+      "generatedAt": "2026-06-18T22:10:51.297Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "Hero Headline: \"Meet Gideon — Your AI-Powered Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and a dedicated workspace built for business owners and professionals. Try three searches free — no credit card required.\"",
-      "rationale": "This headline immediately establishes what Gideon is (AI assistant) and who it serves (trade and business). The subheading reinforces three key value props (instant answers, voice chat, workspace) while clearly communicating the risk-free trial offer. Mentioning 'no credit card required' reduces friction and builds trust, encouraging visitors to engage before hitting the paywall.",
+      "suggestion": "Hero Headline: \"Your AI-Powered Trade & Business Assistant\"\n\nSubheading: \"Meet Gideon — get instant answers, voice chat, and professional support for your business decisions. Try 3 free searches today.\"",
+      "rationale": "This copy immediately communicates what Gideon is (AI assistant for trade/business), highlights three key value props (instant answers, voice chat, professional support), and creates a clear, low-friction CTA by emphasizing the free trial. The word 'Meet' personalizes the AI while keeping the professional tone. Mentioning '3 free searches' sets clear expectations and reduces hesitation.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-18T16:51:29.007Z"
+      "generatedAt": "2026-06-18T22:10:56.129Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to become a Gideon member. Membership starts at just US$2 per day and gives you unlimited access to your personal AI trade and business assistant—including voice chat and your own members workspace. Choose annual billing to save 30 percent.",
-      "rationale": "This FAQ directly addresses the paywall moment, reducing friction and anxiety for prospects who want to know what comes next. It reinforces value (unlimited access, voice chat, workspace) and highlights the annual savings incentive, nudging toward higher-commitment plans.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches with Gideon, you'll be invited to choose a membership plan to continue. Plans start from just US$2 per day, billed monthly or annually—with annual billing saving you 30 percent. As a member, you'll unlock unlimited access to Gideon's workspace, voice chat, and full trade and business support.",
+      "rationale": "This FAQ directly addresses the primary conversion point—the paywall after the free trial. It removes uncertainty about what happens next, reinforces the low entry price, highlights the annual savings incentive, and reminds prospects of the full member benefits, all of which reduce friction and encourage sign-up.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-18T16:51:33.846Z"
+      "generatedAt": "2026-06-18T22:11:02.007Z"
     }
   ]
 }
