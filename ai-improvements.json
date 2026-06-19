@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-06-19T11:56:58.186Z",
+  "runDate": "2026-06-19T16:28:25.270Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try three free searches, then unlock unlimited access from US$2/day.\">\n<meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\">\n<meta property=\"og:description\" content=\"Claude-powered AI assistant for business owners, traders, and professionals. Instant answers, voice chat, and unlimited workspace access. Start with 3 free searches.\">\n<meta property=\"og:type\" content=\"website\">\n<meta property=\"og:site_name\" content=\"GDN AI\">",
-      "rationale": "A compelling meta description under 160 characters improves click-through rates from search results by clearly stating the value proposition and free trial offer. Open Graph tags ensure professional, consistent previews when the homepage is shared on LinkedIn, Facebook, or messaging apps—critical for B2B audience trust and social referral traffic.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and unlimited workspace access. Try three free searches, then join from US$2/day.\">\n<meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\">\n<meta property=\"og:description\" content=\"Claude-powered AI assistant for business owners, traders, and professionals. Instant answers, voice chat, and unlimited workspace. Start with three free searches.\">\n<meta property=\"og:type\" content=\"website\">\n<meta property=\"og:image\" content=\"https://gdn.ai/og-image.jpg\">\n<meta property=\"og:url\" content=\"https://gdn.ai/\">\n<meta name=\"twitter:card\" content=\"summary_large_image\">\n<meta name=\"twitter:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\">\n<meta name=\"twitter:description\" content=\"Claude-powered AI assistant for trade and business. Try three free searches, then unlock unlimited access from US$2/day.\">",
+      "rationale": "These tags ensure the homepage displays compelling, accurate previews in Google search results and when shared on LinkedIn, Twitter, or Facebook. The description highlights key value props (Claude-powered, instant answers, voice chat, free trial, low entry price) within the 155-160 character limit for search. OG tags create a professional social preview that builds trust and encourages clicks from the target audience of business owners and traders.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-19T11:56:43.026Z"
+      "generatedAt": "2026-06-19T16:28:16.410Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "Hero Headline: \"Meet Gideon — Your AI-Powered Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and a dedicated workspace built for business owners and trade professionals. Try three free searches — no card required.\"",
-      "rationale": "This headline immediately introduces the product name and its core function, building brand recognition. The subheading highlights three key value props (instant answers, voice chat, workspace) while targeting the exact audience. Ending with the free trial offer and removing friction ('no card required') encourages immediate action and reduces hesitation.",
+      "suggestion": "<h1>Your AI-Powered Trade & Business Assistant</h1><p>Meet Gideon — get instant answers, voice chat, and professional support for your business operations. Try three searches free, then unlock unlimited access.</p>",
+      "rationale": "This headline immediately communicates what Gideon is (AI assistant) and who it's for (trade and business professionals). The subheading delivers the three core value props (instant answers, voice chat, professional support) while clearly stating the free trial offer, reducing friction and encouraging visitors to engage before hitting the paywall.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-19T11:56:51.753Z"
+      "generatedAt": "2026-06-19T16:28:20.256Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches with Gideon, you'll be invited to become a member to continue accessing unlimited AI-powered trade and business support. Membership starts from just US$2 per day, billed monthly—or save 30 percent with an annual plan. As a member, you'll unlock voice chat, an unlimited workspace, and Gideon's full capabilities to support your business operations.",
-      "rationale": "This FAQ addresses the most common conversion-point question: what happens at the paywall. It transparently explains the trial-to-paid transition, reinforces value (unlimited access, voice chat, workspace), and highlights both pricing options including the annual savings—reducing friction and building trust at the critical decision moment.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches with Gideon, you'll be invited to choose a membership plan to continue. Plans start from just US$2 per day, billed monthly or annually—with annual billing saving you 30 percent. As a member, you'll unlock unlimited access to Gideon's AI-powered trade and business support, voice chat, and your own dedicated workspace.",
+      "rationale": "This FAQ directly addresses the most common friction point in a freemium model—what happens at the paywall. By clearly explaining the transition from free to paid, stating exact pricing, and reinforcing the value unlocked by membership, it reduces uncertainty and supports conversion at the critical decision moment.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-19T11:56:58.183Z"
+      "generatedAt": "2026-06-19T16:28:25.267Z"
     }
   ]
 }
