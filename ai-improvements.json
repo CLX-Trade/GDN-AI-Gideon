@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-06-20T15:28:51.430Z",
+  "runDate": "2026-06-20T21:19:48.324Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try 3 free searches, then join from US$2/day.\"><meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Claude-powered AI assistant for business owners, traders, and professionals. Instant answers, voice chat, unlimited workspace. Start with 3 free searches.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:image\" content=\"https://gdn.ai/og-image.jpg\"><meta property=\"og:url\" content=\"https://gdn.ai/\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"GDN AI – Gideon | AI Trade & Business Assistant\"><meta name=\"twitter:description\" content=\"Your Claude-powered assistant for trade and business. Try 3 free searches, then unlock unlimited access from US$2/day.\">",
-      "rationale": "These meta tags improve search engine click-through rates by clearly communicating the product value proposition and free trial offer. Open Graph and Twitter Card tags ensure professional, consistent previews when shared on LinkedIn, Facebook, and Twitter—critical channels for reaching business professionals. The description highlights key differentiators (Claude-powered, voice chat, trade focus) while including a clear call-to-action with the free search offer and accessible entry price.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and unlimited workspace access. Try three free searches today.\"><meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Instant AI answers for business owners, traders, and professionals. Powered by Claude. Start with three free searches.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:site_name\" content=\"GDN AI\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"GDN AI – Gideon | AI-Powered Trade & Business Assistant\"><meta name=\"twitter:description\" content=\"Get professional trade and business support from Gideon, your Claude-powered AI assistant. Try it free.\">",
+      "rationale": "A clear meta description improves click-through rates from search results by communicating the core value prop and free trial offer. Open Graph and Twitter Card tags ensure the homepage displays professionally when shared on LinkedIn, Facebook, or Twitter—critical channels for reaching business owners and traders. The copy emphasizes key differentiators (Claude-powered, voice chat, free searches) without inventing claims.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-20T15:28:42.263Z"
+      "generatedAt": "2026-06-20T21:19:36.537Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "<h1>Your AI-Powered Trade & Business Assistant</h1><p>Meet Gideon — get instant answers, voice chat, and professional support for your business operations. Try three free searches, then unlock unlimited access.</p>",
-      "rationale": "This headline immediately communicates what Gideon is (AI assistant) and who it serves (trade and business professionals). The subheading reinforces key value props (instant answers, voice chat, professional support) while clearly stating the free trial offer, reducing friction and encouraging visitors to engage before hitting the paywall.",
+      "suggestion": "Hero Headline: \"Meet Gideon — Your AI Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and a dedicated workspace to power your business decisions. Try three free searches — no card required.\"",
+      "rationale": "The headline immediately introduces Gideon by name and clearly states what it is, building brand recognition. The subheading highlights three core value props (instant answers, voice chat, workspace) while emphasizing the low-friction free trial offer. 'No card required' removes hesitation and drives first engagement.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-20T15:28:46.029Z"
+      "generatedAt": "2026-06-20T21:19:41.776Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches with Gideon, you'll be prompted to choose a membership plan to continue. Plans start at just US$2 per day, billed monthly or annually—with annual billing saving you 30 percent. As a member, you unlock unlimited access to Gideon's workspace, voice chat, and professional trade and business support.",
-      "rationale": "This FAQ directly addresses the most common friction point in the conversion funnel—what happens when free access ends. By clearly explaining the transition from trial to paid membership and reinforcing the accessible pricing and value, it reduces uncertainty and encourages conversion rather than abandonment.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: After your three complimentary searches, you'll be invited to become a Gideon member to continue accessing unlimited AI-powered trade and business support. Membership starts from just US$2 per day, billed monthly or annually—with annual plans saving you 30 percent. As a member, you'll unlock voice chat, an unlimited workspace, and professional-grade assistance whenever you need it.",
+      "rationale": "This FAQ directly addresses the most common friction point in the conversion funnel—what happens at the paywall. By clearly explaining the transition from free trial to paid membership, it reduces uncertainty, reinforces value, and presents pricing transparently. This builds trust and helps visitors make an informed decision, improving conversion rates.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-06-20T15:28:51.427Z"
+      "generatedAt": "2026-06-20T21:19:48.321Z"
     }
   ]
 }
