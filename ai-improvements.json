@@ -1,30 +1,5 @@
 {
-  "runDate": "2026-06-24T16:09:17.905Z",
+  "runDate": "2026-06-24T21:24:23.432Z",
   "siteUrl": "https://gdn-ai.com",
-  "improvements": [
-    {
-      "area": "seo_metadata",
-      "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your AI-powered trade and business assistant. Get instant answers, voice chat, and professional support for operations and trade decisions. Try three free searches today.\"><meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Instant AI answers, voice chat, and unlimited workspace for business owners, traders, and professionals. Start with three free searches.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:site_name\" content=\"GDN AI\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"GDN AI – Gideon | AI-Powered Business Assistant\"><meta name=\"twitter:description\" content=\"Professional trade and business support powered by Claude. Try Gideon free today.\">",
-      "rationale": "These tags address three critical gaps: 1) The meta description targets relevant keywords like AI assistant, trade, and business while highlighting the free trial hook to improve organic CTR. 2) Open Graph tags ensure professional previews when shared on LinkedIn, Facebook, or messaging apps—essential for B2B audiences. 3) Twitter card tags optimize sharing on X. All copy stays within verified site context and emphasizes the free searches to drive conversions.",
-      "urgencyLevel": "high",
-      "generatedAt": "2026-06-24T16:09:06.718Z"
-    },
-    {
-      "area": "hero_copy",
-      "areaName": "Hero Headline and Subheading",
-      "suggestion": "Hero Headline: \"Your AI-Powered Trade & Business Partner\"\n\nSubheading: \"Meet Gideon — the intelligent assistant built for business owners, traders, and professionals. Get instant answers, voice chat support, and a dedicated workspace to streamline your operations. Try 3 free searches today.\"",
-      "rationale": "This copy immediately communicates what Gideon is (AI assistant), who it's for (business owners, traders, professionals), and the core benefits (instant answers, voice chat, workspace). The call-to-action highlights the free trial offer without pressure, reducing friction for new visitors. Professional tone aligns with the target audience while the benefit-driven structure addresses the 'what's in it for me' question within seconds of landing.",
-      "urgencyLevel": "high",
-      "generatedAt": "2026-06-24T16:09:12.504Z"
-    },
-    {
-      "area": "faq_content",
-      "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches with Gideon, you'll be invited to choose a membership plan to continue. Plans start at just US$2 per day, billed monthly or annually—with annual billing saving you 30 percent. As a member, you unlock unlimited access to Gideon's workspace, voice chat, and professional trade and business support.",
-      "rationale": "This FAQ directly addresses the most common friction point for trial users—what happens when the free tier ends. By clearly explaining the paywall transition, pricing options, and member benefits, it reduces uncertainty, builds trust, and encourages conversion by highlighting value and the annual savings incentive.",
-      "urgencyLevel": "high",
-      "generatedAt": "2026-06-24T16:09:17.902Z"
-    }
-  ]
+  "improvements": []
 }
