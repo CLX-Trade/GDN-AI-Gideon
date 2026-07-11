@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-07-10T21:06:52.580Z",
+  "runDate": "2026-07-11T09:12:26.586Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your AI-powered trade and business assistant. Get instant answers, voice chat, and professional support for operations and trade. Try three free searches today.\"><meta property=\"og:title\" content=\"Gideon – AI Trade & Business Assistant by GDN AI\"><meta property=\"og:description\" content=\"Your Claude-powered assistant for trade and business. Instant AI answers, voice chat, and unlimited workspace access. Start with three free searches.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:site_name\" content=\"GDN AI\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"Gideon – AI Trade & Business Assistant\"><meta name=\"twitter:description\" content=\"Claude-powered AI assistant for business owners, traders, and professionals. Try three free searches, then unlock unlimited access.\">",
-      "rationale": "A well-crafted meta description improves click-through rates from search results by clearly communicating the value proposition. Open Graph and Twitter Card tags ensure that when the homepage is shared on LinkedIn, Facebook, or Twitter, it displays a professional, compelling preview rather than auto-generated text. This builds trust and drives higher engagement from social shares without any development complexity.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and unlimited workspace access. Try 3 free searches, then join from US$2/day.\"/>\n<meta property=\"og:title\" content=\"Gideon – AI Trade & Business Assistant | GDN AI\"/>\n<meta property=\"og:description\" content=\"Your Claude-powered assistant for trade and business decisions. Instant AI answers, voice chat, and professional support. Start with 3 free searches.\"/>\n<meta property=\"og:type\" content=\"website\"/>\n<meta property=\"og:image\" content=\"https://gdn.ai/og-gideon-preview.jpg\"/>\n<meta property=\"og:url\" content=\"https://gdn.ai/\"/>\n<meta name=\"twitter:card\" content=\"summary_large_image\"/>\n<meta name=\"twitter:title\" content=\"Gideon – AI Trade & Business Assistant\"/>\n<meta name=\"twitter:description\" content=\"Claude-powered AI for business owners and traders. Try 3 free searches, then unlock unlimited access from US$2/day.\"/>",
+      "rationale": "A compelling meta description under 160 characters improves click-through rates from search results by clearly stating the product value and free trial offer. Open Graph and Twitter Card tags ensure professional, branded previews when the link is shared on LinkedIn, Facebook, or Twitter—critical channels for reaching business professionals. Including the price anchor and free searches removes friction and sets expectations before the click.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-07-10T21:06:38.125Z"
+      "generatedAt": "2026-07-11T09:12:17.199Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "Hero Headline: \"Meet Gideon — Your AI Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and a dedicated workspace for your business operations. Try three searches free — no credit card required.\"",
-      "rationale": "This headline immediately establishes what Gideon is (AI assistant) and who it's for (trade and business). The subheading highlights three key value props (instant answers, voice chat, workspace) while making the free trial feel low-risk with 'no credit card required' — a proven conversion driver. The copy is direct and professional without overselling.",
+      "suggestion": "Hero Headline: \"Meet Gideon — Your AI-Powered Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and a dedicated workspace built for professionals. Try three searches free — no credit card required.\"",
+      "rationale": "The headline immediately names the product and clarifies its purpose, building trust and recognition. The subheading highlights three core value props (instant answers, voice chat, workspace) while emphasizing the risk-free trial. 'No credit card required' removes friction and increases trial conversions. Copy stays factual and within provided context.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-07-10T21:06:42.537Z"
+      "generatedAt": "2026-07-11T09:12:22.002Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to join GDN AI as a member. Membership starts from just US$2 per day, giving you unlimited access to Gideon's voice chat, your personal workspace, and professional trade and business support. Choose annual billing to save 30 percent.",
-      "rationale": "This FAQ directly addresses the most common friction point—the paywall moment. By clearly explaining what happens next and immediately reinforcing value and affordable pricing, it reduces abandonment and builds trust at a critical decision point.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches with Gideon, you'll be invited to become a member to continue. Membership starts at just US$2 per day, giving you unlimited access to Gideon's trade and business intelligence, voice chat, and your own dedicated workspace. Choose annual billing and save 30 percent.",
+      "rationale": "This FAQ directly addresses the most common friction point in the conversion funnel—the paywall moment. By clearly explaining what happens next and immediately reinforcing the low entry price and value, it reduces uncertainty and helps visitors make an informed decision to continue.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-07-10T21:06:52.577Z"
+      "generatedAt": "2026-07-11T09:12:26.583Z"
     }
   ]
 }
