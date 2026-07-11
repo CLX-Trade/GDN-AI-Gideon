@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-07-11T14:44:17.135Z",
+  "runDate": "2026-07-11T20:50:35.820Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try 3 free searches, then join from US$2/day.\"><meta property=\"og:title\" content=\"Gideon – AI Trade & Business Assistant | GDN AI\"><meta property=\"og:description\" content=\"Your Claude-powered AI assistant for trade and business. Instant answers, voice chat, and unlimited workspace access. Start with 3 free searches.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:image\" content=\"https://yourdomain.com/og-gideon-preview.jpg\"><meta property=\"og:url\" content=\"https://yourdomain.com/\"><meta name=\"twitter:card\" content=\"summary_large_image\">",
-      "rationale": "A clear meta description improves click-through rates from search results by communicating the core value proposition and free trial offer. Open Graph tags ensure professional, branded previews when shared on LinkedIn, Twitter, and Facebook—critical for B2B audiences. Including the Claude-powered claim builds trust, while mentioning the free searches and low entry price reduces friction. These tags are foundational SEO elements that are currently missing or incomplete.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try 3 free searches, then unlock unlimited access from US$2/day.\">\n<meta property=\"og:title\" content=\"GDN AI – Your Intelligent Trade & Business Assistant\">\n<meta property=\"og:description\" content=\"Meet Gideon: a Claude-powered AI built for business owners, traders, and professionals. Instant answers, voice chat, and unlimited workspace access. Start with 3 free searches.\">\n<meta property=\"og:type\" content=\"website\">\n<meta property=\"og:image\" content=\"https://yourdomain.com/og-image.jpg\">\n<meta property=\"og:url\" content=\"https://yourdomain.com/\">\n<meta name=\"twitter:card\" content=\"summary_large_image\">",
+      "rationale": "A clear meta description improves click-through rates from search results by communicating the core value prop (Claude-powered AI for trade/business) and the free trial offer. Open Graph tags ensure professional, consistent previews when the homepage is shared on LinkedIn, Twitter, or Facebook—critical for B2B trust. Including the price anchor (US$2/day) sets expectations and qualifies visitors before they click.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-07-11T14:44:04.774Z"
+      "generatedAt": "2026-07-11T20:50:26.054Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "<h1>Meet Gideon — Your AI-Powered Trade & Business Assistant</h1><p>Get instant answers, voice chat, and professional support for your business decisions. Try three free searches — no credit card required.</p>",
-      "rationale": "This headline immediately names the product and its core function, while the subheading highlights three key value props (instant answers, voice chat, professional support) and removes friction by emphasizing the free trial with no payment barrier. The copy is direct, benefit-driven, and builds trust without overpromising.",
+      "suggestion": "<h1>Meet Gideon — Your AI-Powered Trade & Business Assistant</h1><p>Get instant answers, voice chat, and professional support for your business operations. Try three searches free, then unlock unlimited access.</p>",
+      "rationale": "This headline immediately names the product and clarifies what it does (AI assistant for trade and business). The subheading highlights three key features (instant answers, voice chat, professional support) and clearly communicates the free trial offer without overpromising. The structure reduces friction by setting expectations upfront.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-07-11T14:44:09.146Z"
+      "generatedAt": "2026-07-11T20:50:30.033Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to become a Gideon member. Membership starts at just US$2 per day and gives you unlimited access to your own AI-powered workspace, voice chat, and professional trade and business support. Choose monthly billing or save 30 percent with an annual plan.",
-      "rationale": "This FAQ directly addresses the conversion moment when free users hit the paywall. By clearly explaining what happens next and immediately reinforcing the value and affordable pricing, it reduces friction, builds trust, and encourages sign-up rather than abandonment.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches with Gideon, you'll be invited to become a member to continue accessing unlimited AI-powered trade and business support. Membership starts from just US$2 per day, and you can save 30 percent by choosing an annual plan. As a member, you'll unlock voice chat, your own unlimited workspace, and professional assistance whenever you need it.",
+      "rationale": "This FAQ directly addresses the most common friction point in a freemium model—what happens when the free trial ends. By clearly explaining the transition and reinforcing the value and affordability of membership, it reduces uncertainty and encourages conversion at the paywall moment.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-07-11T14:44:17.132Z"
+      "generatedAt": "2026-07-11T20:50:35.817Z"
     }
   ]
 }
