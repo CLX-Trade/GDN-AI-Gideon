@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-07-15T15:18:45.082Z",
+  "runDate": "2026-07-15T21:01:43.582Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try three free searches today.\"><meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Instant AI answers, voice chat, and unlimited workspace access for business owners and traders. Powered by Claude.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:url\" content=\"https://gdn.ai\"><meta property=\"og:image\" content=\"https://gdn.ai/og-image.jpg\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta name=\"twitter:description\" content=\"Instant AI answers, voice chat, and unlimited workspace access for business owners and traders. Powered by Claude.\">",
-      "rationale": "A compelling meta description under 160 characters improves click-through rates from search results. Open Graph and Twitter Card tags ensure the homepage displays professionally when shared on LinkedIn, Facebook, and Twitter—critical for B2B audiences. The copy highlights key value props (Claude-powered, instant answers, voice chat, free trial) without fabricated claims, driving qualified traffic and social shares.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try three free searches, then unlock unlimited access from US$2/day.\">\n<meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\">\n<meta property=\"og:description\" content=\"Claude-powered AI assistant for business owners, traders, and professionals. Instant answers, voice chat, and unlimited workspace access. Start with three free searches.\">\n<meta property=\"og:type\" content=\"website\">\n<meta property=\"og:site_name\" content=\"GDN AI\">",
+      "rationale": "A compelling meta description improves click-through rates from search results by clearly communicating the core value proposition and free trial offer. Open Graph tags ensure professional, consistent previews when shared on LinkedIn, Twitter, and other social platforms—critical for B2B audience trust. The copy highlights key differentiators (Claude-powered, voice chat, trade focus) and the low-friction entry point (three free searches) to drive conversions.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-07-15T15:18:32.156Z"
+      "generatedAt": "2026-07-15T21:01:34.600Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "Hero Headline: \"Your AI-Powered Trade & Business Partner\"\n\nSubheading: \"Meet Gideon — the intelligent assistant built for business owners, traders, and professionals. Get instant answers, voice chat, and expert support. Try three free searches today.\"",
-      "rationale": "This headline positions Gideon as a partnership rather than just a tool, building trust. The subheading clearly identifies the target audience, highlights three key features (instant answers, voice chat, expert support), and ends with a low-friction CTA mentioning the free trial without pressure. The copy is concise, benefits-focused, and avoids unverified claims.",
+      "suggestion": "Hero Headline: \"Your AI-Powered Trade & Business Partner\"\n\nSubheading: \"Meet Gideon — the intelligent assistant built for business owners, traders, and professionals. Get instant answers, voice chat, and expert support. Try three searches free.\"",
+      "rationale": "This headline immediately communicates what Gideon is (AI assistant) and who it's for (trade and business professionals), establishing relevance. The subheading reinforces the target audience, highlights three key features (instant answers, voice chat, expert support), and ends with a clear, low-friction CTA mentioning the free trial. The word 'Partner' conveys reliability and ongoing value rather than a one-time tool.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-07-15T15:18:40.025Z"
+      "generatedAt": "2026-07-15T21:01:39.218Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to become a GDN AI member. Membership starts at just US$2 per day and gives you unlimited access to Gideon's voice chat, your own members workspace, and professional trade and business support—with no interruptions. Choose annual billing and save 30 percent.",
-      "rationale": "This FAQ directly addresses the paywall moment every visitor will encounter, reducing friction by setting clear expectations. It reinforces value (unlimited access, workspace, voice chat) right at the decision point and highlights the annual savings incentive to encourage higher-commitment conversions.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to join GDN AI as a member. Membership starts from just US$2 per day, giving you unlimited access to Gideon's voice chat, workspace tools, and professional trade and business support. Choose annual billing to save 30 percent.",
+      "rationale": "This FAQ directly addresses the most common friction point—what happens at the paywall—while reinforcing value and pricing transparency. It reduces uncertainty, builds trust, and guides visitors toward conversion by highlighting the annual savings incentive.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-07-15T15:18:45.079Z"
+      "generatedAt": "2026-07-15T21:01:43.579Z"
     }
   ]
 }
