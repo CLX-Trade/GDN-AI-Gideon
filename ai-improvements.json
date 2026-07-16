@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-07-16T09:51:30.702Z",
+  "runDate": "2026-07-16T15:26:30.498Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your AI-powered trade and business assistant. Get instant answers, voice chat, and professional support for operations and trade decisions. Try three free searches today.\"><meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Instant AI answers, voice chat, and unlimited workspace for business owners, traders, and professionals. Start with three free searches.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:site_name\" content=\"GDN AI\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"GDN AI – Gideon | AI-Powered Business Assistant\"><meta name=\"twitter:description\" content=\"Professional trade and business support powered by Claude. Try Gideon free today.\">",
-      "rationale": "A clear meta description improves click-through rates from search results by communicating the core value prop and free trial offer. Open Graph and Twitter Card tags ensure social shares display a professional, consistent preview that builds trust and drives traffic. Mentioning the three free searches creates a low-friction entry point that encourages clicks.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your AI-powered trade and business assistant. Get instant answers, voice chat, and professional support for operations and trade decisions. Try three free searches today.\"><meta property=\"og:title\" content=\"Gideon – AI Trade & Business Assistant | GDN AI\"><meta property=\"og:description\" content=\"Your Claude-powered assistant for trade and business. Instant AI answers, voice chat, and unlimited workspace access for professionals. Start with three free searches.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:image\" content=\"https://gdn.ai/og-image.png\"><meta property=\"og:url\" content=\"https://gdn.ai/\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"Gideon – AI Trade & Business Assistant\"><meta name=\"twitter:description\" content=\"Instant AI answers and voice chat for business owners, traders, and professionals. Try three free searches.\">",
+      "rationale": "A compelling meta description improves click-through rates from search results by clearly communicating value props (instant answers, voice chat, professional support) and the free trial offer. Open Graph and Twitter Card tags ensure professional, branded previews when the link is shared on LinkedIn, Facebook, Twitter, and messaging apps—critical for a B2B audience. The copy stays factual, uses target keywords (AI trade assistant, business assistant), and highlights the conversion hook of three free searches.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-07-16T09:51:20.972Z"
+      "generatedAt": "2026-07-16T15:26:20.474Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "Hero Headline: \"Meet Gideon — Your AI-Powered Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and professional guidance for your business operations. Try three free searches today.\"",
-      "rationale": "This headline immediately introduces Gideon by name while clearly stating its purpose (trade and business assistant). The subheading highlights three key value props (instant answers, voice chat, professional guidance) and ends with a clear, low-friction CTA mentioning the free trial offer. The copy is concise, avoids hype, and builds trust by being specific about what users get.",
+      "suggestion": "Hero Headline: \"Meet Gideon — Your AI Trade & Business Assistant\"\n\nSubheading: \"Get instant answers for trade, operations, and business decisions. Try three free searches — no credit card required.\"",
+      "rationale": "The headline immediately introduces Gideon by name and clarifies its core function, building brand recognition. The subheading reinforces the key value prop (instant AI answers for business) and removes friction by highlighting the free trial with no commitment. This creates trust and encourages visitors to engage before hitting the paywall.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-07-16T09:51:25.699Z"
+      "generatedAt": "2026-07-16T15:26:25.017Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to become a member. Membership starts at just US$2 per day, and you'll unlock unlimited access to Gideon—including voice chat, your personal workspace, and professional trade and business support. Choose annual billing to save 30 percent.",
-      "rationale": "This FAQ directly addresses the most common friction point: the free-to-paid transition. By clearly explaining what happens next and reinforcing value (unlimited access, voice chat, workspace), it reduces uncertainty and positions the paywall as a natural upgrade rather than a barrier. Mentioning the annual savings creates an incentive to commit.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to become a GDN AI member to continue accessing Gideon. Membership starts at just US$2 per day, and annual plans save you 30 percent. As a member, you'll unlock unlimited searches, voice chat, and a dedicated workspace—everything you need to keep your business moving.",
+      "rationale": "This FAQ directly addresses the most common friction point for trial users: understanding what happens at the paywall. By clearly explaining the transition and immediately reinforcing value and affordability, it reduces abandonment and primes visitors to convert rather than leave confused.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-07-16T09:51:30.700Z"
+      "generatedAt": "2026-07-16T15:26:30.495Z"
     }
   ]
 }
