@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-07-21T15:29:23.335Z",
+  "runDate": "2026-07-21T21:11:15.926Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try three free searches, then unlock unlimited access from US$2/day.\">\n<meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\">\n<meta property=\"og:description\" content=\"Meet Gideon, the Claude-powered assistant built for business owners, traders, and professionals. Instant AI answers, voice chat, and unlimited workspace access. Start with three free searches.\">\n<meta property=\"og:type\" content=\"website\">\n<meta property=\"og:image\" content=\"https://yourdomain.com/og-image.jpg\">\n<meta property=\"og:url\" content=\"https://yourdomain.com/\">\n<meta name=\"twitter:card\" content=\"summary_large_image\">\n<meta name=\"twitter:title\" content=\"GDN AI – Gideon | AI Assistant for Trade & Business\">\n<meta name=\"twitter:description\" content=\"Claude-powered business assistant with instant answers, voice chat, and professional trade support. Three free searches to start.\">",
-      "rationale": "Search engines display meta descriptions in results, directly influencing click-through rates. Open Graph and Twitter Card tags control how the page appears when shared on LinkedIn, Facebook, and X—critical channels for reaching business professionals. This copy highlights the Claude-powered technology, the free trial, and clear value props without invented claims, encouraging both organic and social traffic to convert.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your AI-powered trade and business assistant. Get instant answers, voice chat, and professional support for operations and trade. Try three free searches today.\"><meta property=\"og:title\" content=\"Gideon – AI Trade & Business Assistant | GDN AI\"><meta property=\"og:description\" content=\"Your Claude-powered assistant for trade and business. Instant AI answers, voice chat, and an unlimited members workspace. Start with three free searches.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:image\" content=\"https://gdn.ai/og-image.jpg\"><meta property=\"og:url\" content=\"https://gdn.ai/\"><meta name=\"twitter:card\" content=\"summary_large_image\">",
+      "rationale": "A compelling meta description improves click-through rates from search results by clearly communicating the core value proposition and free trial offer. Open Graph tags ensure professional, branded previews when the homepage is shared on LinkedIn, Twitter, and Facebook—critical channels for reaching business owners and professionals. Including the three free searches offer creates a low-friction call to action directly in search and social previews.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-07-21T15:29:12.506Z"
+      "generatedAt": "2026-07-21T21:11:06.877Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "Hero Headline: \"Meet Gideon — Your AI-Powered Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and a dedicated workspace built for business owners and traders. Try three searches free — no card required.\"",
-      "rationale": "This headline immediately introduces the product name and its core function, building brand recognition. The subheading highlights three key value props (instant answers, voice chat, workspace) while addressing the target audience directly. The free trial CTA with 'no card required' removes friction and encourages immediate engagement without overpromising.",
+      "suggestion": "Hero Headline: \"Meet Gideon — Your AI Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and a dedicated workspace to streamline your operations. Try three searches free — no card required.\"",
+      "rationale": "The headline immediately introduces the product name and core function, building brand recognition. The subheading highlights three key value props (instant answers, voice chat, workspace) while the free trial offer with 'no card required' reduces friction and encourages action. Copy is concise, benefit-driven, and avoids unverifiable claims.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-07-21T15:29:17.658Z"
+      "generatedAt": "2026-07-21T21:11:11.343Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches with Gideon, you'll be invited to choose a membership plan to continue. Plans start from just US$2 per day, billed monthly or annually—with annual billing saving you 30 percent. As a member, you'll unlock unlimited access to Gideon's AI-powered trade and business support, voice chat, and your own dedicated workspace.",
-      "rationale": "This FAQ directly addresses the most common friction point in a freemium model—what happens when the free trial ends. By clearly explaining the transition from free to paid, including pricing and benefits, it reduces uncertainty and builds trust, helping convert trial users into paying members.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to join as a member. Membership starts from just US$2 per day (billed monthly), giving you unlimited access to Gideon's AI-powered trade and business support, voice chat, and your personal members workspace. Choose annual billing to save 30 percent.",
+      "rationale": "This FAQ directly addresses the most common conversion-barrier question—what happens at the paywall. It transparently explains the free-to-paid transition, reinforces value (unlimited access, voice chat, workspace), and highlights the annual savings incentive, reducing friction and building trust at the decision point.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-07-21T15:29:23.332Z"
+      "generatedAt": "2026-07-21T21:11:15.923Z"
     }
   ]
 }
