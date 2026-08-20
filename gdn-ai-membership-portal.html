@@ -249,7 +249,7 @@ body{font-family:'Archivo',system-ui,sans-serif;background:var(--bg);color:var(-
   const mem={};
   const store={async get(k){try{const r=await window.storage.get(k);return r?r.value:(k in mem?mem[k]:null);}catch(e){return (k in mem)?mem[k]:null;}},async set(k,v){mem[k]=v;try{await window.storage.set(k,v);}catch(e){}}};
   const TIERS={'Simple Access':{daily:2,limit:100},'Professional':{daily:7,limit:1000},'Enterprise':{daily:null,limit:Infinity}};
-  let user=null,history=[],usageCount=0,selectedTier='Professional',billing='monthly';
+  let user=null,history=[],usageCount=0,selectedTier='Professional',billing='annual';
   const GREETING="Hi, I am Gideon, your business assistant. I can help across strategy, operations, finance, marketing, trade and commodities, research, writing, drafting documents and general analysis, and I am glad to take on everyday questions too. What would you like to work on?";
   let ttsOn=true;
   function pickVoice(){const v=window.speechSynthesis?speechSynthesis.getVoices():[];return v.find(x=>/en-GB/i.test(x.lang))||v.find(x=>/en-AU/i.test(x.lang))||v.find(x=>/^en/i.test(x.lang))||v[0];}
@@ -259,7 +259,7 @@ body{font-family:'Archivo',system-ui,sans-serif;background:var(--bg);color:var(-
   function scrollPlans(){document.getElementById('plans').scrollIntoView({behavior:'smooth'});}
   function show(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(id).classList.add('active');}
   function monthly(d){return d*30;}function annual(d){return Math.round(d*365*0.7);}function fmt(n){return '$'+n.toLocaleString('en-US');}
-  function selectPass(name,priceId){selectedTier=name;billing='monthly';window.PASS_PRICE=priceId;document.getElementById('modal-title').textContent='Hire Gideon';document.getElementById('billing-block').style.display='none';document.querySelector('#overlay .sub').innerHTML='Pass selected: <b>'+name+'</b>. Enter your details to continue to secure checkout.';document.getElementById('auth-err').textContent='';document.getElementById('overlay').classList.add('active');document.getElementById('in-name').focus();}function selectTier(t){selectedTier=t;billing='monthly';window.PASS_PRICE=null;
+  function selectPass(name,priceId){selectedTier=name;billing='monthly';window.PASS_PRICE=priceId;document.getElementById('modal-title').textContent='Hire Gideon';document.getElementById('billing-block').style.display='none';document.querySelector('#overlay .sub').innerHTML='Pass selected: <b>'+name+'</b>. Enter your details to continue to secure checkout.';document.getElementById('auth-err').textContent='';document.getElementById('overlay').classList.add('active');document.getElementById('in-name').focus();}function selectTier(t){selectedTier=t;billing='annual';window.PASS_PRICE=null;
     document.getElementById('modal-title').textContent=(t==='Enterprise')?'Contact GDN':'Hire Gideon';
     const bb=document.getElementById('billing-block');
     if(t==='Enterprise'){bb.style.display='none';document.querySelector('#overlay .sub').innerHTML='Tier selected: <b>Enterprise</b>. Enterprise plans are arranged directly with GDN. Enter your details and the team will be in touch.';}
