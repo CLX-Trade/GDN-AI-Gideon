@@ -66,7 +66,7 @@ export default async function handler(req, res) {
     const r = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: { 'Authorization': 'Bearer ' + RESEND, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from, to: email, subject: 'Your Gideon sign-in link', html })
+      body: JSON.stringify({ from, to: email, reply_to: (process.env.REPLY_TO_EMAIL || 'gnardo@gdngroup.com.au'), subject: 'Your Gideon sign-in link', html })
     });
     if (!r.ok) {
       console.error('Resend error', r.status, await r.text());
