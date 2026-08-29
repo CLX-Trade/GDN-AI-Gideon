@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-08-29T13:25:08.941Z",
+  "runDate": "2026-08-29T17:27:04.485Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try three free searches, then unlock unlimited access from US$2/day.\">\n<meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\">\n<meta property=\"og:description\" content=\"Meet Gideon, the Claude-powered assistant built for business owners, traders, and professionals. Instant AI answers, voice chat, and an unlimited workspace. Start with three free searches.\">\n<meta property=\"og:type\" content=\"website\">\n<meta property=\"og:image\" content=\"https://yourdomain.com/og-gideon-preview.jpg\">\n<meta property=\"og:url\" content=\"https://yourdomain.com/\">\n<meta name=\"twitter:card\" content=\"summary_large_image\">\n<meta name=\"twitter:title\" content=\"GDN AI – Gideon | AI Assistant for Trade & Business\">\n<meta name=\"twitter:description\" content=\"Claude-powered AI for business owners and traders. Try three free searches, then join from US$2/day.\">",
-      "rationale": "A compelling meta description improves click-through rates from search results by clearly stating what Gideon is, who it serves, and the free trial offer. Open Graph and Twitter Card tags ensure professional, branded previews when the homepage is shared on LinkedIn, Facebook, or Twitter—critical for B2B credibility and social traffic. All copy stays factual, uses verified pricing, and reinforces the value props without invented claims.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try 3 free searches, then unlock unlimited access from US$2/day.\"><meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Meet Gideon, the Claude-powered assistant built for business owners, traders, and professionals. Instant AI answers, voice chat, and unlimited workspace access.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:image\" content=\"https://gdn.ai/og-image.jpg\"><meta property=\"og:url\" content=\"https://gdn.ai\"><meta name=\"twitter:card\" content=\"summary_large_image\">",
+      "rationale": "A compelling meta description improves click-through rates from search results by clearly communicating the product value and entry point (3 free searches, pricing from US$2/day). Open Graph tags ensure professional, branded previews when shared on LinkedIn, Twitter, and other platforms—critical for B2B trust. These tags are foundational SEO elements that directly impact organic discovery and social sharing performance.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-08-29T13:24:59.946Z"
+      "generatedAt": "2026-08-29T17:26:55.924Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "Hero Headline: \"Meet Gideon — Your AI-Powered Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat, and professional support for your business operations. Try three free searches — no credit card required.\"",
-      "rationale": "This headline immediately introduces the product name and core function, building brand recognition. The subheading highlights three key value props (instant answers, voice chat, professional support) while clearly communicating the risk-free trial offer. The 'no credit card required' implication removes friction and encourages immediate engagement with the free searches.",
+      "suggestion": "Hero Headline: \"Your AI-Powered Trade & Business Assistant\"\n\nSubheading: \"Meet Gideon — get instant answers, voice chat, and professional support for your business operations. Try 3 free searches today.\"",
+      "rationale": "This headline immediately communicates what Gideon is (AI assistant) and who it's for (trade and business). The subheading reinforces key value props (instant answers, voice chat, professional support) while creating a clear, low-friction CTA with the free trial offer. The name 'Gideon' is introduced naturally, building brand recognition without jargon.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-08-29T13:25:03.863Z"
+      "generatedAt": "2026-08-29T17:27:00.007Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches with Gideon, you'll be invited to join as a member to continue accessing unlimited AI-powered trade and business support. Membership starts from just US$2 per day, with flexible monthly or annual billing options—annual plans save you 30 percent. As a member, you'll unlock voice chat, your own unlimited workspace, and professional-grade assistance whenever you need it.",
-      "rationale": "This FAQ directly addresses the most common friction point in a freemium model—what happens at the paywall. By clearly explaining the transition, pricing, and benefits gained through membership, it reduces uncertainty, builds trust, and guides prospects toward conversion without feeling pressured.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to join as a member. Membership starts at just US$2 per day (billed monthly), giving you unlimited access to Gideon's voice chat, your personal workspace, and professional trade and business support. Choose annual billing to save 30 percent.",
+      "rationale": "This FAQ directly addresses the most common friction point—what happens at the paywall—while reinforcing value and clearly stating pricing. It reduces uncertainty for prospects deciding whether to try the free searches, knowing exactly what comes next.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-08-29T13:25:08.938Z"
+      "generatedAt": "2026-08-29T17:27:04.482Z"
     }
   ]
 }
