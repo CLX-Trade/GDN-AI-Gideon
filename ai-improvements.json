@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-08-31T19:44:57.550Z",
+  "runDate": "2026-08-31T23:39:23.984Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try three free searches, then unlock unlimited access from US$2/day.\">\n<meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\">\n<meta property=\"og:description\" content=\"Meet Gideon, the Claude-powered assistant built for business owners, traders, and professionals. Instant AI answers, voice chat, and unlimited workspace access. Start with three free searches.\">\n<meta property=\"og:type\" content=\"website\">\n<meta property=\"og:site_name\" content=\"GDN AI\">",
-      "rationale": "A compelling meta description improves click-through rates from search results by clearly communicating the product value and free trial offer. Open Graph tags ensure professional, consistent previews when shared on LinkedIn, Twitter, and Facebook—critical for B2B trust. The copy highlights key differentiators (Claude-powered, voice chat, trade focus) and the low-barrier entry point without inventing claims.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try three free searches, then unlock unlimited access from US$2/day.\">\n<meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\">\n<meta property=\"og:description\" content=\"Meet Gideon: a Claude-powered AI assistant built for business owners, traders, and professionals. Instant answers, voice chat, and unlimited workspace access. Start with three free searches.\">\n<meta property=\"og:type\" content=\"website\">\n<meta property=\"og:image\" content=\"https://yourdomain.com/og-image.jpg\">\n<meta property=\"og:url\" content=\"https://yourdomain.com/\">\n<meta name=\"twitter:card\" content=\"summary_large_image\">\n<meta name=\"twitter:title\" content=\"GDN AI – Gideon | AI Assistant for Trade & Business\">\n<meta name=\"twitter:description\" content=\"Claude-powered AI assistant for business owners and traders. Try three free searches, then join from US$2/day.\">",
+      "rationale": "Search engines display the meta description in results, directly influencing click-through rates. Open Graph and Twitter Card tags ensure professional, branded previews when the homepage is shared on LinkedIn, Facebook, or Twitter—critical channels for reaching business professionals. Including the free trial and entry price creates a compelling, conversion-focused snippet without inventing claims.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-08-31T19:44:48.106Z"
+      "generatedAt": "2026-08-31T23:39:14.021Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "Hero Headline: \"Your AI-Powered Trade & Business Partner\"\n\nSubheading: \"Meet Gideon — the intelligent assistant built for business owners, traders, and professionals. Get instant answers, voice chat, and expert support. Try three free searches today.\"",
-      "rationale": "This headline positions Gideon as a collaborative partner rather than just a tool, building trust with the target audience. The subheading clearly identifies who the product is for, highlights three key features (instant answers, voice chat, expert support), and ends with a clear, low-commitment CTA that leverages the free trial offer to reduce friction and drive engagement.",
+      "suggestion": "Hero Headline: \"Your AI-Powered Trade & Business Partner\"\n\nSubheading: \"Meet Gideon — the intelligent assistant built for business owners, traders, and professionals. Get instant answers, voice chat support, and a dedicated workspace to streamline your operations. Try 3 free searches today.\"",
+      "rationale": "This headline immediately establishes Gideon as a partnership-level tool rather than just software, building trust with the professional audience. The subheading clearly communicates the three core value props (instant answers, voice chat, workspace), identifies the target audience directly, and ends with a low-friction CTA mentioning the free trial to reduce hesitation. The copy avoids hype while maintaining confidence.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-08-31T19:44:52.192Z"
+      "generatedAt": "2026-08-31T23:39:18.786Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches with Gideon, you'll be invited to join as a member to continue accessing unlimited AI-powered trade and business support. Memberships start from just US$2 per day, with flexible monthly or annual billing options—annual plans save you 30 percent. Your workspace, voice chat, and professional assistant remain available the moment you subscribe.",
-      "rationale": "This FAQ directly addresses the most common friction point in the conversion funnel—what happens at the paywall. By clearly explaining the transition from free to paid, restating the low entry price, and highlighting the annual savings, it reduces uncertainty and encourages sign-up decisions.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches with Gideon, you'll be invited to become a member to continue accessing unlimited AI-powered trade and business support. Memberships start from just US$2 per day, with flexible monthly or annual billing options—annual plans save you 30 percent. As a member, you'll unlock unlimited queries, voice chat, and your own dedicated workspace.",
+      "rationale": "This FAQ directly addresses the most common friction point in a freemium model—what happens at the paywall. By clearly explaining the transition from free to paid, including pricing and benefits, it reduces uncertainty, builds trust, and encourages conversion by highlighting value and flexibility.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-08-31T19:44:57.548Z"
+      "generatedAt": "2026-08-31T23:39:23.982Z"
     }
   ]
 }
