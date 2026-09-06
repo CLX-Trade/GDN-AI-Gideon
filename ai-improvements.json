@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-09-06T11:46:24.216Z",
+  "runDate": "2026-09-06T16:34:23.979Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your AI-powered trade and business assistant. Get instant answers, voice chat, and professional support for operations and trade decisions. Try three free searches today.\"><meta property=\"og:title\" content=\"Gideon – AI Trade & Business Assistant by GDN AI\"><meta property=\"og:description\" content=\"Your Claude-powered assistant for trade and business. Instant AI answers, voice chat, and unlimited workspace access for professionals. Start with three free searches.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:site_name\" content=\"GDN AI\"><meta property=\"og:image\" content=\"https://gdn.ai/og-image.jpg\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"Gideon – AI Trade & Business Assistant\"><meta name=\"twitter:description\" content=\"Claude-powered AI for business owners and traders. Instant answers, voice chat, professional support. Try free.\">",
-      "rationale": "The homepage currently lacks optimized meta tags, which hurts search rankings and makes social shares appear generic. A compelling meta description (under 160 characters) improves click-through rates from Google. Open Graph and Twitter Card tags ensure the site displays professionally when shared on LinkedIn, Facebook, or Twitter—critical for B2B audiences. The copy emphasizes key differentiators (Claude-powered, voice chat, free trial) without fabricating claims.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try three free searches, then join from US$2/day.\">\n<meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\">\n<meta property=\"og:description\" content=\"Meet Gideon: a Claude-powered assistant built for business owners, traders, and professionals. Instant AI answers, voice chat, and an unlimited workspace. Start with three free searches.\">\n<meta property=\"og:type\" content=\"website\">\n<meta property=\"og:image\" content=\"https://yourdomain.com/og-gideon-preview.jpg\">\n<meta property=\"og:url\" content=\"https://yourdomain.com/\">\n<meta name=\"twitter:card\" content=\"summary_large_image\">",
+      "rationale": "A compelling meta description improves click-through rates from search results by clearly stating what Gideon does, who it serves, and the free trial offer. Open Graph tags ensure professional, branded previews when shared on LinkedIn, Twitter, or Facebook—critical for B2B audiences. Including the price anchor (US$2/day) sets expectations and attracts qualified leads.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-09-06T11:46:15.717Z"
+      "generatedAt": "2026-09-06T16:34:14.652Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "Hero Headline: \"Meet Gideon — Your AI-Powered Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and a dedicated workspace to streamline your operations. Try three searches free — no credit card required.\"",
-      "rationale": "This headline clearly names the product and its core function, building immediate brand recognition. The subheading highlights three key value props (instant answers, voice chat, workspace) while emphasizing the risk-free trial offer. 'No credit card required' removes friction and increases trial conversions. Copy is concise, benefit-driven, and avoids unverifiable claims.",
+      "suggestion": "Hero Headline: \"Meet Gideon — Your AI-Powered Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and a dedicated workspace built for professionals. Try three free searches — no card required.\"",
+      "rationale": "This headline immediately names the product and its core function, building brand recognition. The subheading highlights three key value props (instant answers, voice chat, workspace) while emphasizing the low-friction free trial. 'No card required' removes a common conversion barrier and builds trust. The copy stays factual, avoids hype, and speaks directly to the target audience of business owners and traders.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-09-06T11:46:19.918Z"
+      "generatedAt": "2026-09-06T16:34:19.117Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to become a member to continue accessing Gideon. Membership starts at just US$2 per day, billed monthly—or save 30 percent with an annual plan. As a member, you'll unlock unlimited access to Gideon's AI-powered trade and business support, voice chat, and your own dedicated workspace.",
-      "rationale": "This FAQ directly addresses the most common friction point in a freemium model—what happens at the paywall. By clearly explaining the transition and immediately reinforcing value and pricing, it reduces uncertainty and supports conversion at the critical decision moment.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches with Gideon, you'll be invited to become a member to continue accessing unlimited AI-powered trade and business support. Membership starts from just US$2 per day, and annual plans save you 30 percent. Your free searches give you a real taste of what Gideon can do—no credit card required to start.",
+      "rationale": "This FAQ directly addresses the most common friction point in a freemium-to-paid model: what happens at the paywall. By setting clear expectations upfront, it reduces anxiety, builds trust, and smoothly introduces pricing without pressure. Mentioning 'no credit card required' removes a key barrier to trial engagement.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-09-06T11:46:24.213Z"
+      "generatedAt": "2026-09-06T16:34:23.976Z"
     }
   ]
 }
