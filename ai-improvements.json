@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-09-09T17:26:01.915Z",
+  "runDate": "2026-09-09T22:19:41.298Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try three free searches, then join from US$2/day.\">\n<meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\">\n<meta property=\"og:description\" content=\"Meet Gideon, the Claude-powered assistant built for business owners, traders, and professionals. Instant AI answers, voice chat, and unlimited workspace access. Start with 3 free searches.\">\n<meta property=\"og:type\" content=\"website\">\n<meta property=\"og:image\" content=\"https://gdn.ai/og-gideon-preview.png\">\n<meta property=\"og:url\" content=\"https://gdn.ai/\">\n<meta name=\"twitter:card\" content=\"summary_large_image\">\n<meta name=\"twitter:title\" content=\"GDN AI – Gideon | AI-Powered Trade & Business Assistant\">\n<meta name=\"twitter:description\" content=\"Your Claude-powered assistant for trade and business. Try 3 free searches, then unlock unlimited access from US$2/day.\">",
-      "rationale": "A compelling meta description improves click-through rates from search results by clearly stating what Gideon does, who it serves, and the low-barrier entry point. Open Graph and Twitter Card tags ensure professional, branded previews when links are shared on LinkedIn, Facebook, or Twitter—critical for B2B audiences. Including the free trial and starting price creates urgency without overpromising.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and unlimited workspace access. Try three free searches today.\"><meta property=\"og:title\" content=\"GDN AI – Meet Gideon, Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Powered by Claude. Instant AI answers, voice chat, and a professional workspace for business owners and traders. Start with three free searches.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:image\" content=\"https://gdn.ai/og-image.png\"><meta property=\"og:url\" content=\"https://gdn.ai/\"><meta name=\"twitter:card\" content=\"summary_large_image\">",
+      "rationale": "A clear meta description improves click-through rates from search results by communicating the core value proposition—Claude-powered AI, instant answers, and free trial searches—within the 155-character limit. Open Graph tags ensure professional, branded previews when the link is shared on LinkedIn, Twitter, or Facebook, which is critical for a B2B product targeting business owners and traders. These tags are foundational SEO elements that are low-effort but high-impact for organic discovery and social sharing.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-09-09T17:25:53.105Z"
+      "generatedAt": "2026-09-09T22:19:32.739Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "Hero Headline: \"Your AI-Powered Trade & Business Partner\"\n\nSubheading: \"Meet Gideon — the intelligent assistant built for business owners, traders, and professionals. Get instant answers, voice chat, and expert support. Try 3 free searches today.\"",
-      "rationale": "This headline positions Gideon as a partnership rather than just a tool, building trust. The subheading clearly identifies the target audience, highlights three key features (instant answers, voice chat, expert support), and ends with a clear, low-friction CTA mentioning the free trial to drive immediate engagement without pressure.",
+      "suggestion": "Hero Headline: \"Your AI-Powered Trade & Business Assistant\"\n\nSubheading: \"Meet Gideon — get instant answers, voice chat, and professional support for your business operations. Try three free searches today.\"",
+      "rationale": "This headline immediately communicates what Gideon is (AI assistant) and who it's for (trade and business professionals). The subheading reinforces key value props (instant answers, voice chat, professional support) while creating a clear, low-friction call to action with the free trial offer. The copy is concise, avoids hype, and builds trust by being straightforward about what users get.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-09-09T17:25:57.204Z"
+      "generatedAt": "2026-09-09T22:19:36.750Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to become a member to continue accessing Gideon. Membership starts at just US$2 per day, billed monthly—or save 30 percent with an annual plan. As a member, you unlock unlimited access to Gideon's AI-powered trade and business support, voice chat, and your own dedicated workspace.",
-      "rationale": "This FAQ directly addresses the most common friction point—the paywall visitors encounter after their free trial. By clearly explaining what happens next and immediately reinforcing the low entry price and value, it reduces uncertainty and helps convert trial users into paying members.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to join as a member. Membership starts at just US$2 per day, billed monthly or annually—with annual plans saving you 30 percent. As a member, you unlock unlimited access to Gideon's AI-powered workspace, voice chat, and professional trade and business support.",
+      "rationale": "This FAQ directly addresses the most common friction point for new visitors—what happens when the free trial ends. By clearly explaining the paywall and membership value in a straightforward, non-pushy way, it reduces uncertainty and builds trust, making visitors more confident about converting.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-09-09T17:26:01.913Z"
+      "generatedAt": "2026-09-09T22:19:41.295Z"
     }
   ]
 }
