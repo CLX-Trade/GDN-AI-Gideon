@@ -1,30 +1,30 @@
 {
-  "runDate": "2026-09-12T21:58:25.200Z",
+  "runDate": "2026-09-13T12:52:38.249Z",
   "siteUrl": "https://gdn-ai.com",
   "improvements": [
     {
       "area": "seo_metadata",
       "areaName": "SEO Meta Description and OG Tags",
-      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try three free searches today.\"><meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Meet Gideon, the Claude-powered assistant built for business owners, traders, and professionals. Instant AI answers, voice chat, and unlimited workspace access.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:site_name\" content=\"GDN AI\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"GDN AI – Gideon | AI-Powered Trade & Business Assistant\"><meta name=\"twitter:description\" content=\"Your Claude-powered assistant for trade and business. Try three free searches, then unlock unlimited access.\">",
-      "rationale": "These meta tags improve search engine visibility by clearly communicating the core offering (Claude-powered AI assistant for trade and business) within optimal character limits. The OG and Twitter tags ensure professional, consistent previews when shared on social platforms, driving higher click-through rates. Including the free trial mention creates immediate incentive to visit.",
+      "suggestion": "<meta name=\"description\" content=\"Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. Try three free searches, then unlock unlimited access from US$2/day.\"><meta property=\"og:title\" content=\"GDN AI – Gideon | Your AI Trade & Business Assistant\"><meta property=\"og:description\" content=\"Claude-powered AI assistant for business owners, traders, and professionals. Instant answers, voice chat, and unlimited workspace access. Start with 3 free searches.\"><meta property=\"og:type\" content=\"website\"><meta property=\"og:site_name\" content=\"GDN AI\"><meta name=\"twitter:card\" content=\"summary_large_image\"><meta name=\"twitter:title\" content=\"GDN AI – Gideon | AI Trade & Business Assistant\"><meta name=\"twitter:description\" content=\"Your Claude-powered assistant for trade and business. Try 3 free searches, then join from US$2/day.\">",
+      "rationale": "These tags improve search engine visibility by clearly communicating what Gideon offers within the 155-character meta description limit. The OG and Twitter tags ensure professional, consistent previews when the homepage is shared on LinkedIn, Facebook, or Twitter—critical channels for reaching business professionals. Including the free trial and entry price creates a low-friction call to action without overpromising.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-09-12T21:58:16.681Z"
+      "generatedAt": "2026-09-13T12:52:29.242Z"
     },
     {
       "area": "hero_copy",
       "areaName": "Hero Headline and Subheading",
-      "suggestion": "Hero Headline: \"Meet Gideon — Your AI-Powered Trade & Business Assistant\"\n\nSubheading: \"Get instant answers, voice chat support, and a dedicated workspace for your business operations. Try 3 free searches — no card required.\"",
-      "rationale": "The headline immediately introduces Gideon by name and clarifies its purpose (AI assistant for trade and business), building brand recognition. The subheading highlights three key value props (instant answers, voice chat, workspace) while emphasizing the risk-free trial with '3 free searches — no card required' to reduce friction and encourage first interaction.",
+      "suggestion": "Hero Headline: \"Meet Gideon — Your AI Trade & Business Partner\"\n\nSubheading: \"Get instant answers, voice-powered support, and a dedicated workspace built for professionals. Try three searches free — no card required.\"",
+      "rationale": "The headline personifies Gideon as a partner rather than just a tool, building trust and connection. The subheading hits three key value props (instant answers, voice chat, workspace) while clearly stating the free trial offer and removing friction by noting no card is needed. This combination addresses what Gideon does, who it's for, and the low-risk entry point — all critical for conversion.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-09-12T21:58:20.657Z"
+      "generatedAt": "2026-09-13T12:52:33.746Z"
     },
     {
       "area": "faq_content",
       "areaName": "FAQ Entry",
-      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to become a GDN AI member to continue accessing Gideon. Membership starts at just US$2 per day, and annual plans save you 30 percent. As a member, you'll unlock unlimited access to Gideon's workspace, voice chat, and professional trade and business support—no caps, no interruptions.",
-      "rationale": "This FAQ directly addresses the most common friction point in the conversion funnel: what happens at the paywall. By transparently explaining the transition from free to paid, it builds trust, reduces abandonment, and reinforces value with specific tier pricing and benefits.",
+      "suggestion": "Q: What happens after my three free searches?\n\nA: Once you've used your three complimentary searches, you'll be invited to join as a member to continue accessing Gideon. Membership starts at just US$2 per day, billed monthly—or save 30 percent with an annual plan. As a member, you unlock unlimited searches, voice chat, and a dedicated workspace designed for serious business and trade professionals.",
+      "rationale": "This FAQ directly addresses the most common friction point in the conversion funnel—what happens at the paywall. It reassures visitors that the free trial exists, transparently explains pricing without surprise, and highlights the value they unlock by upgrading. Clear expectations reduce bounce rates and build trust.",
       "urgencyLevel": "high",
-      "generatedAt": "2026-09-12T21:58:25.198Z"
+      "generatedAt": "2026-09-13T12:52:38.246Z"
     }
   ]
 }
