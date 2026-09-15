@@ -83,11 +83,11 @@ body{font-family:'Archivo',system-ui,sans-serif;background:var(--bg);color:var(-
 .tier li{font-size:13px;color:var(--ink-2);padding:8px 0 8px 18px;position:relative;line-height:1.4;border-top:1px solid var(--hair-2);}
 .tier li:first-child{border-top:none;}
 .tier li::before{content:"";position:absolute;left:0;top:14px;width:7px;height:1px;background:var(--leather);}
-.tier button{width:100%;padding:12px;border-radius:2px;cursor:pointer;font-family:'Archivo';font-size:11.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;transition:background .2s,color .2s,transform .15s;}
+.tier button,.tier a.contact-link{display:block;box-sizing:border-box;text-align:center;text-decoration:none;width:100%;padding:12px;border-radius:2px;cursor:pointer;font-family:'Archivo';font-size:11.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;transition:background .2s,color .2s,transform .15s;}
 .tier button.primary{background:var(--ink);color:var(--bg-2);border:1px solid var(--ink);}
 .tier button.primary:hover{background:var(--leather);border-color:var(--leather);transform:translateY(-1px);}
-.tier button.ghost{background:transparent;color:var(--ink);border:1px solid var(--hair);}
-.tier button.ghost:hover{border-color:var(--ink);}
+.tier button.ghost,.tier a.contact-link{background:transparent;color:var(--ink);border:1px solid var(--hair);}
+.tier button.ghost:hover,.tier a.contact-link:hover{border-color:var(--ink);}
 .plans-note{text-align:center;font-size:11px;color:var(--ink-soft);margin-top:24px;line-height:1.6;}
 #overlay{position:absolute;inset:0;z-index:20;background:rgba(8,28,68,.42);backdrop-filter:blur(3px);display:none;place-items:center;padding:24px;overflow-y:auto;}
 #overlay.active{display:grid;}
@@ -206,7 +206,8 @@ body{font-family:'Archivo',system-ui,sans-serif;background:var(--bg);color:var(-
           <button class="primary" onclick="selectTier('Professional')">Choose Professional</button></div>
         <div class="tier"><div class="badge"></div><div class="name">Enterprise</div><div class="price"><b>Custom</b></div><div class="price-sub">arranged with GDN</div>
           <ul><li>Unlimited usage</li><li>Private deployment and data</li><li>GDN document integration</li><li>Dedicated onboarding</li></ul>
-          <button class="ghost" onclick="selectTier('Enterprise')">Contact GDN</button></div>
+          <a class="contact-link" href="mailto:gnardo@gdngroup.com.au?subject=Gideon%20Enterprise%20enquiry">Email GDN about Enterprise</a>
+          <p style="font-size:12px;line-height:1.5;margin:12px 0 0;overflow-wrap:anywhere">Opens your email app. Send your enquiry to gnardo@gdngroup.com.au and include your company and what you need Gideon to do.</p></div>
       </div>
       <div class="plans-note">All prices are in Australian dollars. Returning member? Choose any tier and sign in with your email.</div><div class="plans-h" style="margin-top:48px">Meeting Room passes</div><div class="plans-note" style="margin-top:0">Run a four-seat AI meeting using your own provider keys. A day pass opens a 24-hour window; the monthly pass renews automatically.</div><div class="tiers" style="grid-template-columns:repeat(2,1fr)"><div class="tier"><div class="badge"></div><div class="name">Meeting Room — Day Pass</div><div class="price"><b>Day pass</b></div><div class="price-sub">24-hour access, one-time</div><ul><li>Four AI seats in one room</li><li>Bring your own provider keys</li><li>24-hour working window</li></ul><button class="primary" onclick="selectPass('Meeting Room — Day Pass','price_1Td6sTFDVJ23RHCn3pOpFSx8')">Book a day pass</button></div><div class="tier"><div class="badge"></div><div class="name">Meeting Room — Monthly</div><div class="price"><b>Monthly</b></div><div class="price-sub">recurring subscription</div><ul><li>Everything in the day pass</li><li>Renews automatically each month</li><li>Cancel anytime</li></ul><button class="primary" onclick="selectPass('Meeting Room — Monthly','price_1Td6vUFDVJ23RHCnFN69OQMb')">Subscribe monthly</button></div></div>
     </div>
@@ -273,7 +274,7 @@ body{font-family:'Archivo',system-ui,sans-serif;background:var(--bg);color:var(-
   const PRICES={'Simple Access':{monthly:'price_1TczRdFDVJ23RHCnpLU6lkAf',annual:'price_1TczW2FDVJ23RHCnwRGRc2Kf'},'Professional':{monthly:'price_1TczVZFDVJ23RHCnhSs461kt',annual:'price_1TczVZFDVJ23RHCn8bJl925S'}};
   async function doSignIn(){const name=document.getElementById('in-name').value.trim();const email=document.getElementById('in-email').value.trim().toLowerCase();const err=document.getElementById('auth-err');err.style.color='';
     if(!name){err.textContent='Please enter your name.';return;}if(!email||!email.includes('@')){err.textContent='Please enter a valid email.';return;}
-    if(selectedTier==='Enterprise'){err.style.color='var(--ink-2)';err.textContent='Thank you. The GDN team will be in touch about Enterprise access.';return;}
+    if(selectedTier==='Enterprise'){err.textContent='Please email gnardo@gdngroup.com.au about Enterprise access. Your enquiry has not been sent.';return;}
     const map=PRICES[selectedTier];const priceId=window.PASS_PRICE?window.PASS_PRICE:(map?map[billing]:null);if(!priceId){err.textContent='Could not match a plan. Please try again.';return;}
     err.style.color='var(--ink-2)';err.textContent='Redirecting to secure checkout...';
     try{await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});const res=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({priceId,email})});const d=await res.json();if(d.url){window.location.href=d.url;}else{err.style.color='';err.textContent='Checkout could not start. Please try again.';}}catch(e){err.style.color='';err.textContent='Checkout could not start. Please try again.';}}
