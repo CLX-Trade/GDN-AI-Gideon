@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sample Report: Trade Document Reconciliation · Gideon</title>
+<meta name="description" content="A synthetic example of the report Gideon produces when it checks a trade document pack — commercial invoice, packing list and bill of lading — for what doesn't reconcile.">
+<link rel="canonical" href="https://www.gdn-ai.com/sample-report">
+<meta property="og:title" content="Sample Report: Trade Document Reconciliation">
+<meta property="og:description" content="See the report Gideon produces when documents in a trade pack don't agree with each other. Synthetic example, not a real customer.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.gdn-ai.com/sample-report">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFFFF; --ink:#14233F; --slate:#5A647C; --muted:#8B93A8;
+    --blue:#2D5BD6; --blue-deep:#234BB6; --blue-soft:#EAF0FD;
+    --gold:#B8954A; --panel:#101B33;
+    --line:rgba(20,35,63,.10); --line-blue:rgba(45,91,214,.24);
+    --red:#B3261E; --red-soft:#FBEAE9;
+    --amber:#8A5A00; --amber-soft:#FCF3E1;
+    --body:'Inter',system-ui,-apple-system,sans-serif;
+    --disp:'Archivo',system-ui,sans-serif;
+    --maxw:760px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+  header.site{border-bottom:1px solid var(--line);padding:18px 0}
+  header.site .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .brand{font-family:var(--disp);font-weight:700;letter-spacing:.14em;font-size:15px;color:var(--ink);text-decoration:none}
+  .brand span{color:var(--blue)}
+  .nav-cta{font-size:14px;font-weight:600;color:#fff;background:var(--blue);padding:9px 16px;border-radius:8px;text-decoration:none}
+  article{padding:44px 0 10px}
+  .eyebrow{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
+  h1{font-family:var(--disp);font-size:clamp(28px,5vw,42px);line-height:1.15;margin:0 0 18px;letter-spacing:-.02em}
+  .standfirst{font-size:19px;color:var(--slate);margin:0 0 12px}
+  .byline{font-size:13px;color:var(--muted);padding-bottom:26px;border-bottom:1px solid var(--line);margin-bottom:32px}
+  h2{font-family:var(--disp);font-size:24px;margin:42px 0 14px;letter-spacing:-.01em}
+  h3{font-family:var(--disp);font-size:18px;margin:30px 0 8px}
+  p{margin:0 0 16px}
+  ul,ol{margin:0 0 18px;padding-left:22px}
+  li{margin-bottom:6px}
+  .lead-in{font-weight:600;color:var(--ink)}
+  .rule{height:2px;width:54px;background:var(--gold);margin:0 0 26px}
+  .banner{background:var(--panel);color:#fff;border-radius:12px;padding:16px 20px;font-size:14px;font-weight:600;margin-bottom:30px;display:flex;align-items:center;gap:10px}
+  .banner .dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex:none}
+  .banner span.sub{font-weight:400;color:#C6CEE0}
+  .meta-box{background:var(--blue-soft);border-radius:12px;padding:20px 22px;margin:0 0 30px;font-size:14px}
+  .meta-box .row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--line-blue)}
+  .meta-box .row:last-child{border-bottom:none}
+  .meta-box .k{color:var(--slate)}
+  .meta-box .v{font-weight:600;color:var(--ink)}
+  .finding{border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:0 0 20px}
+  .finding.high{border-color:rgba(179,38,30,.3)}
+  .finding.medium{border-color:rgba(138,90,0,.3)}
+  .sev{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px;margin-bottom:10px}
+  .sev.high{background:var(--red-soft);color:var(--red)}
+  .sev.medium{background:var(--amber-soft);color:var(--amber)}
+  .finding h3{margin-top:0}
+  .field{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;background:#F5F7FB;border-radius:6px;padding:2px 6px}
+  table{width:100%;border-collapse:collapse;margin:14px 0 6px;font-size:14px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-family:var(--disp);font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--slate)}
+  .cta{margin:48px 0 20px;padding:28px;background:var(--panel);border-radius:14px;color:#fff}
+  .cta h2{color:#fff;margin:0 0 10px;font-size:21px}
+  .cta p{color:#C6CEE0;margin:0 0 18px;font-size:16px}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap}
+  .cta a.btn-gold{display:inline-block;background:var(--gold);color:#14233F;font-weight:600;padding:12px 22px;border-radius:9px;text-decoration:none;font-size:15px}
+  .cta a.btn-line{display:inline-block;border:1px solid rgba(255,255,255,.35);color:#fff;font-weight:600;padding:11px 21px;border-radius:9px;text-decoration:none;font-size:15px}
+  .note{font-size:14px;color:var(--muted);font-style:italic}
+  footer.site{border-top:1px solid var(--line);margin-top:46px;padding:26px 0 46px;font-size:13px;color:var(--muted)}
+  footer.site a{color:var(--slate)}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <a class="brand" href="/">GIDEON<span>.</span></a>
+    <a class="nav-cta" href="/try">Try free &mdash; 3 questions</a>
+  </div>
+</header>
+
+<article>
+  <div class="wrap">
+
+    <div class="banner"><span class="dot"></span>Synthetic example &mdash; not a real customer. All names and figures below are fictional.<span class="sub"></span></div>
+
+    <div class="eyebrow">Sample Report</div>
+    <h1>What Gideon finds when trade documents don&rsquo;t agree</h1>
+    <div class="rule"></div>
+    <p class="standfirst">A commercial invoice, packing list and bill of lading, checked against each other. Three planted discrepancies, all three caught.</p>
+    <div class="byline">Gideon Document Reconciliation Report &middot; demonstration output</div>
+
+    <p>This is the report Gideon produces after reading a trade document pack &mdash; here, a synthetic commercial invoice, packing list and bill of lading built specifically to contain three planted errors. Nothing below is a real transaction. It exists so you can see the report format and the level of detail before you send Gideon a real pack.</p>
+
+    <div class="meta-box">
+      <div class="row"><span class="k">Pack reviewed</span><span class="v">Commercial Invoice, Packing List, Bill of Lading</span></div>
+      <div class="row"><span class="k">Reference</span><span class="v">GDN-SYN-1001</span></div>
+      <div class="row"><span class="k">Documents checked</span><span class="v">3</span></div>
+      <div class="row"><span class="k">Discrepancies found</span><span class="v">3</span></div>
+    </div>
+
+    <h2>Summary</h2>
+    <p>Gideon compared the three documents field by field. Three discrepancies were found. Each document reads correctly on its own &mdash; none is individually malformed &mdash; but they do not agree with each other. This is the pattern Gideon is built to catch: consistency <em>across</em> a document set, not just correctness <em>within</em> one document.</p>
+
+    <h2>Discrepancies</h2>
+
+    <div class="finding high">
+      <span class="sev high">High</span>
+      <h3>1. Shipper / seller name does not match across documents</h3>
+      <table>
+        <tr><th>Document</th><th>Field</th><th>Value</th></tr>
+        <tr><td>Commercial Invoice</td><td>Seller</td><td><span class="field">Meridian Commodities Pte Ltd</span></td></tr>
+        <tr><td>Packing List</td><td>Seller</td><td><span class="field">Meridian Commodities Pte Ltd</span></td></tr>
+        <tr><td>Bill of Lading</td><td>Shipper</td><td><span class="field">Meridian Commodity Trading Pte Ltd</span></td></tr>
+      </table>
+      <p>The entity named as shipper on the Bill of Lading is not the same legal name as the seller on the Invoice and Packing List. This could be a related entity, a clerical error, or a sign the B/L was issued by a different party than the one contracted. Confirm which entity holds the contract and verify both names against the relevant company registry.</p>
+    </div>
+
+    <div class="finding high">
+      <span class="sev high">High</span>
+      <h3>2. Quantity mismatch between Invoice and Packing List</h3>
+      <table>
+        <tr><th>Document</th><th>Quantity</th></tr>
+        <tr><td>Commercial Invoice</td><td><span class="field">500.000 MT</span></td></tr>
+        <tr><td>Packing List (net)</td><td><span class="field">480.000 MT</span></td></tr>
+        <tr><td>Bill of Lading</td><td><span class="field">500.000 MT</span></td></tr>
+      </table>
+      <p>The Packing List understates the cargo by 20 metric tons (4%) against both the Invoice and the Bill of Lading. Two of three documents agree at 500.000 MT, which points to the Packing List as the likely source of the error &mdash; but that should be confirmed with the seller, not assumed.</p>
+    </div>
+
+    <div class="finding medium">
+      <span class="sev medium">Medium</span>
+      <h3>3. Shipment date conflicts with Bill of Lading on-board date</h3>
+      <table>
+        <tr><th>Document</th><th>Field</th><th>Value</th></tr>
+        <tr><td>Commercial Invoice</td><td>Shipment Date</td><td><span class="field">11 September 2026</span></td></tr>
+        <tr><td>Bill of Lading</td><td>Shipped on Board</td><td><span class="field">09 September 2026</span></td></tr>
+      </table>
+      <p>The Invoice states the goods shipped two days <em>after</em> the Bill of Lading was already issued confirming the goods were on board. A B/L cannot be issued before loading occurs, so one of these two dates is wrong. Confirm the actual loading date with the carrier or port agent.</p>
+    </div>
+
+    <h2>What this report does not do</h2>
+    <p>Gideon flags what does not reconcile and tells you exactly where to look. It does not verify entities against a company registry, confirm certificate authenticity with an issuing body, or replace a human sign-off. Items marked High above should be independently checked before funds move.</p>
+
+    <div class="cta">
+      <h2>Run your own pack through it</h2>
+      <p>See this on a real document set &mdash; book 15 minutes and we&rsquo;ll walk a pack through Gideon live, or start a founding pilot: A$490 for up to five documents, reviewed by GDN, delivered in two business days.</p>
+      <div class="cta-row">
+        <a class="btn-gold" href="/try">Book a 15-minute document demo</a>
+        <a class="btn-line" href="mailto:gnardo@gdngroup.com.au?subject=Founding%20pilot%20-%20trade%20document%20review">Start a founding pilot &mdash; A$490</a>
+      </div>
+    </div>
+
+    <p class="note">This report was generated in Gideon&rsquo;s report format for demonstration purposes only. No real customer data was used and no Gideon credits were spent producing it.</p>
+
+  </div>
+</article>
+
+<footer class="site">
+  <div class="wrap">
+    Gideon is built by GDN Enterprise Pty Ltd (ACN 666 495 263), Queensland, Australia.
+    &nbsp;&middot;&nbsp; <a href="/">gdn-ai.com</a>
+  </div>
+</footer>
+
+</body>
+</html>
