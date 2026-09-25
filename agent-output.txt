@@ -3,9 +3,7 @@ GDN AI Improvement Run - 2026-09-25
 1. SEO Meta Description and OG Tags [high]
    <meta name="description" content="Gideon is your Claude-powered AI assistant for trade and business. Get instant answers, voice chat, and professional support. 
 2. Hero Headline and Subheading [high]
-   Hero Headline: "Meet Gideon — Your AI Trade & Business Assistant"
-
-Subheading: "Get instant answers, voice chat support, and a professional workspace built for 
+   <h1>Your AI-Powered Trade & Business Assistant</h1><h2>Meet Gideon — get instant answers, voice chat, and professional support for your business decisions. Try 
 3. FAQ Entry [high]
    Q: What happens after my three free searches?
 
