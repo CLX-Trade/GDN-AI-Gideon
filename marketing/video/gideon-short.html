@@ -1,0 +1,125 @@
+<!doctype html>
+<!-- 1080x1920 Short, rendered frame by frame through window.render(t). Timings come from
+     the voiceover's measured pauses. The pack and its findings match shared/demo-pack.js. -->
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--ink:#f3f5f8;--ink2:#b7bdc9;--ink3:#828b9a;--blue:#2f7bff;--blue2:#72abff;--ok:#3ddc97;--bad:#ff6060}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#050608;color:var(--ink);font-family:Inter,sans-serif}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:72px 72px;-webkit-mask-image:radial-gradient(ellipse 90% 60% at 60% 22%,#000,transparent 80%)}
+.glow{position:absolute;width:1200px;height:1200px;right:-400px;top:-520px;background:radial-gradient(circle,rgba(47,123,255,.42),transparent 62%)}
+#top{position:absolute;left:64px;right:64px;top:190px;display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:16px;font:700 42px Archivo;font-stretch:112%}
+.logo img{width:62px;height:62px;object-fit:contain}
+.tag{font:500 24px 'JetBrains Mono';color:var(--ink3)}
+h1{position:absolute;left:64px;right:64px;top:300px;font:800 104px/1.04 Archivo;font-stretch:106%;letter-spacing:-.025em}
+h1 em{font-style:normal;color:var(--blue2)}
+.scene{position:absolute;inset:0;opacity:0}
+.docs{position:absolute;left:64px;right:64px;top:640px;display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.doc{position:relative;height:430px;background:#10141b;border:2px solid rgba(255,255,255,.15);border-radius:18px;padding:30px;overflow:hidden}
+.doc b{display:block;font:600 34px/1.15 Inter;margin-bottom:26px}
+.doc i{display:block;height:13px;margin-bottom:17px;border-radius:7px;background:rgba(255,255,255,.12)}
+.doc i:nth-child(3){width:82%}.doc i:nth-child(4){width:64%}.doc i:nth-child(5){width:90%}.doc i:nth-child(6){width:48%}
+.tick{position:absolute;right:26px;bottom:24px;width:84px;height:84px;border-radius:50%;background:rgba(61,220,151,.16);border:3px solid var(--ok);display:grid;place-items:center;font:600 46px Inter;color:var(--ok);opacity:0}
+.matrix{position:absolute;left:64px;right:64px;top:590px}
+.heads{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px;font:500 30px 'JetBrains Mono';color:var(--ink2);text-align:center}
+.row{margin-bottom:26px;opacity:0}
+.label{font:500 28px Inter;color:var(--ink3);margin-bottom:10px}
+.cells{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.c{min-height:112px;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px 8px;border-radius:12px;font:500 26px/1.2 'JetBrains Mono';color:#9ee7c7;background:rgba(61,220,151,.1);border:2px solid transparent;overflow:hidden}
+.c.none{background:rgba(255,255,255,.025);color:rgba(255,255,255,.2)}
+.c.bad{color:#ffc0c0;background:rgba(255,96,96,.16);border-color:var(--bad)}
+#beam{position:absolute;top:640px;height:880px;width:150px;background:linear-gradient(90deg,transparent,rgba(47,123,255,.4),transparent);opacity:0}
+#caption{position:absolute;left:64px;right:64px;top:1490px;font:800 74px/1.06 Archivo;font-stretch:104%;letter-spacing:-.02em;color:var(--bad)}
+.verdict{position:absolute;left:64px;right:64px;top:700px;padding:56px;border-radius:26px;border:3px solid var(--bad);background:rgba(255,96,96,.13)}
+.verdict b{display:block;font:800 140px/1 Archivo;font-stretch:108%;color:#ffb1b1}
+.verdict p{font:500 44px/1.3 Inter;margin-top:26px;color:var(--ink)}
+.close{position:absolute;left:64px;right:64px;top:430px;text-align:center}
+.close img{width:300px;height:300px;object-fit:contain;margin:0 auto 26px;display:block}
+.close h2{font:700 120px Archivo;font-stretch:112%}
+.close p{font:500 52px/1.3 Inter;color:var(--ink2);margin-top:28px}
+.cta{display:inline-block;margin-top:66px;padding:34px 70px;border-radius:18px;background:var(--blue);font:700 60px Inter;box-shadow:0 20px 80px -14px rgba(47,123,255,.7)}
+.url{font:500 54px 'JetBrains Mono';color:var(--blue2);margin-top:40px}
+</style></head><body>
+<div class="grid"></div><div class="glow"></div>
+<div id="top"><div class="logo"><img src="file:///Users/guidinardo/crossledger-work/gideon-site/static/media/mark-512.png"><span>Gideon</span></div><div class="tag">Fictional documents</div></div>
+
+<div class="scene" id="a"><h1 id="ah"></h1>
+  <div class="docs">
+    <div class="doc"><b>Commercial Invoice</b><i></i><i></i><i></i><i></i><div class="tick">✓</div></div>
+    <div class="doc"><b>Packing List</b><i></i><i></i><i></i><i></i><div class="tick">✓</div></div>
+    <div class="doc"><b>Bill of Lading</b><i></i><i></i><i></i><i></i><div class="tick">✓</div></div>
+    <div class="doc"><b>Letter of Credit</b><i></i><i></i><i></i><i></i><div class="tick">✓</div></div>
+  </div>
+</div>
+
+<div class="scene" id="b"><h1>Now read <em>across.</em></h1>
+  <div class="matrix">
+    <div class="heads"><span>INV</span><span>PKL</span><span>B/L</span><span>L/C</span></div>
+    <div class="row" id="r1"><div class="label">Net quantity</div><div class="cells"><div class="c">500.000 MT</div><div class="c" data-bad="1">480.000 MT</div><div class="c">500.000 MT</div><div class="c none">—</div></div></div>
+    <div class="row" id="r2"><div class="label">Seller / shipper</div><div class="cells"><div class="c">Meridian Commodities</div><div class="c">Meridian Commodities</div><div class="c" data-bad="1">Meridian Commodity Trading</div><div class="c">Meridian Commodities</div></div></div>
+    <div class="row" id="r3"><div class="label">Vessel IMO number</div><div class="cells"><div class="c none">—</div><div class="c none">—</div><div class="c" data-bad="1">9074728 should end in 9</div><div class="c none">—</div></div></div>
+    <div class="row" id="r4"><div class="label">Shipped / latest shipment</div><div class="cells"><div class="c none">—</div><div class="c none">—</div><div class="c" data-bad="1">Shipped 9 Sep</div><div class="c" data-bad="1">Latest 5 Sep</div></div></div>
+  </div>
+  <div id="beam"></div>
+  <div id="caption"></div>
+</div>
+
+<div class="scene" id="c"><h1>Looks right page by page.<br><em>Breaks across the pages.</em></h1>
+  <div class="verdict" style="top:1000px"><b>STOP.</b><p>4 high-severity findings. Do not release funds until they are resolved.</p></div>
+</div>
+
+<div class="scene" id="d"><div class="close">
+  <img src="file:///Users/guidinardo/crossledger-work/gideon-site/static/media/mark-512.png">
+  <h2>Gideon</h2>
+  <p>Reads across your whole pack in minutes, before the money moves.</p>
+  <div class="cta" id="cta">Try it free</div>
+  <div class="url" id="url">gdn-ai.com</div>
+</div></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const clamp = (x) => Math.max(0, Math.min(1, x));
+const ease = (x) => { x = clamp(x); return x * x * (3 - 2 * x); };
+const between = (t, a, b, fade = 0.3) => ease((t - a) / fade) * (1 - ease((t - b) / fade));
+const ticks = [...document.querySelectorAll('.tick')];
+const rows = ['r1', 'r2', 'r3', 'r4'].map($);
+
+// Measured from the voiceover: sentence start times in seconds.
+const T = { read: 2.54, across: 5.92, qty: 7.86, shipper: 10.8, imo: 13.04, late: 16.14, bad: 19.7, gideon: 25.36, cta: 29.8 };
+const CAPTIONS = [[T.qty, T.shipper, '20 tonnes short.'], [T.shipper, T.imo, 'A different company.'], [T.imo, T.late, 'Fails its check digit.'], [T.late, T.bad, 'Sailed after the deadline.']];
+
+window.render = (t) => {
+  $('a').style.opacity = between(t, -1, T.across - 0.25);
+  $('ah').innerHTML = t < T.read ? 'These look <em>perfect.</em>' : 'One at a time, <em>each one passes.</em>';
+  ticks.forEach((el, i) => {
+    const start = T.read + 0.2 + i * 0.58;
+    el.style.opacity = ease((t - start) / 0.2);
+    el.style.transform = `scale(${0.7 + 0.3 * ease((t - start) / 0.2)})`;
+  });
+
+  $('b').style.opacity = between(t, T.across - 0.2, T.bad - 0.25);
+  const rowStarts = [T.across + 0.35, T.across + 0.65, T.across + 0.95, T.across + 1.25];
+  rows.forEach((row, i) => {
+    row.style.opacity = ease((t - rowStarts[i]) / 0.25);
+    const on = t >= [T.qty, T.shipper, T.imo, T.late][i];
+    row.querySelectorAll('[data-bad]').forEach((c) => c.classList.toggle('bad', on));
+  });
+  const sweep = clamp((t - T.across - 0.1) / 1.6);
+  $('beam').style.left = `${-120 + sweep * 1200}px`;
+  $('beam').style.opacity = t > T.across && t < T.across + 1.8 ? 1 : 0;
+  const cap = CAPTIONS.find(([a, b]) => t >= a && t < b);
+  $('caption').textContent = cap ? cap[2] : '';
+  $('caption').style.opacity = cap ? ease((t - cap[0]) / 0.2) : 0;
+
+  $('c').style.opacity = between(t, T.bad - 0.1, T.gideon - 0.25);
+  $('d').style.opacity = ease((t - T.gideon + 0.1) / 0.35);
+  $('top').style.opacity = t < T.gideon - 0.1 ? 1 : 1 - ease((t - T.gideon + 0.1) / 0.3);
+  const ctaOn = ease((t - T.cta) / 0.3);
+  $('cta').style.opacity = ctaOn;
+  $('url').style.opacity = ctaOn;
+};
+window.render(0);
+</script>
+</body></html>
