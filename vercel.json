@@ -1,26 +1,144 @@
 {
+  "buildCommand": "node scripts/build.mjs",
+  "outputDirectory": "public",
   "cleanUrls": true,
+  "trailingSlash": false,
+  "functions": {
+    "api/chat.js": {
+      "maxDuration": 300
+    },
+    "api/pack.js": {
+      "maxDuration": 300
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/cron-digest",
+      "schedule": "0 22 * * *"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/gdn-ai-membership-portal",
+      "destination": "/pricing",
+      "permanent": true
+    },
+    {
+      "source": "/gdn-ai-trial",
+      "destination": "/try",
+      "permanent": true
+    },
+    {
+      "source": "/gdn-ai-landing",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/gdn-ai-portal",
+      "destination": "/app",
+      "permanent": true
+    },
+    {
+      "source": "/gdn-ai-meeting-room",
+      "destination": "/meeting-room",
+      "permanent": true
+    },
+    {
+      "source": "/membership",
+      "destination": "/pricing",
+      "permanent": true
+    },
+    {
+      "source": "/login",
+      "destination": "/signin",
+      "permanent": true
+    }
+  ],
   "rewrites": [
-    { "source": "/try", "destination": "/try.html" },
-    { "source": "/app", "destination": "/gdn-ai-portal.html" },
-    { "source": "/invest", "destination": "/gideon" }
+    {
+      "source": "/try",
+      "destination": "/workspace"
+    },
+    {
+      "source": "/app",
+      "destination": "/workspace"
+    },
+    {
+      "source": "/invest",
+      "destination": "/gideon"
+    },
+    {
+      "source": "/api/register-interest",
+      "destination": "/api/lead"
+    }
   ],
   "headers": [
     {
-      "source": "/",
+      "source": "/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "no-store, max-age=0" },
-        { "key": "CDN-Cache-Control", "value": "no-store" },
-        { "key": "Vercel-CDN-Cache-Control", "value": "no-store" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), geolocation=(), microphone=(self), payment=()"
+        }
       ]
     },
     {
-      "source": "/(.*\\.html)",
+      "source": "/((?!meeting-room|gideon|invest).*)",
       "headers": [
-        { "key": "Cache-Control", "value": "no-store, max-age=0" },
-        { "key": "CDN-Cache-Control", "value": "no-store" },
-        { "key": "Vercel-CDN-Cache-Control", "value": "no-store" }
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://www.google.com.au https://googleads.g.doubleclick.net; media-src 'self' blob: data:; connect-src 'self' https://www.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net https://www.google.com https://www.googletagmanager.com; worker-src 'self' blob:; frame-src https://www.googletagmanager.com https://td.doubleclick.net; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'"
+        }
+      ]
+    },
+    {
+      "source": "/(meeting-room|gideon|invest)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com https://googleads.g.doubleclick.net; media-src 'self' blob: data:; connect-src 'self' https://api.anthropic.com https://api.openai.com https://generativelanguage.googleapis.com https://www.google-analytics.com https://*.analytics.google.com https://*.g.doubleclick.net https://www.google.com https://www.googletagmanager.com; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/vendor/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/media/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"
+        }
       ]
     }
-  ]
+  ],
+  "fluid": true
 }
