@@ -1,52 +1,68 @@
-import Stripe from 'stripe';
-
-// Only these price IDs may be charged. From your Stripe products.
-const ALLOWED = new Set([
-  'price_1TczRdFDVJ23RHCnpLU6lkAf', // Gideon Simple Access - monthly
-  'price_1TczW2FDVJ23RHCnwRGRc2Kf', // Gideon Simple Access - annual
-  'price_1TczVZFDVJ23RHCnhSs461kt', // Gideon Professional - monthly
-
-  'price_1TczVZFDVJ23RHCn8bJl925S',  // Gideon Professional - annual
-  'price_1Td6sTFDVJ23RHCn3pOpFSx8', // Meeting Room Access - daily (one-time)
-  'price_1Td6vUFDVJ23RHCnFN69OQMb' // Meeting Room Access - monthly (one-time)
-]);
-
-// One-time Meeting Room passes are charged as a single payment, not a subscription.
-// One-time prices use Stripe 'payment' mode; recurring prices use 'subscription'.
-// The daily Meeting Room pass is one-time; the monthly pass is a recurring subscription.
-const ONE_TIME_PRICES = new Set(['price_1Td6sTFDVJ23RHCn3pOpFSx8']);
+// Starts a Stripe Checkout, or opens the Stripe billing portal for an existing
+// customer (?action=portal). The browser only ever names a plan key: which price
+// that maps to is decided here.
+import { json, query, originAllowed, isEmail, normalEmail, baseUrl, parseCookies, ipHash } from '../lib/http.js';
+import { PLANS, planForPrice } from '../lib/plans.js';
+import { stripe } from '../lib/deps.js';
+import { readEmail } from '../lib/session.js';
+import { rateLimit } from '../lib/quota.js';
+import { metric } from '../lib/metrics.js';
+import { findCustomerIds } from '../lib/entitlement.js';
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
+  if (!originAllowed(req)) return json(res, 403, { error: 'Forbidden' });
+  if (query(req).get('action') === 'portal') return portal(req, res);
+  return checkout(req, res);
+}
 
-  const key = (process.env.STRIPE_SECRET_KEY || '').trim();
-  if (!key) {
-    console.error('STRIPE_SECRET_KEY is missing or empty at runtime');
-    return res.status(500).json({ error: 'Stripe is not configured (missing secret key).' });
-  }
-
-  const body = req.body || {};
-  const priceId = body.priceId;
-  const email = body.email;
-  if (!ALLOWED.has(priceId)) return res.status(400).json({ error: 'Unknown price' });
+async function checkout(req, res) {
+  const body = req.body && typeof req.body === 'object' ? req.body : {};
+  const key = typeof body.plan === 'string' ? body.plan : null;
+  const plan = key && Object.hasOwn(PLANS, key)
+    ? { key, ...PLANS[key] }
+    : planForPrice(body.priceId); // older cached pages still post a price id
+  if (!plan) return json(res, 400, { error: 'Unknown plan' });
 
   try {
-    const stripe = new Stripe(key);
-    const base = process.env.PUBLIC_BASE_URL || ('https://' + req.headers.host);
-    // Meeting Room pass purchases redirect to the room, not the Gideon portal.
-    // ONE_TIME_PRICES covers the daily pass; the monthly pass is a subscription
-    // so its price ID is listed explicitly here. Add any new pass IDs to this check.
-    const session = await stripe.checkout.sessions.create({
-      mode: ONE_TIME_PRICES.has(priceId) ? 'payment' : 'subscription',
-      line_items: [{ price: priceId, quantity: 1 }],
-      customer_email: email || undefined,
-      success_url: (ONE_TIME_PRICES.has(priceId) || priceId === 'price_1Td6vUFDVJ23RHCnFN69OQMb') ? base + '/gdn-ai-meeting-room.html?paid=1&session_id={CHECKOUT_SESSION_ID}' : base + '/gdn-ai-portal.html?paid=1&session_id={CHECKOUT_SESSION_ID}',
-      cancel_url: base + '/gdn-ai-membership-portal.html?canceled=1',
-      allow_promotion_codes: true
+    if (!(await rateLimit('checkout', ipHash(req), 20, 600))) return json(res, 429, { error: 'Too many attempts. Please wait a few minutes.' });
+  } catch { /* never block a sale because the limiter is down */ }
+
+  const typed = normalEmail(body.email);
+  const signedIn = readEmail(parseCookies(req));
+  const email = signedIn || (isEmail(typed) ? typed : undefined);
+  const ref = String(body.ref || '').replace(/[^\w.:/-]/g, '').slice(0, 120);
+  const base = baseUrl(req);
+
+  try {
+    const session = await stripe().checkout.sessions.create({
+      mode: plan.mode,
+      line_items: [{ price: plan.price, quantity: 1 }],
+      customer_email: email,
+      allow_promotion_codes: true,
+      success_url: `${base}/api/auth?action=complete&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${base}/pricing?checkout=canceled`,
+      metadata: { plan: plan.key, ref },
+      ...(plan.mode === 'subscription' ? { subscription_data: { metadata: { plan: plan.key, ref } } } : {}),
     });
-    return res.status(200).json({ url: session.url });
+    await metric('checkout_started');
+    return json(res, 200, { url: session.url });
   } catch (e) {
-    console.error('Stripe checkout error:', e && e.message, e && e.type);
-    return res.status(500).json({ error: 'Checkout failed', detail: (e && e.message) || 'unknown' });
+    console.error('checkout failed', e && e.type, e && e.message);
+    return json(res, 502, { error: 'Checkout could not start. Please try again, or email gnardo@gdngroup.com.au.' });
+  }
+}
+
+async function portal(req, res) {
+  const email = readEmail(parseCookies(req));
+  if (!email) return json(res, 401, { error: 'Please sign in first.' });
+  try {
+    const customerIds = await findCustomerIds(email);
+    if (!customerIds.length) return json(res, 404, { error: 'No billing account found for this email.', code: 'no_customer' });
+    const session = await stripe().billingPortal.sessions.create({ customer: customerIds[0], return_url: `${baseUrl(req)}/app` });
+    return json(res, 200, { url: session.url });
+  } catch (e) {
+    console.error('billing portal failed', e && e.message);
+    return json(res, 502, { error: 'The billing page is unavailable. Email gnardo@gdngroup.com.au and we will change or cancel your plan.', code: 'portal_unavailable' });
   }
 }
