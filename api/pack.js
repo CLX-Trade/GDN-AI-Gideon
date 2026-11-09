@@ -11,7 +11,7 @@ import crypto from 'node:crypto';
 import { json, addCookie, originAllowed, query, randomToken } from '../lib/http.js';
 import { resolveIdentity } from '../lib/identity.js';
 import { consume, refund, rateLimit } from '../lib/quota.js';
-import { structured, ModelError } from '../lib/claude.js';
+import { structured, ModelError, alertIfOutOfCredit } from '../lib/claude.js';
 import { EXTRACT_SYSTEM, EXTRACT_SCHEMA, RECONCILE_SYSTEM, RECONCILE_SCHEMA } from '../lib/prompts.js';
 import { reconcile, FIELDS } from '../shared/reconcile.js';
 import { TIERS, TRIAL } from '../lib/plans.js';
@@ -64,8 +64,9 @@ async function spendRunStep(run, step, max, isMember) {
   }
 }
 
-function modelFailure(res, e, fallback) {
+async function modelFailure(res, e, fallback) {
   console.error('pack model call failed', e && e.kind, e && e.message);
+  await alertIfOutOfCredit(e);
   if (e instanceof ModelError && e.kind === 'too_long') return json(res, 413, { error: 'This document is too long to read in one pass. Split it and try again.', code: 'too_long' });
   if (e instanceof ModelError && e.kind === 'refusal') return json(res, 422, { error: 'Gideon could not process this document.', code: 'refused' });
   return json(res, 502, { error: fallback, code: 'upstream' });

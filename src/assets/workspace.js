@@ -3,6 +3,8 @@
 // nothing here can grant access by being edited in the browser.
 import { readDocument, documentBlocks, ACCEPT, ReadError } from './doc-reader.js';
 import { generateFile, extractFiles } from './files.js';
+import { Speaker, Talk, TalkError, audio, talkSupported } from './voice.js';
+import { displayText, windowMessages, annotateInterrupted, wantsPackCheck, wordCount, headline } from './speech.js';
 
 const $ = (id) => document.getElementById(id);
 const IS_APP_ROUTE = location.pathname === '/app';
@@ -16,6 +18,11 @@ const state = {
   staged: [],
   attachments: [],
   running: false,
+  packRunning: false,
+  queue: [],
+  heldTurn: '',
+  fillerTurn: false,
+  dictation: false,
   voice: false,
 };
 
@@ -67,6 +74,7 @@ function renderHistory() {
 function openConversation(id) {
   const conv = loadHistory().find((c) => c.id === id);
   if (!conv || state.running) return;
+  speaker.discard();
   state.conv = conv;
   closeRail();
   if (conv.kind === 'pack') showReport(conv.report);
@@ -168,6 +176,7 @@ function stageFiles(files) {
   const fresh = files.map((file) => ({ file, name: file.name, state: 'reading', note: 'Opening in your browser…', doc: null }));
   state.staged.push(...fresh);
   renderStage();
+  if (talk.active && !speaker.active) speaker.clip('got-it');
   for (const item of fresh) {
     readDocument(item.file, (note) => { item.note = note; updateStagedRow(item); })
       .then((doc) => {
@@ -298,6 +307,7 @@ async function runPack() {
   const items = state.staged.filter((i) => i.state === 'ready');
   state.staged = items;
   state.running = true;
+  state.packRunning = true;
   setComposerEnabled(false);
   try {
     const started = await postPack('start', { documents: items.length });
@@ -345,13 +355,21 @@ async function runPack() {
     state.staged = [];
     showReport(report);
     await refreshStatus();
+    // On a call, Gideon reports back in his own voice, unless he was asked something meanwhile.
+    if (talk.active && !state.heldTurn) speaker.say(`${headline(report.summary || (VERDICTS[report.verdict] || VERDICTS.review)[1])} The full report is on your screen.`);
   } catch (e) {
     console.error('pack failed', e);
     showBanner('Something interrupted the check. Please try again.', true);
     renderStage();
   } finally {
     state.running = false;
+    state.packRunning = false;
     setComposerEnabled(true);
+    if (state.heldTurn) {
+      const held = state.heldTurn;
+      state.heldTurn = '';
+      chain(() => spokenTurn(held));
+    }
   }
 }
 
@@ -364,6 +382,13 @@ const VERDICTS = {
 function evidenceTable(evidence) {
   if (!evidence || !evidence.length) return '';
   return `<table class="evidence">${evidence.map((e) => `<tr><td>${escapeHtml(e.document)}${e.page ? ` <span class="muted">p.${escapeHtml(e.page)}</span>` : ''}</td><td>${escapeHtml(e.value)}</td></tr>`).join('')}</table>`;
+}
+
+function reportDocument(report) {
+  const { rules } = report;
+  const headline = (VERDICTS[report.verdict] || VERDICTS.review)[1];
+  const brief = `Here is the pack report you produced.\n\nVerdict: ${headline}\nSummary: ${report.summary || 'n/a'}\n\nFindings:\n${[...rules.findings, ...report.aiFindings].map((f) => `- [${f.severity}] ${f.title}: ${f.detail}`).join('\n')}\n\nExtracted values:\n${rules.matrix.map((m) => `${m.label}: ${m.cells.map((cell, i) => (cell.length ? `${rules.documents[i].name} = ${cell.map((c) => c.value).join(', ')}` : null)).filter(Boolean).join('; ')}`).join('\n')}`;
+  return { name: 'Pack report', text: brief, images: [], pages: null, notes: [] };
 }
 
 function showReport(report) {
@@ -401,8 +426,7 @@ function showReport(report) {
   $('report-print').addEventListener('click', () => window.print());
   $('report-new').addEventListener('click', showStart);
   $('report-ask').addEventListener('click', () => {
-    const brief = `Here is the pack report you produced.\n\nVerdict: ${headline}\nSummary: ${report.summary || 'n/a'}\n\nFindings:\n${[...rules.findings, ...report.aiFindings].map((f) => `- [${f.severity}] ${f.title}: ${f.detail}`).join('\n')}\n\nExtracted values:\n${rules.matrix.map((m) => `${m.label}: ${m.cells.map((cell, i) => (cell.length ? `${rules.documents[i].name} = ${cell.map((c) => c.value).join(', ')}` : null)).filter(Boolean).join('; ')}`).join('\n')}`;
-    state.attachments = [{ name: 'Pack report', text: brief, images: [], pages: null, notes: [] }];
+    state.attachments = [reportDocument(report)];
     renderAttachments();
     state.conv = null;
     showChat(true);
@@ -481,7 +505,7 @@ function aiBubble() {
 
 function fillAnswer(node, text, { sources = [], truncated = false, finished = true } = {}) {
   const answer = node.querySelector('.answer');
-  const { clean, files, pending } = extractFiles(text);
+  const { clean, files, pending } = extractFiles(displayText(text));
   answer.innerHTML = renderMarkdown(clean) + (pending ? '<p class="thinking"><i></i>Preparing your file…</p>' : '');
   const col = node.querySelector('.answer-col');
   col.querySelectorAll('.files,.sources,.msg-actions,.truncated').forEach((n) => n.remove());
@@ -583,75 +607,230 @@ async function readStream(res, on) {
   }
 }
 
-async function sendFromComposer() {
-  if (state.running) return;
+// The answer being written right now, if any. Only one runs at a time, and everything
+// that wants to start another goes through userTurn or the queue below.
+let activeRun = null;
+let turnChain = Promise.resolve();
+const READ_ALOUD_CHARS = 1400;
+const FILLER_AFTER_MS = 700;
+
+function chain(job) {
+  turnChain = turnChain.then(job).catch((e) => console.error('turn failed', e));
+  return turnChain;
+}
+function launch(turn) {
+  sendMessage(turn).catch((e) => console.error('message failed', e));
+}
+
+// The composer is never locked. Typing or pasting while Gideon writes is fine, and
+// sending waits for him to finish, unless he is on a call, where people just cut in.
+function sendFromComposer() {
   const input = $('input');
   const text = input.value.trim();
   const docs = state.attachments;
-  if (!text && !docs.length) return;
-
-  if (!state.conv || state.conv.kind !== 'chat') {
-    const seed = text || docs[0].name;
-    state.conv = { id: crypto.randomUUID(), kind: 'chat', title: seed.slice(0, 64), messages: [] };
-    showChat();
-  }
-  const thread = $('thread');
-  const names = docs.map((d) => d.name);
-  const api = docs.length
-    ? [...docs.flatMap(documentBlocks), { type: 'text', text: text || 'Please review the attached document and tell me what stands out.' }]
-    : text;
-  const userMessage = { role: 'user', text, names, api };
-  state.conv.messages.push(userMessage);
-  thread.append(userBubble(text, names));
+  if ((!text && !docs.length) || state.packRunning) return;
   input.value = '';
   input.style.height = 'auto';
   state.attachments = [];
   renderAttachments();
+  if (talk.active) {
+    talk.touch();
+    chain(() => userTurn({ text, docs }));
+  } else if (activeRun) {
+    const userNode = userBubble(text, docs.map((d) => d.name));
+    userNode.classList.add('queued');
+    $('thread').append(userNode);
+    scrollDown();
+    state.queue.push({ text, docs, userNode });
+  } else {
+    if (speaker.active) speaker.discard();
+    launch({ text, docs });
+  }
+}
+
+function stopRun(mode) {
+  const run = activeRun;
+  if (!run) return Promise.resolve();
+  run.stopMode = mode;
+  speaker.discard();
+  run.controller.abort();
+  return run.finished;
+}
+
+// Records how much of the last answer was actually heard, so the model does not carry
+// on as if the person sat through all of it.
+function markInterrupted() {
+  const messages = (state.conv && state.conv.messages) || [];
+  const last = messages[messages.length - 1];
+  if (!last || last.role !== 'assistant') return;
+  last.api = annotateInterrupted(last.text, speaker.heardText());
+  persist(state.conv);
+}
+
+async function userTurn({ text, docs = [], spoken = false }) {
+  let message = text;
+  let attached = docs;
+  if (activeRun && activeRun.completed) {
+    // The answer is written and saved, and its first sentence may not have played yet.
+    // That is an interruption, not an unfinished thought.
+    speaker.discard();
+    markInterrupted();
+    await activeRun.finished;
+  } else if (activeRun) {
+    // If Gideon has not said a word yet, the person had simply not finished their
+    // thought. Take it all back and answer the whole thing, at no extra charge.
+    const stillThinking = spoken && !speaker.playedThisTurn;
+    if (stillThinking) {
+      message = `${activeRun.userText} ${text}`.trim();
+      attached = [...activeRun.docs, ...docs];
+    }
+    await stopRun(stillThinking ? 'merge' : 'interrupt');
+  } else if (speaker.active) {
+    speaker.discard();
+    markInterrupted();
+  }
+  launch({ text: message, docs: attached });
+}
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// A turn that arrives by voice picks up whatever is on the desk: documents waiting to
+// be checked, the report on screen, anything pasted into the box.
+async function spokenTurn(spoken) {
+  if (state.packRunning) {
+    state.heldTurn = `${state.heldTurn} ${spoken}`.trim();
+    speaker.clip('busy');
+    return;
+  }
+  if (state.staged.length) {
+    for (let i = 0; i < 40 && state.staged.some((s) => s.state === 'reading'); i++) await sleep(250);
+    const ready = state.staged.filter((s) => s.state === 'ready');
+    const max = state.status ? state.status.maxDocsPerPack : 3;
+    if (ready.length >= 2 && ready.length <= max && wantsPackCheck(spoken)) {
+      speaker.clip('okay');
+      runPack();
+      return;
+    }
+    state.attachments = [...state.attachments, ...ready.map((s) => s.doc)];
+    state.staged = [];
+    renderAttachments();
+  }
+  if (state.conv && state.conv.kind === 'pack') {
+    state.attachments = [reportDocument(state.conv.report), ...state.attachments];
+    state.conv = null;
+    renderAttachments();
+  }
+  const input = $('input');
+  const typed = input.value.trim();
+  let text = spoken;
+  if (typed && wordCount(spoken) >= 2) {
+    text = `${spoken}\n\n${typed}`;
+    input.value = '';
+    input.style.height = 'auto';
+  }
+  const docs = state.attachments;
+  state.attachments = [];
+  renderAttachments();
+  window.Gideon.track('talk_turn');
+  await userTurn({ text, docs, spoken: true });
+}
+
+async function sendMessage({ text, docs = [], userNode = null }) {
+  const inTalk = talk.active;
+  if (!state.conv || state.conv.kind !== 'chat') {
+    const seed = text || docs[0].name;
+    state.conv = { id: crypto.randomUUID(), kind: 'chat', title: seed.slice(0, 64), messages: [] };
+    showChat();
+  } else if (!$('thread')) {
+    showChat();
+  }
+  const thread = $('thread');
+  const input = $('input');
+  const names = docs.map((d) => d.name);
+  const api = docs.length
+    ? [...docs.flatMap(documentBlocks), { type: 'text', text: text || 'Please review the attached document and tell me what stands out.' }]
+    : text;
+  state.conv.messages.push({ role: 'user', text, names, api });
+  if (userNode) {
+    userNode.classList.remove('queued');
+  } else {
+    userNode = userBubble(text, names);
+    thread.append(userNode);
+  }
 
   const node = aiBubble();
   node.querySelector('.answer').innerHTML = '<span class="thinking"><i></i>Thinking…</span>';
   thread.append(node);
   scrollDown();
 
-  const requestMessages = state.conv.messages.map((m) => ({ role: m.role, content: m.api || m.text }));
-  const body = JSON.stringify({ messages: requestMessages });
+  let requestMessages = state.conv.messages.map((m) => ({ role: m.role, content: m.api || m.text }));
+  if (inTalk) requestMessages = windowMessages(requestMessages);
+  const body = JSON.stringify(inTalk ? { messages: requestMessages, voice: true } : { messages: requestMessages });
   if (body.length > MAX_BODY_CHARS) {
     state.conv.messages.pop();
     node.querySelector('.answer').innerHTML = '<p class="msg-err">This is too much to send at once. Please start a new chat, or attach fewer or smaller documents.</p>';
     return;
   }
 
+  const run = { controller: new AbortController(), text: '', userText: text, docs, stopMode: null };
+  let settled;
+  run.finished = new Promise((resolve) => { settled = resolve; });
+  activeRun = run;
   state.running = true;
-  setComposerEnabled(false);
+
+  const speaking = inTalk || state.voice;
+  if (inTalk) speaker.begin();
+  else if (state.voice) speaker.begin({ maxChars: READ_ALOUD_CHARS });
+  let filler = null;
+  if (inTalk) {
+    talk.setBusy('thinking');
+    // A person answering takes a beat and makes a sound. Silence reads as a dropped call.
+    filler = setTimeout(() => {
+      if (!talk.active || speaker.playedThisTurn || speaker.playing || speaker.held) return;
+      state.fillerTurn = !state.fillerTurn;
+      if (state.fillerTurn) speaker.clip(['right', 'okay', 'mhm', 'moment'][Math.floor(Math.random() * 4)]);
+    }, FILLER_AFTER_MS);
+  }
+
   let text2 = '';
   let meta = { sources: [], truncated: false };
   try {
-    const res = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body });
+    const res = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body, signal: run.controller.signal });
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       state.conv.messages.pop();
+      speaker.discard();
       if (res.status === 402) {
         node.remove();
-        thread.lastChild && thread.lastChild.remove();
-        input.value = text;
-        state.attachments = docs;
+        userNode.remove();
+        if (!input.value) input.value = text;
+        state.attachments = [...docs, ...state.attachments];
         renderAttachments();
         await refreshStatus();
+        if (talk.active) endTalk();
         showPaywall();
         return;
       }
       node.querySelector('.answer').innerHTML = `<p class="msg-err">${escapeHtml(data.error || 'Gideon could not answer just now. Please try again.')}</p>`;
+      if (talk.active) speaker.clip('sorry');
       return;
     }
     let errored = null;
     await readStream(res, (event, data) => {
       if (event === 'delta') {
         text2 += data.text;
+        run.text = text2;
         fillAnswer(node, text2, { finished: false });
         const v = view();
         if (v.scrollHeight - v.scrollTop - v.clientHeight < 160) scrollDown();
-      } else if (event === 'status' && !text2) {
-        node.querySelector('.answer').innerHTML = '<span class="thinking"><i></i>Searching the web…</span>';
+        if (speaking) speaker.feed(data.text);
+        if (inTalk) talk.setBusy('thinking');
+      } else if (event === 'status') {
+        if (!text2) node.querySelector('.answer').innerHTML = '<span class="thinking"><i></i>Searching the web…</span>';
+        if (inTalk && talk.active) {
+          talk.setBusy('searching');
+          if (!speaker.playedThisTurn && !speaker.playing && !text2) speaker.clip('checking');
+        }
       } else if (event === 'done') {
         meta = data;
       } else if (event === 'error') {
@@ -661,11 +840,15 @@ async function sendFromComposer() {
     if (errored && !text2) {
       state.conv.messages.pop();
       node.querySelector('.answer').innerHTML = `<p class="msg-err">${escapeHtml(errored)}</p>`;
+      speaker.discard();
+      if (talk.active) speaker.clip('sorry');
       return;
     }
     if (!text2) {
       state.conv.messages.pop();
       node.querySelector('.answer').innerHTML = '<p class="msg-err">The answer came back empty. Please try again.</p>';
+      speaker.discard();
+      if (talk.active) speaker.clip('sorry');
       return;
     }
     fillAnswer(node, text2, { sources: meta.sources, truncated: meta.truncated });
@@ -675,26 +858,47 @@ async function sendFromComposer() {
       note.textContent = errored;
       node.querySelector('.answer-col').append(note);
     }
-    state.conv.messages.push({ role: 'assistant', text: text2, sources: meta.sources, truncated: meta.truncated });
+    state.conv.messages.push({ role: 'assistant', text: displayText(text2), sources: meta.sources, truncated: meta.truncated });
+    run.completed = true;
     persist(state.conv);
     setTitle(state.conv.title);
-    window.Gideon.track('chat_query', { member: Boolean(state.status && state.status.member) });
-    speak(extractFiles(text2).clean);
+    window.Gideon.track('chat_query', { member: Boolean(state.status && state.status.member), voice: inTalk });
+    if (speaking) speaker.finish();
     await refreshStatus();
   } catch (e) {
-    console.error('chat failed', e);
-    state.conv.messages.pop();
-    node.querySelector('.answer').innerHTML = '<p class="msg-err">The connection dropped. Please try again.</p>';
+    if (run.stopMode === 'merge') {
+      state.conv.messages.pop();
+      node.remove();
+      userNode.remove();
+    } else if (run.stopMode === 'interrupt') {
+      if (run.text) {
+        const full = displayText(run.text);
+        fillAnswer(node, run.text, {});
+        state.conv.messages.push({ role: 'assistant', text: full, api: annotateInterrupted(full, speaker.heardText()) });
+        persist(state.conv);
+      } else {
+        node.remove();
+      }
+    } else {
+      console.error('chat failed', e);
+      state.conv.messages.pop();
+      node.querySelector('.answer').innerHTML = '<p class="msg-err">The connection dropped. Please try again.</p>';
+      speaker.discard();
+      if (talk.active) speaker.clip('sorry');
+    }
   } finally {
+    clearTimeout(filler);
+    activeRun = null;
     state.running = false;
-    setComposerEnabled(true);
-    input.focus();
+    talk.setBusy(null);
+    settled();
+    const next = state.queue.shift();
+    if (next) launch(next);
   }
 }
 
 function setComposerEnabled(on) {
   $('send').disabled = !on;
-  $('input').disabled = !on;
 }
 
 function renderAttachments() {
@@ -724,35 +928,118 @@ async function attachFiles(files) {
     }
   }
   renderAttachments();
+  if (talk.active && state.attachments.length && !speaker.active) speaker.clip('got-it');
 }
 
 /* ---------- voice ---------- */
-let audio = null;
-function stopVoice() {
-  if (audio) { audio.pause(); audio = null; }
-  if ('speechSynthesis' in window) speechSynthesis.cancel();
+const speaker = new Speaker({ onChange: () => talk.refresh() });
+const talk = new Talk({
+  speaker,
+  onState: renderTalk,
+  onLive: (text) => { $('talk-live').textContent = text.length > 110 ? `…${text.slice(-110)}` : text; },
+  onTurn: (text) => { chain(() => spokenTurn(text)); },
+  onLost: (e) => {
+    endTalk();
+    showBanner(`${e.message} You can start again, or keep typing.`, true);
+  },
+  onIdle: () => { speaker.clip('paused'); },
+});
+
+const TALK_LABELS = {
+  connecting: 'Connecting…',
+  listening: 'Listening',
+  hearing: 'Listening',
+  thinking: 'Thinking',
+  searching: 'Searching the web',
+  speaking: 'Speaking',
+  muted: 'Muted. Gideon can still talk to you',
+  paused: 'Microphone paused',
+};
+
+let talkFrame = 0;
+function animateTalk() {
+  if (!talk.active) { talkFrame = 0; return; }
+  const level = speaker.playing ? speaker.level() * 3.5 : talk.micLevel * 6;
+  document.querySelector('.talk-orb').style.setProperty('--lvl', Math.min(1, level).toFixed(3));
+  talkFrame = requestAnimationFrame(animateTalk);
 }
-async function speak(text) {
-  if (!state.voice || !text) return;
-  stopVoice();
-  const plain = text.replace(/[#*`|>_-]+/g, ' ').replace(/\s+/g, ' ').slice(0, 1400);
+
+function renderTalk(s) {
+  const on = s !== 'off';
+  const bar = $('talk');
+  if (bar.dataset.state === s && bar.hidden === !on && $('talk-mute').getAttribute('aria-pressed') === String(talk.muted)) return;
+  bar.hidden = !on;
+  bar.dataset.state = s;
+  $('talk-state').textContent = TALK_LABELS[s] || '';
+  $('talk-start').hidden = on || !talkSupported();
+  $('voice').hidden = on;
+  $('mic').hidden = on || !state.dictation;
+  const mute = $('talk-mute');
+  mute.textContent = s === 'paused' ? 'Resume' : talk.muted ? 'Unmute' : 'Mute';
+  mute.setAttribute('aria-pressed', String(talk.muted));
+  if (on && !talkFrame) talkFrame = requestAnimationFrame(animateTalk);
+}
+
+let wakeLock = null;
+async function holdScreenOn() {
+  try { wakeLock = await navigator.wakeLock.request('screen'); } catch { /* not available here */ }
+}
+
+async function startTalk() {
+  const s = state.status;
+  if (s && !s.member && s.used !== null && s.used >= (s.limit ?? 3)) { showPaywall(); return; }
+  audio();
+  speaker.discard();
+  const clips = speaker.loadClips();
   try {
-    const res = await fetch('/api/speak', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: plain }) });
-    if (!res.ok) throw new Error('no voice');
-    audio = new Audio(URL.createObjectURL(await res.blob()));
-    await audio.play();
-  } catch {
-    if ('speechSynthesis' in window) speechSynthesis.speak(new SpeechSynthesisUtterance(plain));
+    await talk.start();
+  } catch (e) {
+    if (e instanceof TalkError && e.kind === 'paywall') {
+      await refreshStatus();
+      showPaywall();
+    } else {
+      showBanner(`${e instanceof TalkError ? e.message : 'Live conversation could not start.'} You can still type to Gideon.`, true);
+    }
+    return;
   }
+  $('banner').hidden = true;
+  window.Gideon.track('talk_start', { member: Boolean(s && s.member) });
+  holdScreenOn();
+  await Promise.race([clips, sleep(1200)]);
+  const midChat = state.conv && state.conv.messages && state.conv.messages.length;
+  speaker.clip(midChat ? 'okay' : Math.random() < 0.5 ? 'greet-1' : 'greet-2');
 }
+
+function endTalk() {
+  speaker.discard();
+  talk.stop();
+  if (wakeLock) { wakeLock.release().catch(() => {}); wakeLock = null; }
+}
+
+function setupTalk() {
+  if (talkSupported()) $('talk-start').hidden = false;
+  $('talk-start').addEventListener('click', startTalk);
+  $('talk-end').addEventListener('click', endTalk);
+  $('talk-mute').addEventListener('click', async () => {
+    if (!talk.paused) { talk.setMuted(!talk.muted); return; }
+    try {
+      await talk.resume();
+    } catch (e) {
+      showBanner(`${e.message || 'The microphone could not restart.'} You can still type to Gideon.`, true);
+    }
+  });
+  addEventListener('pagehide', () => { if (talk.active) endTalk(); });
+}
+
 function setupMic() {
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   const btn = $('mic');
+  state.dictation = Boolean(SR);
   if (!SR) { btn.hidden = true; return; }
   let rec = null;
   btn.addEventListener('click', () => {
     if (rec) { rec.stop(); return; }
-    stopVoice();
+    speaker.discard();
     rec = new SR();
     rec.lang = 'en-AU';
     rec.interimResults = false;
@@ -819,23 +1106,31 @@ async function boot() {
     try { localStorage.removeItem(HISTORY_KEY); } catch { /* storage unavailable */ }
     showStart();
   });
-  $('new-check').addEventListener('click', () => { if (!state.running) { closeRail(); showStart(); } });
-  $('new-chat').addEventListener('click', () => { if (!state.running) { closeRail(); showChat(true); $('input').focus(); } });
+  $('new-check').addEventListener('click', () => { if (!state.running) { speaker.discard(); closeRail(); showStart(); } });
+  $('new-chat').addEventListener('click', () => { if (!state.running) { speaker.discard(); closeRail(); showChat(true); $('input').focus(); } });
   $('burger').addEventListener('click', () => $('ws').classList.toggle('rail-open'));
   $('voice').addEventListener('click', (e) => {
+    audio();
     state.voice = !state.voice;
     e.currentTarget.classList.toggle('on', state.voice);
     e.currentTarget.setAttribute('aria-pressed', String(state.voice));
-    if (!state.voice) stopVoice();
+    if (!state.voice) speaker.discard();
   });
   const input = $('input');
-  input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = `${Math.min(input.scrollHeight, 180)}px`; });
+  input.addEventListener('input', () => { input.style.height = 'auto'; input.style.height = `${Math.min(input.scrollHeight, 180)}px`; if (talk.active) talk.touch(); });
+  input.addEventListener('paste', (e) => {
+    const files = [...((e.clipboardData && e.clipboardData.files) || [])];
+    if (files.length) { e.preventDefault(); attachFiles(files); return; }
+    const pasted = e.clipboardData ? e.clipboardData.getData('text') : '';
+    if (talk.active && pasted.length > 200 && !speaker.active) speaker.clip('got-it');
+  });
   input.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendFromComposer(); } });
   $('composer').addEventListener('submit', (e) => { e.preventDefault(); sendFromComposer(); });
   const attach = $('attach');
   attach.accept = ACCEPT;
   attach.addEventListener('change', () => { attachFiles([...attach.files]); attach.value = ''; });
   setupMic();
+  setupTalk();
   setupPaywall();
 
   // Dropping files anywhere in the app starts a pack, or attaches them mid-chat.
@@ -844,9 +1139,9 @@ async function boot() {
   addEventListener('drop', (e) => {
     e.preventDefault();
     const files = [...(e.dataTransfer ? e.dataTransfer.files : [])];
-    if (!files.length || state.running) return;
+    if (!files.length) return;
     if (state.conv && state.conv.kind === 'chat') attachFiles(files);
-    else stageFiles(files);
+    else if (!state.running) stageFiles(files);
   });
 
   const status = await refreshStatus();

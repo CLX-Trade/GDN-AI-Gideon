@@ -28,7 +28,7 @@ const terms = legal('/terms', 'Terms of use', 'The terms that apply when you use
 <ul>
 <li>Plans, prices and monthly query limits are shown on the <a href="/pricing">pricing page</a>. Prices are in Australian dollars.</li>
 <li>Subscriptions renew automatically at the end of each billing period until you cancel. You can cancel at any time from Manage billing in your account. Your access continues until the end of the paid period.</li>
-<li>A query is one chat message or one document in a pack check. Unused queries do not carry over.</li>
+<li>A query is one chat message or one document in a pack check. In a live voice conversation, five spoken exchanges count as one query, unless documents are involved or the answer is long. Unused queries do not carry over.</li>
 <li>Keep access to your email account secure, because sign-in links are sent there.</li>
 <li>We may change prices or plans. We will give you notice before a price change affects a renewal, and you may cancel before it takes effect.</li>
 </ul>
@@ -67,7 +67,7 @@ const privacy = legal('/privacy', 'Privacy policy', 'How GDN Enterprise handles 
 <tr><td>Vercel</td><td>Website hosting</td></tr>
 <tr><td>Upstash</td><td>Database for sign-in links, usage counters and enquiries</td></tr>
 <tr><td>Resend</td><td>Sending sign-in and account email</td></tr>
-<tr><td>ElevenLabs</td><td>Reading answers aloud, only if you turn voice on</td></tr>
+<tr><td>ElevenLabs</td><td>Reading answers aloud if you turn voice on, and turning your speech into text if you start a conversation. Your microphone audio goes straight from your browser to ElevenLabs while a conversation is open. GDN does not record or keep it.</td></tr>
 <tr><td>Google</td><td>Analytics and advertising measurement</td></tr>
 </table>
 <p>Some of these providers are based outside Australia, including in the United States, so your information may be handled overseas. If you use Meeting Room seats with your own API keys, your browser talks directly to the provider you choose, and that provider's terms apply.</p>

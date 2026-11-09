@@ -8,7 +8,7 @@ import { sendEmail, emailShell, escapeHtml, OWNER_EMAIL } from '../lib/email.js'
 import { json, today } from '../lib/http.js';
 
 // Opus 5.5 list prices in US dollars. A guide to margin, not an invoice.
-const COST = { input: 4 / 1e6, output: 20 / 1e6, search: 10 / 1000 };
+const COST = { input: 4 / 1e6, output: 20 / 1e6, search: 10 / 1000, voiceChar: 0.05 / 1000 };
 
 async function attempt(name, fn) {
   try {
@@ -26,7 +26,12 @@ export async function runHealthChecks() {
       await store().set(key, 1, { ex: 60 });
       if (Number(await store().get(key)) !== 1) throw new Error('read back failed');
     }),
-    attempt('Claude', async () => { await anthropic().models.retrieve(MODEL()); return MODEL(); }),
+    attempt('Claude', async () => {
+      await anthropic().models.retrieve(MODEL());
+      // Asking whether a model exists succeeds even when the account is out of credit.
+      await anthropic().beta.messages.stream({ model: 'claude-haiku-5-5', max_tokens: 16, messages: [{ role: 'user', content: 'Say ok.' }] }).finalMessage();
+      return MODEL();
+    }),
     attempt('Stripe prices', async () => {
       const drift = [];
       for (const [key, plan] of Object.entries(PLANS)) {
@@ -38,6 +43,11 @@ export async function runHealthChecks() {
     }),
     attempt('Sign-in key', async () => { if (!process.env.SESSION_SECRET) throw new Error('SESSION_SECRET is not set'); }),
     attempt('Email', async () => { if (!process.env.RESEND_API_KEY) throw new Error('RESEND_API_KEY is not set'); }),
+    attempt('Voice', async () => {
+      if (!process.env.ELEVENLABS_API_KEY || !process.env.ELEVENLABS_VOICE_ID) throw new Error('ElevenLabs is not configured');
+      const r = await fetch('https://api.elevenlabs.io/v1/single-use-token/realtime_scribe', { method: 'POST', headers: { 'xi-api-key': process.env.ELEVENLABS_API_KEY } });
+      if (!r.ok) throw new Error(`transcription token refused (${r.status})`);
+    }),
   ]);
 }
 
@@ -49,9 +59,9 @@ export default async function handler(req, res) {
   const [health, numbers, usage] = await Promise.all([
     runHealthChecks(),
     readMetrics(yesterday, FUNNEL),
-    readMetrics(yesterday, ['ai_input_tokens', 'ai_output_tokens', 'ai_web_searches']),
+    readMetrics(yesterday, ['ai_input_tokens', 'ai_output_tokens', 'ai_web_searches', 'voice_chars']),
   ]);
-  const aiCost = (usage.ai_input_tokens || 0) * COST.input + (usage.ai_output_tokens || 0) * COST.output + (usage.ai_web_searches || 0) * COST.search;
+  const aiCost = (usage.ai_input_tokens || 0) * COST.input + (usage.ai_output_tokens || 0) * COST.output + (usage.ai_web_searches || 0) * COST.search + (usage.voice_chars || 0) * COST.voiceChar;
   const failing = health.filter((h) => !h.ok);
 
   const healthRows = health.map((h) => `<tr><td style="padding:5px 10px">${h.ok ? '&#10003;' : '<strong style="color:#c0262d">FAIL</strong>'}</td><td style="padding:5px 10px">${escapeHtml(h.name)}</td><td style="padding:5px 10px;color:#7a8290">${escapeHtml(h.detail)}</td></tr>`).join('');
@@ -69,7 +79,7 @@ export default async function handler(req, res) {
     await sendEmail({
       to: OWNER_EMAIL(),
       subject,
-      html: emailShell(`Gideon, ${yesterday}`, `<h2 style="font-size:14px;margin:18px 0 6px">Systems</h2><table style="border-collapse:collapse;font-size:13px;width:100%">${healthRows}</table><h2 style="font-size:14px;margin:22px 0 6px">Yesterday</h2><table style="border-collapse:collapse;font-size:13px;width:100%">${numberRows}</table><p style="font-size:13px;color:#7a8290;margin-top:14px">Estimated AI cost: US$${aiCost.toFixed(2)}. ${(usage.ai_input_tokens || 0).toLocaleString()} tokens in, ${(usage.ai_output_tokens || 0).toLocaleString()} out, ${usage.ai_web_searches || 0} web searches.</p>`),
+      html: emailShell(`Gideon, ${yesterday}`, `<h2 style="font-size:14px;margin:18px 0 6px">Systems</h2><table style="border-collapse:collapse;font-size:13px;width:100%">${healthRows}</table><h2 style="font-size:14px;margin:22px 0 6px">Yesterday</h2><table style="border-collapse:collapse;font-size:13px;width:100%">${numberRows}</table><p style="font-size:13px;color:#7a8290;margin-top:14px">Estimated AI cost: US$${aiCost.toFixed(2)}. ${(usage.ai_input_tokens || 0).toLocaleString()} tokens in, ${(usage.ai_output_tokens || 0).toLocaleString()} out, ${usage.ai_web_searches || 0} web searches, ${(usage.voice_chars || 0).toLocaleString()} characters of speech.</p>`),
     });
   } catch (e) {
     emailed = false;
