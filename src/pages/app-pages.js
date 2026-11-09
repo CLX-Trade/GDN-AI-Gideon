@@ -31,6 +31,18 @@ export const workspace = page({
     <div class="banner" id="banner" role="status" hidden></div>
     <div class="ws-view" id="view"></div>
     <div class="composer-wrap" id="composer-wrap">
+      <div class="talk-wrap">
+        <button class="talk-start" id="talk-start" type="button" hidden><span class="talk-start-dot" aria-hidden="true"></span>Talk to Gideon</button>
+        <div class="talk" id="talk" data-state="off" hidden>
+          <div class="talk-orb" aria-hidden="true"><img src="/media/mark-96.png" width="24" height="24" alt=""></div>
+          <div class="talk-body">
+            <div class="talk-state" id="talk-state" role="status"></div>
+            <div class="talk-live" id="talk-live"></div>
+          </div>
+          <button class="talk-btn" id="talk-mute" type="button" aria-pressed="false">Mute</button>
+          <button class="talk-btn talk-end" id="talk-end" type="button">End</button>
+        </div>
+      </div>
       <form class="composer" id="composer">
         <div class="chips" id="chips" hidden></div>
         <div class="composer-row">
@@ -98,7 +110,7 @@ export const signin = page({
 });
 
 const PRICING_FAQ = [
-  ['What counts as a query?', 'One chat message, or one document in a pack check. A five-document pack uses five queries. Your counter resets each calendar month.'],
+  ['What counts as a query?', 'One chat message, or one document in a pack check. A five-document pack uses five queries. In a live voice conversation, five spoken exchanges count as one query, unless documents are involved or the answer is long. Your counter resets each calendar month.'],
   ['What currency am I charged in?', 'Australian dollars. Your bank may show a converted amount if your card is in another currency.'],
   ['Can I cancel?', 'Yes, at any time, from Manage billing in your account menu. Access continues until the end of the period you have paid for, and you are not charged again.'],
   ['What happens if I reach my monthly limit?', 'Gideon tells you, and new queries pause until your counter resets or you upgrade. You are never charged extra without choosing to.'],
@@ -140,8 +152,8 @@ export const pricing = page({
       <button id="bill-a" aria-pressed="false">Annual <span class="save">save 30%</span></button>
     </div>
     <div class="grid-3">
-      ${planCard({ id: 'simple', name: 'Simple', monthly: 60, annual: 504, annualMonthly: 42, perDay: 2, features: ['100 queries a month', 'Pack checks up to 5 documents', 'Rule checks and AI review', 'Chat with web search', 'Files in PDF, Word and Excel', 'Voice'] })}
-      ${planCard({ id: 'pro', name: 'Professional', badge: 'For working desks', featured: true, monthly: 210, annual: 1764, annualMonthly: 147, perDay: 7, features: ['1,000 queries a month', 'Pack checks up to 20 documents', 'Rule checks and AI review', 'Chat with web search', 'Files in PDF, Word and Excel', 'Voice'] })}
+      ${planCard({ id: 'simple', name: 'Simple', monthly: 60, annual: 504, annualMonthly: 42, perDay: 2, features: ['100 queries a month', 'Pack checks up to 5 documents', 'Rule checks and AI review', 'Chat with web search', 'Files in PDF, Word and Excel', 'Live voice conversation'] })}
+      ${planCard({ id: 'pro', name: 'Professional', badge: 'For working desks', featured: true, monthly: 210, annual: 1764, annualMonthly: 147, perDay: 7, features: ['1,000 queries a month', 'Pack checks up to 20 documents', 'Rule checks and AI review', 'Chat with web search', 'Files in PDF, Word and Excel', 'Live voice conversation'] })}
       <div class="plan">
         <div class="plan-badge"></div>
         <h3>Enterprise</h3>
