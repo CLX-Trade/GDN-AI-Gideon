@@ -1,86 +1,113 @@
-import { kv } from '@vercel/kv';
-import { parse, serialize } from 'cookie';
+// Gideon chat. Streams the answer as server-sent events so people see it being
+// written instead of watching a spinner for a minute. `stream:false` returns one
+// JSON object for the Meeting Room's Gideon seat.
+import { json, addCookie, originAllowed } from '../lib/http.js';
+import { resolveIdentity } from '../lib/identity.js';
+import { consume, refund, rateLimit } from '../lib/quota.js';
+import { sanitizeMessages, streamAnswer, ModelError } from '../lib/claude.js';
+import { CHAT_SYSTEM } from '../lib/prompts.js';
+import { metric } from '../lib/metrics.js';
+import { activePass } from '../lib/pass.js';
 
-const MODEL = process.env.CLAUDE_MODEL || 'claude-sonnet-4-6';
-const FREE_LIMIT = parseInt(process.env.FREE_TRIAL_LIMIT || '3', 10);
-
-const SYSTEM = "You are Gideon, a thoughtful and highly capable AI assistant with a strong business mind. Behave like a sharp, trusted colleague: genuinely helpful, warm, curious and thorough, and ready to help with anything the user brings, from deep strategy and financial analysis to quick everyday questions. Your default lens is commercial, so you naturally think in terms of strategy, value, risk and the real decision the user needs to make, and you bring genuine expertise across operations, finance, marketing and sales, trade and commodities, research and writing. Explain your thinking when it helps, ask a brief clarifying question when a request is genuinely ambiguous instead of guessing, and give complete, well organised answers rather than clipped ones. Stay warm and professional, write in clean prose with no dash punctuation, and be substantive without padding. Do not describe yourself as any particular company's AI, and do not bring up who operates you unless the user directly asks; if they ask who is behind you, you may say you are provided by GDN. When a question turns on legal, tax, regulatory or financial certainty, give your best analysis and note that a qualified professional should review before acting. You can deliver any output as a downloadable file in whatever format the user asks for, including PDF, Word, HTML, a spreadsheet as CSV or XLSX, plain text, Markdown, JSON, and any code or website file. To create a file, put the complete file content inside a fenced block whose opening line is three backticks immediately followed by gideon-file and a name attribute, then the file content on the following lines, then a closing line of three backticks. The opening line looks exactly like ```gideon-file name=\"report.pdf\" and you choose the file name and extension. Use the extension the user asked for, such as pdf, docx, html, csv, xlsx, md, txt, js, py or css, and if they do not specify pick the most fitting one. For a website or any multi-file deliverable, output one such block per file, for example index.html then styles.css then script.js. Put the real deliverable inside the block, and do not wrap that content in any extra code fences. The content inside the block is always plain, readable content, never raw PDF data, binary, base64, or file-format code. For a pdf or a docx, write the document itself as clean readable text using # headings, **bold**, and bulleted or numbered lists, exactly as a person would read it, and the app renders the real PDF or Word file from that; never output PDF objects, streams or xref tables. For csv or xlsx, write plain comma separated rows. For html and any programming file, write the actual human-readable markup or code. When the file is a document such as a report, proposal, letter or brief, design it to look professional and use your own judgement on structure: open with a clear title, organise the content into sections with descriptive headings, keep paragraphs short, put key terms and figures in **bold**, and use bulleted lists or a simple markdown pipe table wherever it makes the information clearer. You may write one short sentence of normal text before the block. Never tell the user to copy and paste into another program, never give them steps to build the file themselves, and never say that you cannot create or deliver a file, a document, code or a website, because you can always produce it. You can search the web for current information, and you should do so whenever a question depends on recent or live facts, prices, news, or specific details about a company, person, website or market the user mentions; never say that you cannot browse the web, search the internet, or look at a website, because you can. You can read PDFs and images that the user attaches; when a file is attached, use its contents directly and never claim you cannot open files. If the user refers to a file but none is attached, ask them to attach it.";
-
-function randomId() {
-  if (globalThis.crypto && globalThis.crypto.randomUUID) return globalThis.crypto.randomUUID().replace(/-/g, '');
-  return (Date.now().toString(36) + Math.random().toString(36).slice(2));
-}
+const MEMBER_LIMITS = { maxMessages: 80, maxChars: 900000, maxImages: 40 };
+const TRIAL_LIMITS = { maxMessages: 10, maxChars: 200000, maxImages: 12 };
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
+  if (!originAllowed(req)) return json(res, 403, { error: 'Forbidden' });
 
-  const cookies = parse(req.headers.cookie || '');
-  let sid = cookies.gid_sid;
-  if (!sid) {
-    sid = randomId();
-    res.setHeader('Set-Cookie', serialize('gid_sid', sid, { httpOnly: true, secure: true, sameSite: 'lax', path: '/', maxAge: 60 * 60 * 24 * 365 }));
-  }
-  const email = cookies.gid_email || null;
+  const body = req.body && typeof req.body === 'object' ? req.body : {};
+  const identity = await resolveIdentity(req);
+  if (identity.setCookie) addCookie(res, identity.setCookie);
+  const isMember = Boolean(identity.entitlement);
 
-  let isMember = false;
-  if (email) { try { isMember = (await kv.get('member:' + email.toLowerCase())) === true; } catch (e) {} }
-
-  if (!isMember) {
-    let used = 0;
-    try { used = (await kv.get('trial:' + sid)) || 0; } catch (e) {}
-    if (used >= FREE_LIMIT) {
-      return res.status(402).json({ paywall: true, message: 'Free trial complete' });
-    }
-  }
-
-  const body = req.body || {};
-  const messages = body.messages;
-  if (!Array.isArray(messages) || messages.length === 0) {
-    return res.status(400).json({ error: 'messages array required' });
-  }
-
-  function callClaude(useTools) {
-    const payload = { model: MODEL, max_tokens: 8192, system: SYSTEM, messages };
-    if (useTools) payload.tools = [{ type: 'web_search_20250305', name: 'web_search', max_uses: 5 }];
-    return fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify(payload)
-    });
-  }
+  const checked = sanitizeMessages(body.messages, isMember ? MEMBER_LIMITS : TRIAL_LIMITS);
+  if (checked.error) return json(res, 400, { error: checked.error, code: checked.code || 'invalid' });
 
   try {
-    let r = await callClaude(true);
-    let data = await r.json();
-    // If web search is disabled/blocked on the account, the whole request fails.
-    // Retry once without it so Gideon always answers (just without live web search).
-    if (!r.ok) {
-      console.error('Claude error (with web search)', data);
-      r = await callClaude(false);
-      data = await r.json();
-    }
-    if (!r.ok) {
-      console.error('Claude error (no tools)', data);
-      const detail = (data && data.error && (data.error.message || data.error.type)) || 'unknown';
-      return res.status(502).json({ error: 'Upstream error', detail });
-    }
-    const text = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n').trim();
+    const allowed = await rateLimit('chat', identity.email || identity.ipHash, isMember ? 40 : 15, 60);
+    if (!allowed) return json(res, 429, { error: 'Too many requests. Please wait a moment.', code: 'rate' });
+  } catch { /* the quota step below decides what a store outage means */ }
 
-    let trialUsed = 0;
-    if (!isMember) {
-      try {
-        const cur = (await kv.get('trial:' + sid)) || 0;
-        trialUsed = cur + 1;
-        await kv.set('trial:' + sid, trialUsed);
-      } catch (e) {}
-    }
-    return res.status(200).json({ text, member: isMember, trialUsed, trialLimit: FREE_LIMIT });
-  } catch (e) {
-    console.error(e);
-    return res.status(500).json({ error: 'Server error' });
+  // A live Meeting Room pass covers its own Gideon seat, within a daily ceiling.
+  let quota = null;
+  const roomSeat = body.room === true && !isMember && identity.email;
+  if (roomSeat) {
+    const pass = await activePass(identity.email);
+    const within = pass && await rateLimit('room', identity.email, 100, 86400).catch(() => false);
+    if (!within) return json(res, 402, { paywall: true, reason: 'pass' });
+    quota = { ok: true, used: null, limit: null };
+  } else {
+    quota = await consume(identity, 1);
   }
+
+  if (!quota.ok) {
+    if (quota.reason === 'paywall') { await metric('paywall_hit'); return json(res, 402, { paywall: true, reason: 'trial_used', trialUsed: quota.limit, trialLimit: quota.limit }); }
+    if (quota.reason === 'quota') { await metric('quota_hit'); return json(res, 429, { error: `You have used all ${quota.limit} queries for this month.`, code: 'quota', used: quota.used, limit: quota.limit }); }
+    await metric(quota.reason === 'busy' ? 'trial_busy' : 'store_error');
+    return json(res, 503, { error: 'The free trial is very busy right now. Please try again shortly, or email gnardo@gdngroup.com.au.', code: 'busy' });
+  }
+  await metric(isMember ? 'member_chat' : 'trial_chat');
+
+  const meta = { member: isMember, tier: identity.entitlement ? identity.entitlement.tier : null, used: quota.used, limit: quota.limit };
+  const options = {
+    system: CHAT_SYSTEM,
+    messages: checked.messages,
+    webSearchUses: isMember ? 5 : 2,
+    maxTokens: isMember ? 16000 : 4000,
+    effort: 'medium',
+  };
+  const giveBack = () => { if (!roomSeat) return refund(identity, 1); return null; };
+
+  if (body.stream === false) return respondWhole(res, options, meta, giveBack);
+  return respondStream(req, res, options, meta, giveBack);
+}
+
+async function respondWhole(res, options, meta, giveBack) {
+  let text = '';
+  try {
+    const result = await streamAnswer({ ...options, onText: (t) => { text += t; } });
+    return json(res, 200, { text: text.trim(), truncated: result.truncated, sources: result.sources, ...meta, trialUsed: meta.used, trialLimit: meta.limit });
+  } catch (e) {
+    console.error('chat failed', e && e.message);
+    await giveBack();
+    await metric('ai_error');
+    return json(res, 502, { error: 'Gideon could not answer just now. You have not been charged for this query.' });
+  }
+}
+
+async function respondStream(req, res, options, meta, giveBack) {
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-store, no-transform');
+  res.setHeader('X-Accel-Buffering', 'no');
+  const send = (event, data) => { if (!res.writableEnded) res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`); };
+  send('meta', meta);
+
+  const controller = new AbortController();
+  res.on('close', () => { if (!res.writableEnded) controller.abort(); });
+
+  let produced = false;
+  try {
+    const result = await streamAnswer({
+      ...options,
+      signal: controller.signal,
+      onText: (text) => { produced = true; send('delta', { text }); },
+      onSearch: () => send('status', { searching: true }),
+    });
+    send('done', { truncated: result.truncated, sources: result.sources });
+  } catch (e) {
+    if (!controller.signal.aborted) {
+      console.error('chat stream failed', e && e.message);
+      await metric('ai_error');
+      if (!produced) await giveBack();
+      send('error', {
+        message: e instanceof ModelError && e.kind === 'refusal'
+          ? 'Gideon cannot help with that request. You have not been charged for it.'
+          : 'Gideon lost the connection to the model. Please try again.',
+        reset: true,
+      });
+    }
+  }
+  res.end();
 }

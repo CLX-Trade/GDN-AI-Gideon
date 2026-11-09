@@ -1,19 +1,31 @@
-import { kv } from '@vercel/kv';
-import { parse } from 'cookie';
+// Who is this browser, and what do they have left. Read-only and never errors: a
+// page should still render for someone whose status cannot be determined.
+import { json } from '../lib/http.js';
+import { resolveIdentity } from '../lib/identity.js';
+import { currentUsage } from '../lib/quota.js';
+import { readPass } from '../lib/pass.js';
+import { TIERS, TRIAL } from '../lib/plans.js';
 
 export default async function handler(req, res) {
-  const cookies = parse(req.headers.cookie || '');
-  const sid = cookies.gid_sid;
-  const email = cookies.gid_email;
-  let member = false, trialUsed = 0, pass = null;
-  if (email) { try { member = (await kv.get('member:' + email.toLowerCase())) === true; } catch (e) {} }
-if (email) { try { pass = (await kv.get('pass:' + email.toLowerCase())) || null; } catch (e) {} }
-  if (sid) { try { trialUsed = (await kv.get('trial:' + sid)) || 0; } catch (e) {} }
-  return res.status(200).json({
-    member,
-    trialUsed,
-    trialLimit: parseInt(process.env.FREE_TRIAL_LIMIT || '3', 10),
-    email: email || null,
-    pass
+  const identity = await resolveIdentity(req);
+  const usage = await currentUsage(identity);
+  let pass = null;
+  if (identity.email) {
+    try { pass = await readPass(identity.email); } catch { /* shown as no pass */ }
+  }
+  const tier = identity.entitlement ? identity.entitlement.tier : null;
+  return json(res, 200, {
+    signedIn: Boolean(identity.email),
+    email: identity.email,
+    member: Boolean(identity.entitlement),
+    tier,
+    tierLabel: tier ? TIERS[tier].label : null,
+    used: usage.used,
+    limit: usage.limit,
+    maxDocsPerPack: tier ? TIERS[tier].maxDocsPerPack : TRIAL.maxDocsPerPack,
+    pass,
+    // Older cached pages read these two names.
+    trialUsed: tier ? 0 : usage.used,
+    trialLimit: TRIAL.queries(),
   });
 }

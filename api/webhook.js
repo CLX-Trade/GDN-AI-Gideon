@@ -1,81 +1,99 @@
-import Stripe from 'stripe';
-import { kv } from '@vercel/kv';
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+// Stripe events. A failure here returns 500 so Stripe retries. The old handler caught
+// every error and answered 200, so when the database died, payments were reported
+// as delivered while the customer received nothing.
+import { stripe, store } from '../lib/deps.js';
+import { fulfilCheckoutSession, isPaid } from '../lib/fulfil.js';
+import { forgetEntitlement } from '../lib/entitlement.js';
+import { planForPrice } from '../lib/plans.js';
+import { readPass, writePass } from '../lib/pass.js';
 
-// Stripe needs the raw body to verify the signature.
 export const config = { api: { bodyParser: false } };
 
 function readRaw(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
-    req.on('data', c => chunks.push(c));
+    req.on('data', (c) => chunks.push(c));
     req.on('end', () => resolve(Buffer.concat(chunks)));
     req.on('error', reject);
   });
 }
 
+async function emailForCustomer(customerId) {
+  if (!customerId) return '';
+  const customer = await stripe().customers.retrieve(customerId);
+  return customer && !customer.deleted && customer.email ? customer.email.toLowerCase() : '';
+}
+
+function subscriptionPlan(subscription) {
+  for (const item of (subscription.items && subscription.items.data) || []) {
+    const plan = planForPrice(item.price && item.price.id);
+    if (plan) return plan;
+  }
+  return null;
+}
+
+export async function handleEvent(event) {
+  const object = event.data.object;
+  switch (event.type) {
+    case 'checkout.session.completed':
+    case 'checkout.session.async_payment_succeeded':
+      if (isPaid(object)) await fulfilCheckoutSession(object);
+      return;
+
+    case 'invoice.payment_succeeded': {
+      // A monthly Meeting Room renewal restores its four sessions. The first invoice
+      // is skipped because checkout.session.completed already issued that pass.
+      if (object.billing_reason !== 'subscription_cycle') return;
+      const email = (object.customer_email || '').toLowerCase() || await emailForCustomer(object.customer);
+      if (!email) return;
+      const pass = await readPass(email);
+      if (pass && pass.type === 'monthly') await writePass(email, { ...pass, startedAt: null, passesRemaining: 4 });
+      return;
+    }
+
+    case 'invoice.payment_failed': {
+      // Stripe retries on its own schedule and cancels if the card never recovers,
+      // which arrives below. One failed charge is not a cancellation.
+      console.warn('Payment failed', { invoice: object.id, attempt: object.attempt_count });
+      return;
+    }
+
+    case 'customer.subscription.updated':
+    case 'customer.subscription.deleted': {
+      const email = await emailForCustomer(object.customer);
+      if (!email) return;
+      // Drop the cache: the next request re-reads the truth from Stripe.
+      await forgetEntitlement(email);
+      if (event.type === 'customer.subscription.deleted') {
+        const plan = subscriptionPlan(object);
+        if (plan && plan.pass === 'monthly') await store().del(`pass:${email}`);
+      }
+      return;
+    }
+
+    default:
+  }
+}
+
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end();
+  if (req.method !== 'POST') { res.statusCode = 405; return res.end(); }
   let event;
   try {
     const raw = await readRaw(req);
-    const sig = req.headers['stripe-signature'];
-    event = stripe.webhooks.constructEvent(raw, sig, process.env.STRIPE_WEBHOOK_SECRET);
+    event = stripe().webhooks.constructEvent(raw, req.headers['stripe-signature'], process.env.STRIPE_WEBHOOK_SECRET);
   } catch (e) {
-    console.error('Webhook signature verification failed:', e.message);
-    return res.status(400).send('Bad signature');
+    console.error('Webhook signature rejected:', e && e.message);
+    res.statusCode = 400;
+    return res.end('Bad signature');
   }
-
   try {
-    if (event.type === 'checkout.session.completed') {
-      const s = event.data.object;
-      const email = (s.customer_email || (s.customer_details && s.customer_details.email) || '').toLowerCase();
-      if (email) {
-        // Determine whether this purchase was a Meeting Room pass (one-time) or a membership.
-        const DAILY = 'price_1Td6sTFDVJ23RHCn3pOpFSx8';
-        const MONTHLY = 'price_1Td6vUFDVJ23RHCnFN69OQMb';
-        let passType = null;
-        try {
-          const items = await stripe.checkout.sessions.listLineItems(s.id, { limit: 1 });
-          const priceId = items && items.data && items.data[0] && items.data[0].price && items.data[0].price.id;
-          if (priceId === DAILY) passType = 'daily';
-          else if (priceId === MONTHLY) passType = 'monthly';
-        } catch (e) { console.error('listLineItems failed:', e && e.message); }
-        if (passType) {
-          await kv.set('pass:' + email, {
-            type: passType,
-            purchasedAt: Date.now(),
-            startedAt: null,
-            passesRemaining: passType === 'monthly' ? 4 : 1
-          });
-        } else {
-          await kv.set('member:' + email, true);
-        }
-      }
-    }
-    if (event.type === 'invoice.payment_succeeded') {
-      // Monthly Meeting Room renewal: each new billing cycle restores the four sessions.
-      // Skip the very first invoice (billing_reason 'subscription_create') because
-      // checkout.session.completed already wrote the fresh pass record for that purchase.
-      const inv = event.data.object;
-      const reason = inv.billing_reason;
-      if (reason === 'subscription_cycle' || reason === 'subscription_update') {
-        const email = (inv.customer_email || '').toLowerCase();
-        if (email) {
-          const existing = await kv.get('pass:' + email);
-          // Only refresh monthly passes; leave daily passes and memberships untouched.
-          if (existing && existing.type === 'monthly') {
-            await kv.set('pass:' + email, { ...existing, startedAt: null, passesRemaining: 4 });
-          }
-        }
-      }
-    }
-    if (event.type === 'customer.subscription.deleted') {
-      // To revoke on cancellation, look up the customer email via the Stripe API
-      // using event.data.object.customer, then kv.del('member:' + email).
-    }
+    await handleEvent(event);
   } catch (e) {
-    console.error('Webhook handling error:', e);
+    console.error('Webhook handling failed, Stripe will retry', event.type, e && e.message);
+    res.statusCode = 500;
+    return res.end('Retry');
   }
-  return res.status(200).json({ received: true });
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'application/json');
+  return res.end('{"received":true}');
 }

@@ -1,15 +1,24 @@
 {
-    "name": "gdn-ai-gideon",
-    "version": "1.0.0",
-    "private": true,
-    "type": "module",
-    "scripts": {
-          "ai-agent": "node scripts/run-ai-agent.mjs"
-    },
-    "dependencies": {
-          "@anthropic-ai/sdk": "^0.32.1",
-          "stripe": "^17.0.0",
-          "@vercel/kv": "^2.0.0",
-          "cookie": "^0.6.0"
-    }
+  "name": "gideon",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/dev.mjs",
+    "test": "node --test \"test/*.test.js\""
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.6.0",
+    "@upstash/redis": "^1.41.0",
+    "stripe": "^23.1.0"
+  },
+  "devDependencies": {
+    "html2pdf.js": "^0.10.3",
+    "pdfjs-dist": "^6.5.438",
+    "xlsx": "^0.18.5"
+  }
 }

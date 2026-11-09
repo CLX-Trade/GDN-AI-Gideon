@@ -1,59 +1,36 @@
-import { kv } from '@vercel/kv';
-import { parse } from 'cookie';
-
-const DAY_MS = 24 * 60 * 60 * 1000;
+// Opens (or reports) the 24-hour Meeting Room window for a signed-in pass holder.
+import { json, parseCookies, originAllowed } from '../lib/http.js';
+import { readEmail } from '../lib/session.js';
+import { readPass, writePass, DAY_MS } from '../lib/pass.js';
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
+  if (!originAllowed(req)) return json(res, 403, { error: 'Forbidden' });
 
-  const cookies = parse(req.headers.cookie || '');
-  const email = (cookies.gid_email || '').toLowerCase();
-  if (!email) return res.status(401).json({ ok: false, reason: 'not_signed_in' });
+  const email = readEmail(parseCookies(req));
+  if (!email) return json(res, 401, { ok: false, reason: 'not_signed_in' });
 
   let pass;
   try {
-    pass = await kv.get('pass:' + email);
+    pass = await readPass(email);
   } catch (e) {
-    console.error('pass-start kv.get failed:', e && e.message);
-    return res.status(500).json({ ok: false, reason: 'kv_error' });
+    console.error('pass read failed', e && e.message);
+    return json(res, 500, { ok: false, reason: 'store_error' });
   }
-  if (!pass) return res.status(200).json({ ok: false, reason: 'no_pass' });
+  if (!pass) return json(res, 200, { ok: false, reason: 'no_pass' });
 
   const now = Date.now();
-
-  // An active 24h window is already running — return it, do NOT consume another session.
   if (pass.startedAt && now < pass.startedAt + DAY_MS) {
-    return res.status(200).json({
-      ok: true,
-      active: true,
-      startedAt: pass.startedAt,
-      expiresAt: pass.startedAt + DAY_MS,
-      passesRemaining: pass.passesRemaining
-    });
+    return json(res, 200, { ok: true, active: true, startedAt: pass.startedAt, expiresAt: pass.startedAt + DAY_MS, passesRemaining: pass.passesRemaining });
   }
+  if (!pass.passesRemaining || pass.passesRemaining < 1) return json(res, 200, { ok: false, reason: 'no_sessions_left' });
 
-  // No active window. Need at least one session left to start a new one.
-  if (!pass.passesRemaining || pass.passesRemaining < 1) {
-    return res.status(200).json({ ok: false, reason: 'no_sessions_left' });
-  }
-
-  // Consume one session: stamp startedAt, decrement remaining.
-  pass.startedAt = now;
-  pass.passesRemaining = pass.passesRemaining - 1;
-
+  const updated = { ...pass, startedAt: now, passesRemaining: pass.passesRemaining - 1 };
   try {
-    await kv.set('pass:' + email, pass);
+    await writePass(email, updated);
   } catch (e) {
-    console.error('pass-start kv.set failed:', e && e.message);
-    return res.status(500).json({ ok: false, reason: 'kv_error' });
+    console.error('pass write failed', e && e.message);
+    return json(res, 500, { ok: false, reason: 'store_error' });
   }
-
-  return res.status(200).json({
-    ok: true,
-    active: true,
-    consumed: true,
-    startedAt: pass.startedAt,
-    expiresAt: pass.startedAt + DAY_MS,
-    passesRemaining: pass.passesRemaining
-  });
+  return json(res, 200, { ok: true, active: true, consumed: true, startedAt: now, expiresAt: now + DAY_MS, passesRemaining: updated.passesRemaining });
 }

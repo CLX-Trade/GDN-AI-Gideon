@@ -1,26 +1,58 @@
-// Natural voice via ElevenLabs. Optional and non-blocking:
-// if the env vars are not set, this returns 501 and the front end
-// falls back to the basic browser voice, so the site never breaks.
+// Gideon's voice through ElevenLabs. This was open to anyone with no limit, so any
+// script could burn the voice credit. Now it needs a session and has a daily ceiling.
+// Any non-200 tells the browser to fall back to its built-in voice.
+import { json, parseCookies, originAllowed, ipHash } from '../lib/http.js';
+import { readEmail } from '../lib/session.js';
+import { rateLimit } from '../lib/quota.js';
+import { store } from '../lib/deps.js';
+
+const MAX_CHARS = 1500;
+
 export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
+  if (!originAllowed(req)) return json(res, 403, { error: 'Forbidden' });
+
   const key = process.env.ELEVENLABS_API_KEY;
   const voiceId = process.env.ELEVENLABS_VOICE_ID;
-  if (!key || !voiceId) return res.status(501).json({ error: 'TTS not configured' });
+  if (!key || !voiceId) return json(res, 501, { error: 'Voice is not configured' });
 
-  const text = ((req.body && req.body.text) || '').toString().slice(0, 2500);
-  if (!text) return res.status(400).json({ error: 'text required' });
-  const model = process.env.ELEVENLABS_MODEL || 'eleven_turbo_v2_5';
+  const cookies = parseCookies(req);
+  const email = readEmail(cookies);
+  const sid = cookies.gid_sid;
 
   try {
-    const r = await fetch('https://api.elevenlabs.io/v1/text-to-speech/' + voiceId, {
+    // A visitor id costs nothing to make up, so a trial visitor must have actually
+    // used the trial before their voice calls are allowed.
+    if (!email) {
+      const used = sid ? Number(await store().get(`trial:${sid}`)) || 0 : 0;
+      if (used < 1) return json(res, 401, { error: 'No session' });
+    }
+    const allowed = await rateLimit('speak', email || ipHash(req), email ? 300 : 8, 86400);
+    if (!allowed) return json(res, 429, { error: 'Voice limit reached for today' });
+  } catch {
+    return json(res, 503, { error: 'Voice is unavailable' });
+  }
+
+  const text = String((req.body && req.body.text) || '').slice(0, MAX_CHARS);
+  if (!text.trim()) return json(res, 400, { error: 'text required' });
+
+  try {
+    const r = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}`, {
       method: 'POST',
-      headers: { 'xi-api-key': key, 'content-type': 'application/json', 'accept': 'audio/mpeg' },
-      body: JSON.stringify({ text, model_id: model, voice_settings: { stability: 0.5, similarity_boost: 0.75 } })
+      headers: { 'xi-api-key': key, 'content-type': 'application/json', accept: 'audio/mpeg' },
+      body: JSON.stringify({ text, model_id: process.env.ELEVENLABS_MODEL || 'eleven_turbo_v2_5', voice_settings: { stability: 0.5, similarity_boost: 0.75 } }),
     });
-    if (!r.ok) { console.error('TTS upstream', r.status, await r.text()); return res.status(502).json({ error: 'TTS upstream error' }); }
-    const buf = Buffer.from(await r.arrayBuffer());
+    if (!r.ok) {
+      console.error('Voice upstream error', r.status);
+      return json(res, 502, { error: 'Voice upstream error' });
+    }
+    const audio = Buffer.from(await r.arrayBuffer());
+    res.statusCode = 200;
     res.setHeader('Content-Type', 'audio/mpeg');
     res.setHeader('Cache-Control', 'no-store');
-    return res.status(200).send(buf);
-  } catch (e) { console.error(e); return res.status(500).json({ error: 'TTS server error' }); }
+    return res.end(audio);
+  } catch (e) {
+    console.error('Voice failed', e && e.message);
+    return json(res, 500, { error: 'Voice failed' });
+  }
 }
