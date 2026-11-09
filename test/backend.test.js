@@ -137,7 +137,7 @@ test('chat input: no system role, no tools, no assistant last turn, no parameter
   assert.ok(!sent.system.includes('be evil'));
   assert.notEqual(sent.model, 'x');
   assert.equal(sent.max_tokens, 4000);
-  assert.equal(sent.tools[0].type, 'web_search_20260209');
+  assert.deepEqual(sent.tools.map((t) => t.name), ['check_identifier', 'web_search']);
 });
 
 test('another website cannot call the paid endpoint', async () => {
@@ -337,8 +337,218 @@ test('pack: documents that fail to read are refunded when the run ends', async (
   assert.equal(twice.json.refunded, 0, 'cannot refund the same run twice');
 });
 
+/* ---------- live voice ---------- */
+const memberCookies = () => ({ gid_session: liveCookie(MEMBER) });
+const say = (text = 'What does a B/L prove?') => ({ body: { voice: true, messages: [{ role: 'user', content: text }] }, cookies: memberCookies() });
+const usedQueries = async (email = MEMBER) => Number(await db.get(`usage:${email}:${new Date().toISOString().slice(0, 7)}`)) || 0;
+
+function stubFetch(handler) {
+  const original = globalThis.fetch;
+  const seen = [];
+  globalThis.fetch = async (url, init = {}) => { seen.push({ url: String(url), init }); return handler(String(url), init); };
+  return { seen, restore: () => { globalThis.fetch = original; } };
+}
+const okToken = () => new Response(JSON.stringify({ token: 'single-use' }), { status: 200 });
+const okAudio = () => new Response(new Uint8Array([1, 2, 3]), { status: 200 });
+
+test('voice chat: a call gets the spoken prompt and the fast model, plain chat is unchanged', async () => {
+  await call(chat, say());
+  const spoken = ai.calls[0];
+  assert.equal(spoken.model, 'claude-sonnet-5-5');
+  assert.deepEqual(spoken.thinking, { type: 'between_tools' });
+  assert.equal(spoken.output_config.effort, 'low');
+  assert.match(spoken.system, /live voice call/);
+  assert.match(spoken.system, /GDN built you/);
+  assert.match(spoken.messages[0].content, /under 35 words/);
+  await call(chat, { body: { messages: [{ role: 'user', content: 'hello' }] }, cookies: memberCookies() });
+  const plain = ai.calls[1];
+  assert.equal(plain.model, 'claude-opus-5-5');
+  assert.equal(plain.thinking, undefined);
+  assert.doesNotMatch(plain.system, /live voice call/);
+  assert.doesNotMatch(plain.messages[0].content, /under 35 words/);
+  for (const system of [spoken.system, plain.system]) assert.match(system, /did come from those tools/);
+});
+
+test('voice chat: five spoken exchanges count as one query, the sixth starts the next', async () => {
+  for (let i = 0; i < 5; i++) assert.equal((await call(chat, say())).statusCode, 200);
+  assert.equal(await usedQueries(), 1);
+  await call(chat, say());
+  assert.equal(await usedQueries(), 2);
+});
+
+test('voice chat: a typed-style flag cannot make document turns cheap', async () => {
+  const image = { type: 'image', source: { type: 'base64', media_type: 'image/png', data: 'AAAA' } };
+  const withScan = { body: { voice: true, messages: [{ role: 'user', content: [image, { type: 'text', text: 'read this' }] }] }, cookies: memberCookies() };
+  await call(chat, withScan);
+  await call(chat, withScan);
+  assert.equal(await usedQueries(), 2);
+  const longPaste = 'x'.repeat(30000);
+  await call(chat, say(longPaste));
+  await call(chat, say(longPaste));
+  assert.equal(await usedQueries(), 4);
+});
+
+test('voice chat: a spoken request that turns into a long deliverable is charged properly', async () => {
+  ai.outputTokens = 2000;
+  await call(chat, say());
+  assert.equal(await usedQueries(), 1);
+  await call(chat, say());
+  assert.equal(await usedQueries(), 2);
+});
+
+test('voice chat: the free trial stops at its limit, after fifteen exchanges', async () => {
+  const cookies = { gid_sid: 'trialvisitortrialvisitor01' };
+  const turn = () => call(chat, { body: { voice: true, messages: [{ role: 'user', content: 'hi' }] }, cookies });
+  for (let i = 0; i < 15; i++) assert.equal((await turn()).statusCode, 200, `turn ${i}`);
+  for (const key of db.data.keys()) if (key.startsWith('rl:')) db.data.delete(key); // nobody talks this fast
+  const over = await turn();
+  assert.equal(over.statusCode, 402);
+  assert.equal(over.json.paywall, true);
+});
+
+test('voice chat: a failed charged turn is handed back and the next one is charged again', async () => {
+  ai.fail = true;
+  await call(chat, say());
+  assert.equal(await usedQueries(), 0);
+  ai.fail = false;
+  await call(chat, say());
+  assert.equal(await usedQueries(), 1);
+});
+
+test('voice chat: hanging up before a word is said costs nothing, after the first word it does', async () => {
+  ai.slowMs = 30;
+  const early = mockResponse();
+  const running = chat(mockRequest(say()), early);
+  await new Promise((r) => setTimeout(r, 5));
+  early.handlers.close();
+  await running;
+  assert.equal(await usedQueries(), 0);
+
+  const late = mockResponse();
+  const second = chat(mockRequest(say()), late);
+  await new Promise((r) => setTimeout(r, 60));
+  late.handlers.close();
+  await second;
+  assert.equal(await usedQueries(), 1);
+});
+
+test('voice chat: a long call is allowed past the limit that applies to typed trial chats', async () => {
+  const history = Array.from({ length: 21 }, (_, i) => ({ role: i % 2 ? 'assistant' : 'user', content: `turn ${i}` }));
+  const cookies = { gid_sid: 'trialvisitortrialvisitor02' };
+  assert.equal((await call(chat, { body: { voice: true, messages: history }, cookies })).statusCode, 200);
+  assert.equal((await call(chat, { body: { messages: history }, cookies })).statusCode, 400);
+});
+
+test('tools: an identifier mentioned in chat gets the real check, not the model\'s arithmetic', async () => {
+  ai.toolCall = { kind: 'imo', value: 'IMO 9074729' };
+  const res = await call(chat, say('Is IMO 9074729 valid?'));
+  assert.equal(res.statusCode, 200);
+  assert.equal(ai.calls.length, 2);
+  const followUp = ai.calls[1].messages;
+  const result = followUp[followUp.length - 1].content[0];
+  assert.equal(result.type, 'tool_result');
+  assert.equal(result.tool_use_id, 'toolu_1');
+  assert.equal(JSON.parse(result.content).valid, true);
+  assert.match(res.body, /Let me run that/);
+  const words = [...res.body.matchAll(/event: delta\ndata: (.+)/g)].map((m) => JSON.parse(m[1]).text).join('');
+  assert.match(words, /that\.\s+A bill of lading/);
+  assert.ok(ai.calls[0].tools.some((t) => t.name === 'check_identifier'));
+});
+
+test('tools: nonsense input to a check is reported to the model, not run', async () => {
+  ai.toolCall = { kind: 'constructor', value: 'x' };
+  await call(chat, say('check this'));
+  const followUp = ai.calls[1].messages;
+  const result = followUp[followUp.length - 1].content[0];
+  assert.equal(result.is_error, true);
+});
+
+test('talk token: a member gets one, and the key stays on the server', async () => {
+  process.env.ELEVENLABS_API_KEY = 'k'; process.env.ELEVENLABS_VOICE_ID = 'v';
+  const net = stubFetch(okToken);
+  try {
+    const res = await call(speak, { url: '/api/speak?action=token', cookies: memberCookies() });
+    assert.equal(res.statusCode, 200);
+    assert.deepEqual(res.json, { token: 'single-use' });
+    assert.equal(net.seen[0].url, 'https://api.elevenlabs.io/v1/single-use-token/realtime_scribe');
+    assert.equal(net.seen[0].init.headers['xi-api-key'], 'k');
+    assert.ok(!res.body.includes('"k"'));
+  } finally { net.restore(); }
+});
+
+test('talk token: a new visitor can start a call, a finished trial cannot, and it is limited per day', async () => {
+  process.env.ELEVENLABS_API_KEY = 'k'; process.env.ELEVENLABS_VOICE_ID = 'v';
+  const net = stubFetch(okToken);
+  try {
+    const sid = 'trialvisitortrialvisitor03';
+    const mint = (cookies = { gid_sid: sid }) => call(speak, { url: '/api/speak?action=token', cookies });
+    assert.equal((await mint()).statusCode, 200);
+    await db.set(`trial:${sid}`, 3);
+    const done = await mint();
+    assert.equal(done.statusCode, 402);
+    assert.equal(done.json.paywall, true);
+    let last = null;
+    for (let i = 0; i < 21; i++) last = await mint({ gid_sid: `othervisitorothervisitor${String(i).padStart(2, "0")}` });
+    assert.equal(last.statusCode, 429);
+  } finally { net.restore(); }
+});
+
+test('talk token: a bad answer from the voice service is not passed through', async () => {
+  process.env.ELEVENLABS_API_KEY = 'k'; process.env.ELEVENLABS_VOICE_ID = 'v';
+  const net = stubFetch(() => new Response('nope', { status: 401 }));
+  try {
+    assert.equal((await call(speak, { url: '/api/speak?action=token', cookies: memberCookies() })).statusCode, 502);
+  } finally { net.restore(); }
+});
+
+test('speech: sends the sentence before for continuity, and caps spending by characters', async () => {
+  process.env.ELEVENLABS_API_KEY = 'k'; process.env.ELEVENLABS_VOICE_ID = 'v';
+  const net = stubFetch(okAudio);
+  try {
+    const sid = 'trialvisitortrialvisitor04';
+    await db.set(`trial:${sid}`, 1);
+    const speakIt = (text, previous) => call(speak, { body: { text, previous }, cookies: { gid_sid: sid } });
+    const first = await speakIt('Next sentence.', 'The sentence before.');
+    assert.equal(first.statusCode, 200);
+    const sent = JSON.parse(net.seen[0].init.body);
+    assert.equal(sent.text, 'Next sentence.');
+    assert.equal(sent.previous_text, 'The sentence before.');
+    let last = null;
+    for (let i = 0; i < 5; i++) last = await speakIt('x'.repeat(1400));
+    assert.equal(last.statusCode, 429);
+  } finally { net.restore(); }
+});
+
+test('speech: signing in without a plan does not unlock member voice limits', async () => {
+  process.env.ELEVENLABS_API_KEY = 'k'; process.env.ELEVENLABS_VOICE_ID = 'v';
+  const res = await call(speak, { body: { text: 'hello' }, cookies: { gid_session: liveCookie('noplan@example.com') } });
+  assert.equal(res.statusCode, 401);
+});
+
+test('an empty AI account emails the owner once a day, not on every failed request', async () => {
+  ai.fail = true;
+  ai.failMessage = '400 {"error":{"message":"Your credit balance is too low to access the Anthropic API."}}';
+  await call(chat, say());
+  await call(chat, say());
+  const alerts = mail.filter((m) => m.subject.includes('out of AI credit'));
+  assert.equal(alerts.length, 1);
+  ai.failMessage = 'something else went wrong';
+  await db.del(`alert:credit:${new Date().toISOString().slice(0, 10)}`);
+  await call(chat, say());
+  assert.equal(mail.filter((m) => m.subject.includes('out of AI credit')).length, 1);
+});
+
+test('digest: an AI account with no credit fails the health check even though the model exists', async () => {
+  delete process.env.ELEVENLABS_API_KEY;
+  ai.fail = true;
+  const res = await call(digest, { method: 'GET', headers: { authorization: 'Bearer cron-secret' } });
+  assert.equal(res.statusCode, 500);
+  assert.ok(mail[0].subject.includes('Claude'));
+});
+
 test('digest: requires the cron secret, reports failures loudly', async () => {
   assert.equal((await call(digest, { method: 'GET' })).statusCode, 401);
+  delete process.env.ELEVENLABS_API_KEY;
   db.failing = true;
   const res = await call(digest, { method: 'GET', headers: { authorization: 'Bearer cron-secret' } });
   assert.equal(res.statusCode, 500);
