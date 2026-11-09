@@ -86,17 +86,32 @@ function fakeExtraction(params) {
   return { doc_type: 'other', doc_title: 'Test document', readability: 'clear', fields, other_facts: [] };
 }
 
-export function fakeAnthropic({ replyText = 'A bill of lading is a receipt, a contract of carriage and a document of title.', fail = false, slowMs = 0 } = {}) {
+export function fakeAnthropic({ replyText = 'A bill of lading is a receipt, a contract of carriage and a document of title.', fail = false, slowMs = 0, outputTokens = 0 } = {}) {
+  const failure = () => new Error(client.failMessage || 'upstream exploded');
   const calls = [];
   const client = {
     calls,
     fail,
+    slowMs,
+    outputTokens,
+    toolCall: null, // set to { kind, value } and the next turn asks for that check first
     models: { retrieve: async (id) => ({ id }) },
     beta: {
       messages: {
         stream(params) {
           calls.push(params);
           const failNow = client.fail;
+          if (client.toolCall) {
+            const input = client.toolCall;
+            client.toolCall = null;
+            const content = [{ type: 'text', text: 'Let me run that.' }, { type: 'tool_use', id: 'toolu_1', name: 'check_identifier', input }];
+            return {
+              abort() {},
+              async *[Symbol.asyncIterator]() { yield { type: 'content_block_delta', delta: { type: 'text_delta', text: 'Let me run that.' } }; },
+              async finalMessage() { return { stop_reason: 'tool_use', content, usage: {} }; },
+            };
+          }
+          const delay = client.slowMs;
           const isJson = params.output_config && params.output_config.format;
           let content;
           if (isJson) {
@@ -108,19 +123,21 @@ export function fakeAnthropic({ replyText = 'A bill of lading is a receipt, a co
             content = replyText;
           }
           const words = content.split(/(?<= )/);
+          let aborted = false;
           return {
-            abort() {},
+            abort() { aborted = true; },
             async *[Symbol.asyncIterator]() {
-              if (failNow) throw new Error('upstream exploded');
+              if (failNow) throw failure();
               yield { type: 'content_block_start', content_block: { type: 'text' } };
               for (const w of words) {
-                if (slowMs) await new Promise((r) => setTimeout(r, slowMs));
+                if (delay) await new Promise((r) => setTimeout(r, delay));
+                if (aborted) throw new Error('Request was aborted.');
                 yield { type: 'content_block_delta', delta: { type: 'text_delta', text: w } };
               }
             },
             async finalMessage() {
-              if (failNow) throw new Error('upstream exploded');
-              return { stop_reason: 'end_turn', content: [{ type: 'text', text: content }], usage: {} };
+              if (failNow) throw failure();
+              return { stop_reason: 'end_turn', content: [{ type: 'text', text: content }], usage: { output_tokens: client.outputTokens } };
             },
           };
         },
@@ -147,7 +164,8 @@ export function mockResponse() {
     getHeader(k) { return this.headers[k.toLowerCase()]; },
     write(c) { this.chunks.push(String(c)); return true; },
     end(c) { if (c) this.chunks.push(c instanceof Buffer ? c.toString() : String(c)); this.writableEnded = true; },
-    on() {},
+    handlers: {},
+    on(event, fn) { this.handlers[event] = fn; },
     get body() { return this.chunks.join(''); },
     get json() { return JSON.parse(this.body); },
     cookie(name) {
