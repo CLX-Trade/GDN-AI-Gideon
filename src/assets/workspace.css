@@ -134,6 +134,36 @@ tr.m-match td.filled, tr.m-format td.filled { color: #9ee7c7; }
 .chip-file span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .chip-file button { background: none; border: 0; color: var(--ink-3); cursor: pointer; font-size: 15px; line-height: 1; padding: 0 2px; }
 
+/* live conversation: stays above the composer, so typing and pasting carry on beside it */
+.talk-wrap { max-width: 860px; margin: 0 auto 8px; display: flex; justify-content: center; }
+.talk-wrap:empty { display: none; }
+.talk-start { display: inline-flex; align-items: center; gap: 9px; padding: 8px 16px; border-radius: 999px; border: 1px solid rgba(47,123,255,.55); background: rgba(47,123,255,.12); color: var(--ink); font-size: 13.5px; font-weight: 500; cursor: pointer; transition: background .15s, border-color .15s; }
+.talk-start:hover { background: rgba(47,123,255,.22); border-color: var(--blue-2); }
+.talk-start[hidden], .toggle[hidden], .icon-btn[hidden] { display: none; }
+.talk-start-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--blue-2); box-shadow: 0 0 10px var(--blue-2); }
+.talk { flex: 1; min-width: 0; display: flex; align-items: center; gap: 12px; padding: 8px 10px 8px 12px; border: 1px solid var(--line-2); border-radius: 13px; background: var(--panel-2); }
+.talk[hidden] { display: none; }
+.talk-orb { --lvl: 0; position: relative; flex: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: var(--panel-3); }
+.talk-orb img { width: 22px; height: 22px; object-fit: contain; }
+.talk-orb::before { content: ''; position: absolute; inset: -3px; border-radius: 50%; border: 2px solid var(--blue-2); opacity: calc(.25 + var(--lvl) * .75); transform: scale(calc(1 + var(--lvl) * .32)); transition: transform .08s linear, opacity .08s linear; }
+.talk[data-state="speaking"] .talk-orb::before { border-color: var(--ok); }
+.talk[data-state="thinking"] .talk-orb::before, .talk[data-state="searching"] .talk-orb::before, .talk[data-state="connecting"] .talk-orb::before { border-color: var(--blue-2); animation: talk-pulse 1.1s ease-in-out infinite; }
+.talk[data-state="muted"] .talk-orb::before, .talk[data-state="paused"] .talk-orb::before { border-color: var(--ink-3); opacity: .4; transform: none; }
+@keyframes talk-pulse { 0%, 100% { opacity: .25; transform: scale(1); } 50% { opacity: .9; transform: scale(1.14); } }
+.talk-body { flex: 1; min-width: 0; }
+.talk-state { font-size: 13px; font-weight: 500; }
+.talk-live { font-size: 13px; color: var(--ink-3); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.talk-live:empty { display: none; }
+.talk-btn { flex: none; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line-2); background: none; color: var(--ink-2); font-size: 12.5px; cursor: pointer; }
+.talk-btn:hover { color: var(--ink); background: rgba(255,255,255,.06); }
+.talk-btn[aria-pressed="true"] { border-color: var(--warn); color: var(--ink); }
+.talk-end { border-color: rgba(255,96,96,.5); }
+.msg-user.queued { opacity: .55; }
+@media (prefers-reduced-motion: reduce) {
+  .talk-orb::before { transition: none; transform: none; }
+  .talk[data-state="thinking"] .talk-orb::before, .talk[data-state="searching"] .talk-orb::before, .talk[data-state="connecting"] .talk-orb::before { animation: none; }
+}
+
 /* composer */
 .composer-wrap { flex: none; padding: 8px 18px 14px; }
 .composer { max-width: 860px; margin: 0 auto; border: 1px solid var(--line-2); border-radius: 13px; background: var(--panel); padding: 9px 10px 9px 13px; transition: border-color .15s, box-shadow .15s; }
