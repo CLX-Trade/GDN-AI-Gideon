@@ -173,11 +173,12 @@ const redFlags = article({
   title: 'Commodity deal red flags: how to spot a bad offer',
   description: 'Practical warning signs in EN590, sugar and other commodity offers, from a working trade desk: procedure drift, deposits before inspection, and paperwork that does not reconcile.',
   lede: 'What we actually look for in EN590, sugar and other commodity offers, including which warning signs people over-weight.',
+  updated: '2026-11-15',
   body: `
 <p>Commodity markets attract a lot of paperwork that goes nowhere: chains of intermediaries, recycled offers, and some outright fraud. Most of it can be screened out cheaply if you look at the right things.</p>
 <h2>Signals that matter</h2>
 <h3>Money before verifiable cargo</h3>
-<p>A request for a deposit, a "verification fee", a tank storage fee or a similar payment before you have independently confirmed the product exists is the most common way people lose money. The question is simple: what can you verify before funds leave your control? If the answer is only more paperwork from the same people, stop.</p>
+<p>A request for a deposit, a "verification fee", a tank storage fee or a similar payment before you have independently confirmed the product exists is the most common way people lose money. The question is simple: what can you verify before funds leave your control? If the answer is only more paperwork from the same people, stop. We go through the usual paperwork in <a href="/guides/proof-of-product-documents">proof of product documents</a>.</p>
 <h3>Procedure drift</h3>
 <p>This one costs the most. Compare the procedure agreed at the start, line by line, with what is being asked for now. Be most careful with conditions that appear <strong>after</strong> you have committed something irreversible, such as a deposit lodged, an instrument opened or a vessel chartered. If new requirements arrive only once you cannot easily walk away, the sequencing itself is the signal.</p>
 <h3>Entities that appear once</h3>
@@ -245,6 +246,116 @@ const vessel = article({
   ],
 });
 
+const sblc = article({
+  slug: 'verify-sblc-bank-guarantee',
+  name: 'Check an SBLC or bank guarantee',
+  title: 'How to check an SBLC or bank guarantee before you rely on it',
+  description: 'How to check a standby letter of credit or bank guarantee before you ship or pay: how it should reach you, the issuing bank, the wording and the warning signs.',
+  lede: 'A standby letter of credit is only worth what the issuing bank will pay against it. Here is how we check one before relying on it.',
+  updated: '2026-11-15',
+  body: `
+<p>A standby letter of credit (SBLC) or bank guarantee is a bank's promise to pay you when you present a demand that meets its terms, usually a statement that the bank's customer has not done what the contract says. The bank pays on the documents, not on proof of what happened. It is only as good as three things: the bank that issued it, the wording, and the route by which it reached you. Each can be checked before you ship, pay or commit to anything.</p>
+<h2>1. It must reach you through your own bank</h2>
+<p>In cross-border trade, a guarantee or standby is normally issued bank to bank over SWIFT. The issuing bank sends an MT760 to your bank, your bank checks that the message is apparently authentic, and then it advises you. That check by your own bank is the one that counts. It tells you the instrument really came from the issuing bank. It does not tell you whether that bank is good for the money, which is step 3.</p>
+<p>A PDF, a scan or a "SWIFT copy" sent by the applicant or a broker is not an instrument. It is a picture of one. Ask your bank three questions: has it received the message, from which bank, and was it authenticated? If your bank has nothing, you have nothing, whatever is in your inbox.</p>
+<p>Guarantees are still issued on paper in some domestic markets. If you are given a paper original, have your own bank confirm it with the issuing bank, bank to bank.</p>
+<h2>2. Know the message types</h2>
+<ul>
+<li><strong>MT760</strong> issues a guarantee or standby letter of credit.</li>
+<li><strong>MT767</strong> amends one that has already been issued.</li>
+<li><strong>MT799</strong> is a free-format message that banks use to write to each other. It is not the message used to issue a guarantee.</li>
+</ul>
+<p>Offers often describe an MT799 "pre-advice" or a "ready, willing and able" letter as if it were security. It is correspondence. Whether it commits the bank to anything depends entirely on its wording, and it usually does not. What you can draw on is the instrument itself.</p>
+<h2>3. Check the issuing bank</h2>
+<ul>
+<li><strong>Is it a licensed bank?</strong> Look it up on the public register of the banking regulator in its home country, not on its own website.</li>
+<li><strong>Does the BIC hold together?</strong> Run it through our <a href="/tools/swift-bic-checker">SWIFT/BIC checker</a>. That confirms the format and the country code, and nothing more.</li>
+<li><strong>Would your bank take its risk?</strong> Ask your own bank whether it would accept that bank, and whether it would add its confirmation. A bank your bank will not deal with is a real answer.</li>
+</ul>
+<p>Be careful with names that resemble a well-known bank, and with issuers described as a "financial group", "trust" or "private bank" that do not appear on any regulator's register.</p>
+<h2>4. Read the wording</h2>
+<p>Most of the value is in the text. Go through it for these points.</p>
+<ul>
+<li><strong>Beneficiary.</strong> Your exact legal name, as on the contract.</li>
+<li><strong>Applicant.</strong> If it is not your counterparty, find out who it is and why they are putting up security for someone else's deal.</li>
+<li><strong>Amount and currency.</strong> Enough to cover what the contract says it secures.</li>
+<li><strong>Expiry.</strong> The date, and the place where a demand must be presented. An instrument that expires before your counterparty's obligation falls due protects nothing.</li>
+<li><strong>What you must present to be paid.</strong> A simple demand and a statement of default is normal. Be wary if payment depends on a document only the other side can give you, such as their signed acceptance.</li>
+<li><strong>The rules.</strong> Standbys are usually subject to ISP98 or UCP 600, and demand guarantees to URDG 758. If no rules are named, find out which law governs it. It should be irrevocable. Check whether it is transferable if you need to pass it on.</li>
+<li><strong>The contract reference.</strong> It should identify the deal you are actually doing.</li>
+</ul>
+<h2>5. Compare it with the contract</h2>
+<p>Put the instrument next to the contract and read across: names, amounts, dates, the contract number, the goods, the trigger for a claim. A guarantee that is genuine but secures a slightly different company, or expires a week before delivery, fails you just as badly as a forged one. The same habit applies to documentary credits, which we cover in <a href="/guides/letter-of-credit-discrepancies">letter of credit discrepancies</a>.</p>
+<p><a href="/try">Gideon does this read-across in minutes</a> and lists what does not reconcile. It does not contact banks and cannot see SWIFT traffic, so the check with your own bank in step 1 is still yours to do.</p>
+<h2>Warning signs</h2>
+<ul>
+<li><strong>"Leased", "monetised", "fresh cut" or "seasoned" instruments,</strong> or a "provider" with no connection to the deal who will supply a guarantee for a fee.</li>
+<li><strong>Fees before your bank has received anything:</strong> to "issue", "transmit" or "block funds".</li>
+<li><strong>Verification only through contacts the other side gives you,</strong> such as a bank officer's mobile number or a private email address.</li>
+<li><strong>Pressure to act on a copy</strong> while the "real" message is said to be on its way.</li>
+<li><strong>An issuer you cannot find on a regulator's register.</strong></li>
+</ul>
+<p>The US Securities and Exchange Commission's investor alert <a href="https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-alerts/investor-57" rel="noopener">"Prime Bank" Investments Are Scams</a> names standby letters of credit and bank guarantees among the official-sounding terms these schemes use.</p>
+<div class="note"><strong>If your bank has not received it, you have nothing.</strong> Do not ship, pay or release documents against a copy. Ask your bank to confirm receipt in writing first.</div>`,
+  faq: [
+    ['What is the difference between an SBLC and a bank guarantee?', 'In practice they do the same job: the bank pays if its customer does not perform. A standby letter of credit is usually issued subject to ISP98 or UCP 600, and a demand guarantee subject to URDG 758. The wording matters more than the name.'],
+    ['Can I verify an SBLC from a copy?', 'No. A copy can only tell you what to ask about. Ask your own bank whether it has received the authenticated message from the issuing bank.'],
+    ['Is an MT799 a bank guarantee?', 'No. An MT799 is a free-format message between banks. A guarantee or standby is issued by MT760.'],
+  ],
+});
+
+const proofOfProduct = article({
+  slug: 'proof-of-product-documents',
+  name: 'Proof of product documents',
+  title: 'Proof of product in fuel deals: what the documents really prove',
+  description: 'What a tank storage receipt, dip test authorisation and inspection report actually prove in EN590 and jet fuel deals, and how to check each one.',
+  lede: 'A tank storage receipt, a dip test authorisation and an inspection report each prove less than they appear to. Here is how we test them.',
+  updated: '2026-11-15',
+  body: `
+<p>Before paying for fuel that is said to be sitting in a tank, buyers are usually sent "proof of product": a tank storage receipt (TSR), an authority to verify (ATV) or dip test authorisation (DTA), and an inspection report. Each proves less than it appears to, and each is easy to produce on a laptop. Their real use is to tell you what to go and confirm.</p>
+<h2>What usually arrives</h2>
+<div class="table-scroll"><table>
+<thead><tr><th>Document</th><th>What it claims</th><th>Who can actually confirm it</th></tr></thead>
+<tbody>
+<tr><td>Tank storage receipt</td><td>A named company holds a quantity of product in named tanks at a terminal.</td><td>The terminal operator, and only to someone the tank holder has authorised.</td></tr>
+<tr><td>Dip test authorisation, or authority to verify</td><td>You may send an inspector to gauge and sample the tank.</td><td>The terminal, by letting your inspector in.</td></tr>
+<tr><td>Inspection report (quantity and quality)</td><td>An inspection company measured and tested the product on a stated date.</td><td>The inspection company's issuing office.</td></tr>
+<tr><td>Injection or tank-to-tank transfer report</td><td>Product was moved into, or between, tanks.</td><td>The terminal.</td></tr>
+</tbody>
+</table></div>
+<p>None of these, on its own, shows that the seller owns the product or that it will still be there when you pay.</p>
+<h2>1. Establish who controls the tank</h2>
+<p>Two parties matter: the terminal operator, which owns and runs the tanks, and the tank holder, which rents the capacity and can instruct the terminal about the product in it. The holder is not always the owner of the product. Your seller should be the holder, or the owner with the holder's cooperation, or should be able to show in writing how the product passes from the owner to them and then to you.</p>
+<p>If the name on the storage receipt is not your seller, ask for that chain in writing. A company that appears on one document and nowhere else in the pack is the pattern we describe in <a href="/guides/commodity-deal-red-flags">commodity deal red flags</a>.</p>
+<h2>2. Confirm with the terminal, independently</h2>
+<p>Find the terminal's contact details yourself, from its official website. Do not use the phone number, email address or web link printed on the receipt.</p>
+<p>Expect the terminal to refuse to discuss a customer's stock with a stranger. That is normal and proves nothing either way. The useful test is whether the tank holder will instruct the terminal to confirm the product to you, or to admit your inspector. A genuine holder can usually arrange that. Someone with no connection to the tank cannot. Access shows who can instruct the terminal. It does not show who owns the product, so you still need the chain of title from step 1.</p>
+<p>Fake terminal websites are a known problem. In Rotterdam, the Port Authority and the Dutch tank storage association VOTOB run a task force against "storage spoofing", and publish lists of fake and genuine terminal websites at storagespoofing.nl.</p>
+<h2>3. Send your own inspector</h2>
+<p>A dip test is a physical measurement of the tank, usually with samples taken for analysis. It only means something if the inspector is one you appointed and paid, and the terminal let them in on the tank holder's instruction.</p>
+<p>A report the seller commissioned tells you what was in a tank on the day of the inspection. Check the date, the tank numbers, and who ordered it.</p>
+<h2>4. Confirm the inspection report with the company that issued it</h2>
+<p>Go to the inspection company's own website and contact the office named on the report, or use the company's own document verification service if it has one. Give the report number and ask whether they issued it, for whom, and with those results.</p>
+<p>Be careful with QR codes and links printed on the document. Check the web address they open. A forged report can point to a forged verification page.</p>
+<h2>5. Read across the documents</h2>
+<ul>
+<li>The same tank numbers in every document.</li>
+<li>A quantity the tanks could hold, where the capacity is stated or you can find it.</li>
+<li>Dates in an order that could have happened: stored before inspected, inspected before offered.</li>
+<li>Company names and registration numbers identical everywhere, not nearly identical.</li>
+<li>Product grade and specification matching the offer and the contract.</li>
+</ul>
+<p>For the companies named, work through our <a href="/counterparty-verification-checklist">counterparty verification checklist</a>.</p>
+<h2>Paying before you have access</h2>
+<p>Paying your own inspector for a dip test is a normal cost. Paying the seller, or a company the seller nominates, for storage extensions, "tank fees" or the authorisation itself before you have had any independent access is a different thing. We cover that in <a href="/guides/commodity-deal-red-flags">commodity deal red flags</a>.</p>
+<div class="note">Gideon compares tank numbers, quantities, dates and company names across the documents in your pack and lists what does not reconcile. It does not contact terminals or inspection companies. <a href="/try">Check a pack free</a>, then do steps 2 to 4 yourself.</div>`,
+  faq: [
+    ['Is a tank storage receipt proof that the product exists?', 'No. It is a statement that can be confirmed or not. Only the terminal can confirm it, and normally only with the tank holder\'s authority.'],
+    ['What is a dip test?', 'A physical measurement of the product in a storage tank, usually with samples taken for laboratory analysis. It should be done by an independent inspector you appointed.'],
+    ['Should the buyer pay for the dip test?', 'Paying your own inspector is normal. Be careful about paying the seller or its nominee for access, storage or authorisation before you have been able to check anything independently.'],
+  ],
+});
+
 // The desk's original checklist, carried over word for word from the old page.
 const oldChecklist = await readFile(join(here, '../content/checklist.html'), 'utf8');
 const checklist = article({
@@ -256,15 +367,15 @@ const checklist = article({
   body: oldChecklist,
 });
 
-const LIST = [checklist, billOfLading, mustMatch, lcDiscrepancies, redFlags, vessel];
+const LIST = [checklist, billOfLading, mustMatch, lcDiscrepancies, redFlags, vessel, sblc, proofOfProduct];
 
 const hub = {
   path: '/guides',
-  updated: UPDATED,
+  updated: '2026-11-15',
   html: page({
     path: '/guides',
     title: 'Trade Document Guides from a Working Desk · Gideon',
-    description: 'Practical guides on verifying bills of lading, letters of credit, vessels and commodity counterparties, written by the GDN trade desk.',
+    description: 'Practical guides on checking bills of lading, letters of credit, bank guarantees, proof of product, vessels and commodity counterparties, written by the GDN trade desk.',
     current: '/guides',
     schema: [breadcrumbSchema([['Home', '/'], ['Guides', '/guides']])],
     body: `

@@ -183,6 +183,8 @@ function toolPage(t) {
   return {
     path,
     updated: UPDATED,
+    name: t.name,
+    lede: t.lede,
     html: page({
       path,
       title: t.title,

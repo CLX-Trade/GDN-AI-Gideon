@@ -1,0 +1,174 @@
+<!doctype html>
+<!-- 1080x1920 Short, rendered frame by frame through window.render(t). Timings come from
+     the voiceover's measured pauses. The arithmetic is the IMO check digit, the same rule
+     as shared/checks.js: 9074729 passes (sum 139), 9071729 fails (sum 127). -->
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--ink:#f3f5f8;--ink2:#b7bdc9;--ink3:#828b9a;--blue:#2f7bff;--blue2:#72abff;--ok:#3ddc97;--bad:#ff6060;--amber:#ffb020}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#050608;color:var(--ink);font-family:Inter,sans-serif}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:72px 72px;-webkit-mask-image:radial-gradient(ellipse 90% 60% at 60% 22%,#000,transparent 80%)}
+.glow{position:absolute;width:1200px;height:1200px;right:-400px;top:-520px;background:radial-gradient(circle,rgba(47,123,255,.42),transparent 62%)}
+#top{position:absolute;left:64px;right:64px;top:190px;display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:16px;font:700 42px Archivo;font-stretch:112%}
+.logo img{width:62px;height:62px;object-fit:contain}
+.tag{font:500 24px 'JetBrains Mono';color:var(--ink3)}
+h1{position:absolute;left:64px;right:64px;top:300px;font:800 96px/1.05 Archivo;font-stretch:106%;letter-spacing:-.025em}
+h1 em{font-style:normal;color:var(--blue2)}
+.scene{position:absolute;inset:0;opacity:0}
+.seven{position:absolute;left:64px;display:grid;grid-template-columns:repeat(7,120px);gap:16px}
+#digits{top:650px}
+.d{height:156px;display:grid;place-items:center;border-radius:16px;background:#10141b;border:3px solid rgba(255,255,255,.16);font:500 92px 'JetBrains Mono';color:var(--ink)}
+.d.chk{border-color:var(--blue);box-shadow:0 0 60px -6px rgba(47,123,255,.8);color:var(--blue2)}
+.d.ok{border-color:var(--ok);box-shadow:0 0 60px -6px rgba(61,220,151,.7);color:var(--ok);background:rgba(61,220,151,.1)}
+.d.bad{border-color:var(--bad);box-shadow:0 0 60px -6px rgba(255,96,96,.7);color:#ffc0c0;background:rgba(255,96,96,.16)}
+.d.chg{border-color:var(--amber);color:var(--amber);background:rgba(255,176,32,.12)}
+#under{top:826px}
+.m{height:70px;display:grid;place-items:center;font:500 46px 'JetBrains Mono';color:var(--blue2);opacity:0}
+#lab7{font:500 25px/1.15 'JetBrains Mono';color:var(--blue2);text-align:center;opacity:0}
+#six{position:absolute;left:64px;width:800px;top:826px;height:70px;border:3px solid rgba(255,255,255,.3);border-top:0;border-radius:0 0 16px 16px;opacity:0}
+#six span{position:absolute;left:0;right:0;top:82px;text-align:center;font:500 30px 'JetBrains Mono';color:var(--ink2)}
+#prods{top:916px}
+.p{height:104px;display:grid;place-items:center;border-radius:14px;background:rgba(47,123,255,.12);font:500 50px 'JetBrains Mono';color:var(--ink);border:3px solid transparent;opacity:0}
+.p.chg{border-color:var(--amber);color:var(--amber);background:rgba(255,176,32,.12)}
+#sumline{position:absolute;left:64px;top:1066px;font:500 40px 'JetBrains Mono';color:var(--ink2);opacity:0}
+#total{position:absolute;left:64px;top:1120px;font:800 210px/1.1 Archivo;font-stretch:106%;letter-spacing:-.02em;opacity:0;transform-origin:left center}
+#total i{font-style:normal;color:var(--ink3);margin-right:24px}
+#last{display:inline-block;padding:0 14px;margin-left:6px;border-radius:20px;border:4px solid transparent}
+#last.mark{border-color:var(--blue)}
+#last.ok{border-color:var(--ok);color:var(--ok);background:rgba(61,220,151,.1)}
+#last.bad{border-color:var(--bad);color:#ffc0c0;background:rgba(255,96,96,.16)}
+.badge{position:absolute;left:64px;top:1392px;padding:24px 40px;border-radius:20px;font:800 76px/1 Archivo;font-stretch:106%;opacity:0}
+.badge b{font:500 62px 'JetBrains Mono';margin-right:26px}
+#pass{border:3px solid var(--ok);background:rgba(61,220,151,.13);color:var(--ok)}
+#fail{border:3px solid var(--bad);background:rgba(255,96,96,.15);color:#ffb1b1}
+.why{position:absolute;left:64px;right:64px;top:330px}
+.why p{font:800 82px/1.08 Archivo;font-stretch:106%;letter-spacing:-.025em;margin-bottom:84px;opacity:0}
+.why p em{font-style:normal}
+#w2 em{color:#ff9a9a}
+#w3{color:var(--blue2)}
+.close{position:absolute;left:64px;right:64px;top:430px;text-align:center}
+.close img{width:300px;height:300px;object-fit:contain;margin:0 auto 26px;display:block}
+.close h2{font:700 120px Archivo;font-stretch:112%}
+.close p{font:500 52px/1.3 Inter;color:var(--ink2);margin-top:28px}
+.cta{display:inline-block;margin-top:66px;padding:34px 70px;border-radius:18px;background:var(--blue);font:700 60px Inter;box-shadow:0 20px 80px -14px rgba(47,123,255,.7)}
+.url{font:500 54px 'JetBrains Mono';color:var(--blue2);margin-top:40px}
+</style></head><body>
+<div class="grid"></div><div class="glow"></div>
+<div id="top"><div class="logo"><img src="file:///Users/guidinardo/crossledger-work/gideon-site/static/media/mark-512.png"><span>Gideon</span></div><div class="tag">Example number</div></div>
+
+<div class="scene" id="calc"><h1 id="h"></h1>
+  <div class="seven" id="digits"><div class="d"></div><div class="d"></div><div class="d"></div><div class="d"></div><div class="d"></div><div class="d"></div><div class="d"></div></div>
+  <div id="six"><span>the other six</span></div>
+  <div class="seven" id="under"><div class="m">×7</div><div class="m">×6</div><div class="m">×5</div><div class="m">×4</div><div class="m">×3</div><div class="m">×2</div><div id="lab7">check<br>digit</div></div>
+  <div class="seven" id="prods"><div class="p"></div><div class="p"></div><div class="p"></div><div class="p"></div><div class="p"></div><div class="p"></div></div>
+  <div id="sumline"></div>
+  <div id="total"><i>=</i><span id="lead"></span><span id="last"></span></div>
+  <div class="badge" id="pass"><b>9 = 9</b>Passes</div>
+  <div class="badge" id="fail"><b>7 ≠ 9</b>Fails</div>
+</div>
+
+<div class="scene" id="why"><div class="why">
+  <p id="w1">Passing doesn't<br>prove the ship is real.</p>
+  <p id="w2">Failing means the<br>number was<br><em>mistyped, or made up.</em></p>
+  <p id="w3">Either way:<br>stop and ask.</p>
+</div></div>
+
+<div class="scene" id="end"><div class="close">
+  <img src="file:///Users/guidinardo/crossledger-work/gideon-site/static/media/mark-512.png">
+  <h2>Gideon</h2>
+  <p>Check any IMO number free.</p>
+  <div class="cta" id="cta">Free IMO checker</div>
+  <div class="url" id="url">gdn-ai.com</div>
+</div></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const clamp = (x) => Math.max(0, Math.min(1, x));
+const ease = (x) => { x = clamp(x); return x * x * (3 - 2 * x); };
+const between = (t, a, b, fade = 0.3) => ease((t - a) / fade) * (1 - ease((t - b) / fade));
+const cells = [...document.querySelectorAll('.d')];
+const mults = [...document.querySelectorAll('.m')];
+const prods = [...document.querySelectorAll('.p')];
+const WEIGHTS = [7, 6, 5, 4, 3, 2];
+
+// Measured from the voiceover: phrase start times in seconds.
+const T = {
+  check: 3.5, six: 4.9, mult: 6.64, m: [8.1, 8.92, 9.62, 10.22, 10.78, 11.35], add: 12.34, sum: 13.32,
+  match: 15.4, nine1: 19.3, nine2: 20.04, pass: 21.04,
+  change: 22.3, swap: 22.9, reprod: 23.3, resum: 23.75, nomatch: 24.18, fails: 26.3,
+  real: 27.7, failing: 30.4, either: 34.14, cta: 36.64, url: 38.74,
+};
+const HEADS = [
+  [-1, 'The check inside every <em>IMO number</em>'],
+  [T.mult, 'Multiply the <em>first six</em>'],
+  [T.add, 'Add them <em>up</em>'],
+  [T.match, 'The last digits must <em>match</em>'],
+  [T.change, 'Now change <em>one digit</em>'],
+];
+
+window.render = (t) => {
+  $('calc').style.opacity = between(t, -1, T.real - 0.25);
+
+  // Heading swaps with a short dip at each change.
+  let head = HEADS[0];
+  for (const h of HEADS) if (t >= h[0]) head = h;
+  $('h').innerHTML = head[1];
+  let dip = 1;
+  for (const h of HEADS.slice(1)) dip = Math.min(dip, ease(Math.abs(t - h[0]) / 0.14));
+  $('h').style.opacity = dip;
+
+  // The seven digits. The fourth changes from 4 to 1 in the second half.
+  const digits = [9, 0, 7, t >= T.swap ? 1 : 4, 7, 2, 9];
+  cells.forEach((el, i) => {
+    el.textContent = digits[i];
+    el.style.opacity = ease((t - 0.1 - i * 0.08) / 0.2);
+    el.className = 'd';
+  });
+  if (t >= T.swap) cells[3].classList.add('chg');
+  if (t >= T.nomatch + 0.9) cells[6].classList.add('bad');
+  else if (t >= T.nine2 && t < T.change) cells[6].classList.add('ok');
+  else if (t >= T.check) cells[6].classList.add('chk');
+
+  $('lab7').style.opacity = ease((t - T.check) / 0.25);
+  $('six').style.opacity = between(t, T.six, T.mult - 0.25, 0.25);
+
+  // Multipliers and products arrive as each one is spoken.
+  const shown = [9, 0, 7, t >= T.reprod ? 1 : 4, 7, 2].map((d, i) => d * WEIGHTS[i]);
+  mults.forEach((el, i) => { el.style.opacity = ease((t - T.m[i]) / 0.18); });
+  prods.forEach((el, i) => {
+    el.textContent = shown[i];
+    el.style.opacity = ease((t - T.m[i] - 0.18) / 0.18);
+    el.classList.toggle('chg', i === 3 && t >= T.reprod);
+  });
+
+  const total = String(shown.reduce((a, b) => a + b, 0));
+  $('sumline').textContent = shown.join(' + ');
+  $('sumline').style.opacity = ease((t - T.add) / 0.25);
+  const shownTotal = t >= T.resum ? total : '139';
+  $('lead').textContent = shownTotal.slice(0, -1);
+  $('last').textContent = shownTotal.slice(-1);
+  $('total').style.opacity = ease((t - T.sum) / 0.25);
+  $('total').style.transform = `scale(${0.92 + 0.08 * ease((t - T.sum) / 0.25)})`;
+  const last = $('last');
+  last.className = '';
+  if (t >= T.nomatch) last.classList.add('bad');
+  else if (t >= T.nine1 && t < T.change) last.classList.add('ok');
+  else if (t >= T.match && t < T.change) last.classList.add('mark');
+
+  $('pass').style.opacity = between(t, T.pass, T.change - 0.05, 0.2);
+  $('fail').style.opacity = ease((t - T.fails) / 0.2);
+
+  $('why').style.opacity = between(t, T.real - 0.15, T.cta - 0.25);
+  $('w1').style.opacity = ease((t - T.real) / 0.3);
+  $('w2').style.opacity = ease((t - T.failing) / 0.3);
+  $('w3').style.opacity = ease((t - T.either) / 0.3);
+
+  $('end').style.opacity = ease((t - T.cta + 0.1) / 0.35);
+  $('top').style.opacity = t < T.cta - 0.1 ? 1 : 1 - ease((t - T.cta + 0.1) / 0.3);
+  $('url').style.opacity = ease((t - T.url) / 0.3);
+};
+window.render(0);
+</script>
+</body></html>
