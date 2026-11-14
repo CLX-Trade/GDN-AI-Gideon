@@ -45,6 +45,39 @@ ${urls.map((u) => `  <url><loc>https://www.gdn-ai.com${u.path}</loc><lastmod>${u
 await writeFile(join(out, 'sitemap.xml'), sitemap);
 await writeFile(join(out, 'robots.txt'), `User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /app\n\nSitemap: https://www.gdn-ai.com/sitemap.xml\n`);
 
+// llms.txt (llmstxt.org): a plain map of the site for AI assistants and answer engines.
+// Tool and guide pages carry a name and lede, so new ones are listed automatically.
+const SITE_URL = 'https://www.gdn-ai.com';
+const link = (p) => `- [${p.name}](${SITE_URL}${p.path}): ${p.lede}`;
+const listed = pages.filter((p) => p.name && p.lede && p.sitemap !== false);
+const core = [
+  { name: 'Home', path: '/', lede: 'What Gideon does: it compares every field across a trade document pack and reports what does not match.' },
+  { name: 'Try Gideon free', path: '/try', lede: 'Check a document pack, ask a question, or talk to Gideon by voice. Free to try, no card.' },
+  { name: 'Sample report', path: '/sample-report', lede: 'A full Gideon report on a fictional pack with planted errors.' },
+  { name: 'Pricing', path: '/pricing', lede: 'Plans in Australian dollars, from a day pass to annual.' },
+  { name: 'Free tools', path: '/tools', lede: 'Check digits and formats for IMO, container, IBAN, SWIFT/BIC, LEI and ABN/ACN numbers.' },
+  { name: 'Guides', path: '/guides', lede: 'Practical guides from a working trade desk.' },
+];
+const llms = `# Gideon
+
+> Gideon reads across a whole trade document pack (bills of lading, invoices, letters of credit, inspection certificates, storage receipts and the rest) and lists every party, quantity, date and identifier that does not reconcile, before the money moves. Built by the GDN trade desk.
+
+Gideon does not confirm that a document is genuine. It shows where the documents in a pack disagree with each other, so you know what to check with the issuer, the bank or the terminal.
+
+## Core pages
+
+${core.map(link).join('\n')}
+
+## Free tools
+
+${listed.filter((p) => p.path.startsWith('/tools/')).map(link).join('\n')}
+
+## Guides
+
+${listed.filter((p) => p.path.startsWith('/guides/') || p.path === '/counterparty-verification-checklist').map(link).join('\n')}
+`;
+await writeFile(join(out, 'llms.txt'), llms);
+
 async function size(dir) {
   let total = 0;
   for (const name of await readdir(dir)) {
