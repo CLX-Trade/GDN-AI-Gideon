@@ -79,7 +79,7 @@ export default async function handler(req, res) {
     await sendEmail({
       to: OWNER_EMAIL(),
       subject,
-      html: emailShell(`Gideon, ${yesterday}`, `<h2 style="font-size:14px;margin:18px 0 6px">Systems</h2><table style="border-collapse:collapse;font-size:13px;width:100%">${healthRows}</table><h2 style="font-size:14px;margin:22px 0 6px">Yesterday</h2><table style="border-collapse:collapse;font-size:13px;width:100%">${numberRows}</table><p style="font-size:13px;color:#7a8290;margin-top:14px">Estimated AI cost: US$${aiCost.toFixed(2)}. ${(usage.ai_input_tokens || 0).toLocaleString()} tokens in, ${(usage.ai_output_tokens || 0).toLocaleString()} out, ${usage.ai_web_searches || 0} web searches, ${(usage.voice_chars || 0).toLocaleString()} characters of speech.</p>`),
+      html: emailShell(`Gideon, ${yesterday}`, `<h2 style="font-size:14px;margin:18px 0 6px">Systems</h2><table style="border-collapse:collapse;font-size:13px;width:100%">${healthRows}</table><h2 style="font-size:14px;margin:22px 0 6px">Yesterday, Brisbane time</h2><table style="border-collapse:collapse;font-size:13px;width:100%">${numberRows}</table><p style="font-size:13px;color:#7a8290;margin-top:14px">Estimated AI cost: US$${aiCost.toFixed(2)}. ${(usage.ai_input_tokens || 0).toLocaleString()} tokens in, ${(usage.ai_output_tokens || 0).toLocaleString()} out, ${usage.ai_web_searches || 0} web searches, ${(usage.voice_chars || 0).toLocaleString()} characters of speech.</p>`),
     });
   } catch (e) {
     emailed = false;

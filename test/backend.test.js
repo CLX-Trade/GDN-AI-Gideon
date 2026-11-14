@@ -1,4 +1,4 @@
-import test, { beforeEach } from 'node:test';
+import test, { beforeEach, mock } from 'node:test';
 import assert from 'node:assert/strict';
 import { setDepsForTest } from '../lib/deps.js';
 import { sessionCookie, readEmail } from '../lib/session.js';
@@ -15,6 +15,9 @@ import lead from '../api/lead.js';
 import digest from '../api/cron-digest.js';
 import { handleEvent } from '../api/webhook.js';
 import { getEntitlement } from '../lib/entitlement.js';
+import { today, thisMonth } from '../lib/http.js';
+import { metric } from '../lib/metrics.js';
+import { consume, refund } from '../lib/quota.js';
 
 process.env.SESSION_SECRET = 'test-secret-value';
 process.env.CRON_SECRET = 'cron-secret';
@@ -106,7 +109,7 @@ test('paying member keeps working when the database is down (Stripe is the truth
 });
 
 test('tier limits are enforced: the 101st Simple query is refused', async () => {
-  await db.set(`usage:${MEMBER}:${new Date().toISOString().slice(0, 7)}`, 100);
+  await db.set(`usage:${MEMBER}:${thisMonth()}`, 100);
   const res = await call(chat, { ...ask(), cookies: { gid_session: liveCookie(MEMBER) } });
   assert.equal(res.statusCode, 429);
   assert.equal(res.json.code, 'quota');
@@ -170,7 +173,7 @@ test('webhook and return racing: one sale counted, one pass issued, one set of e
   const pass = await db.get('pass:room@example.com');
   assert.equal(pass.passesRemaining, 1);
   assert.equal(mail.length, 2, 'owner notice and customer welcome, once each');
-  assert.equal(Number(await db.get(`m:${new Date().toISOString().slice(0, 10)}:checkout_paid`)), 1);
+  assert.equal(Number(await db.get(`m:${today()}:checkout_paid`)), 1);
 });
 
 test('a customer who typed capitals at checkout is still recognised as a member', async () => {
@@ -340,7 +343,7 @@ test('pack: documents that fail to read are refunded when the run ends', async (
 /* ---------- live voice ---------- */
 const memberCookies = () => ({ gid_session: liveCookie(MEMBER) });
 const say = (text = 'What does a B/L prove?') => ({ body: { voice: true, messages: [{ role: 'user', content: text }] }, cookies: memberCookies() });
-const usedQueries = async (email = MEMBER) => Number(await db.get(`usage:${email}:${new Date().toISOString().slice(0, 7)}`)) || 0;
+const usedQueries = async (email = MEMBER) => Number(await db.get(`usage:${email}:${thisMonth()}`)) || 0;
 
 function stubFetch(handler) {
   const original = globalThis.fetch;
@@ -533,7 +536,7 @@ test('an empty AI account emails the owner once a day, not on every failed reque
   const alerts = mail.filter((m) => m.subject.includes('out of AI credit'));
   assert.equal(alerts.length, 1);
   ai.failMessage = 'something else went wrong';
-  await db.del(`alert:credit:${new Date().toISOString().slice(0, 10)}`);
+  await db.del(`alert:credit:${today()}`);
   await call(chat, say());
   assert.equal(mail.filter((m) => m.subject.includes('out of AI credit')).length, 1);
 });
@@ -554,4 +557,41 @@ test('digest: requires the cron secret, reports failures loudly', async () => {
   assert.equal(res.statusCode, 500);
   assert.ok(mail[0].subject.startsWith('ACTION NEEDED'));
   assert.ok(mail[0].subject.includes('Database'));
+});
+
+test('days and months are counted in Brisbane time', () => {
+  assert.equal(today(new Date('2026-11-14T13:59:59Z')), '2026-11-14');
+  assert.equal(today(new Date('2026-11-14T14:00:00Z')), '2026-11-15');
+  assert.equal(thisMonth(new Date('2026-11-30T13:59:59Z')), '2026-11');
+  assert.equal(thisMonth(new Date('2026-11-30T14:00:00Z')), '2026-12');
+});
+
+test('metrics: test copies of the site do not count as visitors, but their AI spend does', async () => {
+  process.env.VERCEL_ENV = 'preview';
+  try {
+    await metric('trial_chat');
+    await metric('ai_input_tokens', 50);
+  } finally {
+    delete process.env.VERCEL_ENV;
+  }
+  assert.equal(Number(await db.get(`m:${today()}:trial_chat`)) || 0, 0);
+  assert.equal(Number(await db.get(`m:${today()}:ai_input_tokens`)), 50);
+  process.env.VERCEL_ENV = 'production';
+  try { await metric('trial_chat'); } finally { delete process.env.VERCEL_ENV; }
+  assert.equal(Number(await db.get(`m:${today()}:trial_chat`)), 1);
+});
+
+test('quota: a refund after midnight gives back the day that was charged', async () => {
+  mock.timers.enable({ apis: ['Date'], now: new Date('2026-11-15T13:59:00Z') });
+  try {
+    const identity = { sid: 'sid-midnight', ipHash: 'ip-midnight' };
+    assert.equal((await consume(identity, 1)).ok, true);
+    mock.timers.tick(2 * 60 * 1000); // now just past midnight in Brisbane
+    await refund(identity, 1);
+    assert.equal(Number(await db.get('trialip:ip-midnight:2026-11-15')), 0);
+    assert.equal(Number(await db.get('trialday:2026-11-15')), 0);
+    assert.equal(Number(await db.get('trialip:ip-midnight:2026-11-16')) || 0, 0);
+  } finally {
+    mock.timers.reset();
+  }
 });
