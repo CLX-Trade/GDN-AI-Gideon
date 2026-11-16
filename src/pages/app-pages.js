@@ -3,8 +3,8 @@ import { page, esc, faqHtml, faqSchema, closingCta, CONTACT } from '../layout.js
 
 export const workspace = page({
   path: '/try',
-  title: 'Gideon · Check a trade document pack',
-  description: 'Drop in a trade document pack. Gideon compares every field across every document and shows you what does not reconcile. Three free queries, no card.',
+  title: 'Gideon · Your AI business manager',
+  description: 'Ask Gideon anything, attach your documents, or talk it through on a call. It reads, researches and writes for your business. Three free queries, no card.',
   bodyClass: 'app',
   bare: true,
   head: '<link rel="stylesheet" href="/assets/workspace.css">',
@@ -14,7 +14,7 @@ export const workspace = page({
 <div class="ws" id="ws">
   <aside class="ws-rail">
     <a class="logo" href="/"><img src="/media/mark-96.png" width="30" height="30" alt=""><span>Gideon</span></a>
-    <button class="rail-btn primary" id="new-check">New pack check</button>
+    <button class="rail-btn primary" id="new-check">New document check</button>
     <button class="rail-btn" id="new-chat">New chat</button>
     <input class="rail-search" id="rail-search" type="search" placeholder="Search history" aria-label="Search history">
     <div class="history" id="history"></div>
@@ -110,7 +110,7 @@ export const signin = page({
 });
 
 const PRICING_FAQ = [
-  ['How do the 2 free weeks work?', 'Choose Simple monthly and enter a card. You pay nothing for 14 days and get the full Simple plan: 100 queries and pack checks up to 5 documents. Checkout shows the date of the first charge, and we email you 3 days before it. Cancel from Manage billing in your account menu before then and you are never charged. The free week is for new customers.'],
+  ['How do the 2 free weeks work?', 'Choose Simple monthly and enter a card. You pay nothing for 14 days and get the full Simple plan: 100 queries and pack checks up to 5 documents. Checkout shows the date of the first charge, and we email you 3 days before it. Cancel from Manage billing in your account menu before then and you are never charged. The free trial is for new customers.'],
   ['What counts as a query?', 'One chat message, or one document in a pack check. A five-document pack uses five queries. In a live voice conversation, five spoken exchanges count as one query, unless documents are involved or the answer is long. Your counter resets each calendar month.'],
   ['What currency am I charged in?', 'Australian dollars. Your bank may show a converted amount if your card is in another currency.'],
   ['Can I cancel?', 'Yes, at any time, from Manage billing in your account menu. Access continues until the end of the period you have paid for, and you are not charged again.'],
@@ -132,8 +132,8 @@ const planCard = ({ id, name, badge, featured, monthly, annual, annualMonthly, p
 
 export const pricing = page({
   path: '/pricing',
-  title: 'Pricing · Gideon trade document reconciliation',
-  description: 'Gideon plans from A$60 a month, with the first 2 weeks of Simple free. Check trade document packs and work with an AI trade analyst. Prices in Australian dollars, cancel any time.',
+  title: 'Pricing · Gideon AI business manager',
+  description: 'Gideon plans from A$60 a month, with the first 2 weeks of Simple free. An AI business manager that reads your documents, researches live and writes the paperwork. Prices in Australian dollars, cancel any time.',
   current: '/pricing',
   scripts: ['/assets/pricing.js'],
   schema: [faqSchema(PRICING_FAQ)],
@@ -141,7 +141,7 @@ export const pricing = page({
 <section class="page-head">
   <div class="wrap">
     <div class="eyebrow">Pricing</div>
-    <h1>Less than one refused presentation.</h1>
+    <h1>A business manager for about A$2 a day.</h1>
     <p class="lede" style="max-width:40em">Try three queries with no card, or take Simple free for 2 weeks. Prices are in Australian dollars. Cancel any time.</p>
     <p id="checkout-note" class="form-msg" role="status"></p>
   </div>
