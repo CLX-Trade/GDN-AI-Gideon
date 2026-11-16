@@ -143,18 +143,18 @@ function showStart() {
   setTitle(state.status && state.status.member ? 'New check' : 'Free trial');
   const docs = state.status ? state.status.maxDocsPerPack : 3;
   view().innerHTML = `<div class="ws-inner start">
-    <h1>Drop in the pack.</h1>
-    <p>Gideon compares every field across every document and shows you what doesn't reconcile.</p>
+    <h1>What can I take off your desk?</h1>
+    <p>Ask anything below, start a call, or drop in documents and Gideon will check them against each other.</p>
     <label class="drop" id="drop"><input type="file" id="drop-input" multiple accept="${ACCEPT}" aria-label="Choose documents">
       <b>Choose documents, or drop them here</b>
       <small>PDF, scans, photos, Word, Excel or text. Two to ${docs} documents on your plan. Your files are not stored.</small>
     </label>
     <p class="drop-demo">No documents to hand? <button class="linkish" id="use-samples">Try it on a fictional sample pack</button></p>
     <div class="suggest">
+      <button data-q="Write a polite but firm email to a customer whose invoice is 30 days overdue. Keep it short and give me two versions.">Chase an overdue invoice for me</button>
+      <button data-q="Build me a simple 12-month cash-flow forecast spreadsheet for a small business, with income, costs and a running balance, as an Excel file.">Build me a cash-flow spreadsheet</button>
+      <button data-q="What should I check before I sign a supplier contract? Give me a checklist I can use today.">What should I check before signing a supplier contract?</button>
       <button data-q="What should match between a commercial invoice, a packing list and a bill of lading? Give me a checklist I can use today.">What must match between an invoice, packing list and B/L?</button>
-      <button data-q="I have been sent an offer for EN590 with a very low price and a request for a deposit before inspection. What are the red flags, and what should I ask for next?">What are the red flags in this kind of commodity offer?</button>
-      <button data-q="What are the most common discrepancies that get documents refused under a letter of credit, and how do I avoid them?">Why do banks refuse documents under a letter of credit?</button>
-      <button data-q="How do I verify that a vessel, its IMO number and its current position match what a seller is telling me?">How do I check a vessel is real?</button>
     </div>
   </div>`;
   const input = $('drop-input');
