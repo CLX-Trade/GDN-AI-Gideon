@@ -22,7 +22,7 @@ function header(current) {
     <nav class="nav-links" aria-label="Main">${links}</nav>
     <div class="nav-cta">
       <a class="nav-signin" href="/signin">Sign in</a>
-      <a class="btn btn-sm btn-primary" href="/try">Check a pack free</a>
+      <a class="btn btn-sm btn-primary" href="/pricing">Start 2 weeks free</a>
       <details class="nav-menu">
         <summary aria-label="Menu"><span></span><span></span></summary>
         <div class="nav-sheet">${links}<a href="/signin">Sign in</a></div>
@@ -37,9 +37,9 @@ function footer() {
   <div class="wrap foot-grid">
     <div class="foot-brand">
       <a class="logo" href="/"><img src="/media/mark-96.png" width="30" height="30" alt="" loading="lazy"><span>Gideon</span></a>
-      <p>Finds what does not reconcile across a trade document pack, before the money moves. Built by a working trade desk.</p>
+      <p>Your AI business manager. Reads your documents, finds what doesn't add up, researches live, writes the paperwork and talks it through. Built by GDN in Brisbane.</p>
     </div>
-    <div><h4>Product</h4><a href="/try">Check a pack</a><a href="/sample-report">Sample report</a><a href="/pricing">Pricing</a><a href="/meeting-room">Meeting Room</a><a href="/signin">Sign in</a></div>
+    <div><h4>Product</h4><a href="/try">Try Gideon</a><a href="/sample-report">Sample report</a><a href="/pricing">Pricing</a><a href="/meeting-room">Meeting Room</a><a href="/signin">Sign in</a></div>
     <div><h4>Free tools</h4><a href="/tools/imo-number-checker">IMO number</a><a href="/tools/container-number-checker">Container number</a><a href="/tools/iban-checker">IBAN</a><a href="/tools/swift-bic-checker">SWIFT / BIC</a><a href="/tools/lei-checker">LEI</a><a href="/tools/abn-acn-checker">ABN / ACN</a></div>
     <div><h4>Guides</h4><a href="/counterparty-verification-checklist">Counterparty checklist</a><a href="/guides/verify-bill-of-lading">Verify a bill of lading</a><a href="/guides/documents-that-must-match">Documents that must match</a><a href="/guides/letter-of-credit-discrepancies">L/C discrepancies</a><a href="/guides">All guides</a></div>
     <div><h4>Company</h4><a href="https://www.gdngroup.com.au" rel="noopener">GDN Group</a><a href="mailto:${CONTACT}">Contact</a><a href="/invest">Investors</a><a href="/security">Security</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/refunds">Refunds</a></div>
@@ -121,10 +121,10 @@ export function breadcrumbSchema(trail) {
   };
 }
 
-export const closingCta = (title = 'Run your next pack through it.', sub = 'Three free queries cover a three-document pack. No card, no sign-up.') => `<section class="cta-band">
+export const closingCta = (title = 'Put Gideon on your desk.', sub = 'First 2 weeks free on the Simple plan, card required, cancel any time. Or ask three questions free with no card.') => `<section class="cta-band">
   <div class="wrap">
     <h2>${title}</h2>
     <p>${sub}</p>
-    <div class="cta-row"><a class="btn btn-primary" href="/try">Check a pack free</a><a class="btn btn-ghost" href="/sample-report">See a sample report</a></div>
+    <div class="cta-row"><a class="btn btn-primary" href="/pricing">Start 2 weeks free</a><a class="btn btn-ghost" href="/try">Ask 3 questions free</a></div>
   </div>
 </section>`;
