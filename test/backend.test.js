@@ -595,3 +595,54 @@ test('quota: a refund after midnight gives back the day that was charged', async
     mock.timers.reset();
   }
 });
+
+test('free week: Simple monthly takes a card and starts a 7-day trial; others and returning customers pay at once', async () => {
+  await call(checkout, { body: { plan: 'simple-monthly', email: 'new@example.com' } });
+  const c = pay.calls.created[0];
+  assert.equal(c.subscription_data.trial_period_days, 7);
+  assert.equal(c.payment_method_collection, 'always');
+  assert.equal(c.subscription_data.trial_settings.end_behavior.missing_payment_method, 'cancel');
+  assert.match(c.custom_text.submit.message, /Free for 7 days, then A\$60 a month/);
+
+  await call(checkout, { body: { plan: 'pro-monthly', email: 'new@example.com' } });
+  assert.equal(pay.calls.created[1].subscription_data.trial_period_days, undefined, 'no free Professional');
+  assert.equal(pay.calls.created[1].custom_text, undefined);
+
+  await call(checkout, { body: { plan: 'simple-monthly', email: MEMBER } });
+  assert.equal(pay.calls.created[2].subscription_data.trial_period_days, undefined, 'one free week per customer');
+});
+
+test('free week: a trial checkout grants access, counts as a trial not a sale, and states the charge date', async () => {
+  const trialEnd = Math.floor(Date.now() / 1000) + 7 * 86400;
+  const session = { id: 'cs_trial', mode: 'subscription', status: 'complete', payment_status: 'no_payment_required', amount_total: 0, customer: 'cus_t', customer_details: { email: 'trial@example.com' }, subscription: { id: 'sub_t', status: 'trialing', trial_end: trialEnd } };
+  pay.checkout.sessions.listLineItems = async () => ({ data: [{ price: { id: PLANS['simple-monthly'].price } }] });
+  await handleEvent({ type: 'checkout.session.completed', data: { object: session } });
+  assert.equal((await getEntitlement('trial@example.com')).tier, 'simple');
+  assert.equal(Number(await db.get(`m:${today()}:trial_started`)), 1);
+  assert.equal(Number(await db.get(`m:${today()}:checkout_paid`)) || 0, 0);
+  const welcome = mail.find((m) => m.to === 'trial@example.com');
+  assert.match(welcome.subject, /free week/);
+  assert.match(welcome.html, /Nothing is charged until/);
+  assert.ok(mail.some((m) => /free trial started/.test(m.subject)), 'owner told');
+});
+
+test('free week: the 3-day reminder is sent once, only while trialing', async () => {
+  const sub = { id: 'sub_r', customer: 'cus_1', status: 'trialing', trial_end: Math.floor(Date.now() / 1000) + 3 * 86400, items: { data: [{ price: { id: PLANS['simple-monthly'].price } }] } };
+  await handleEvent({ type: 'customer.subscription.trial_will_end', data: { object: sub } });
+  await handleEvent({ type: 'customer.subscription.trial_will_end', data: { object: sub } });
+  const sent = mail.filter((m) => /free week ends/.test(m.subject));
+  assert.equal(sent.length, 1);
+  assert.equal(sent[0].to, MEMBER);
+  assert.match(sent[0].html, /A\$ ?60|AUD 60/);
+  await handleEvent({ type: 'customer.subscription.trial_will_end', data: { object: { ...sub, id: 'sub_x', status: 'canceled' } } });
+  assert.equal(mail.filter((m) => /free week ends/.test(m.subject)).length, 1);
+});
+
+test('free week: a failed reminder email is retried on the next delivery', async () => {
+  const sub = { id: 'sub_f', customer: 'cus_1', status: 'trialing', trial_end: Math.floor(Date.now() / 1000) + 3 * 86400, items: { data: [{ price: { id: PLANS['simple-monthly'].price } }] } };
+  setDepsForTest({ store: db, stripe: pay, anthropic: ai, sendEmail: async () => { throw new Error('mail down'); } });
+  await assert.rejects(handleEvent({ type: 'customer.subscription.trial_will_end', data: { object: sub } }));
+  setDepsForTest({ store: db, stripe: pay, anthropic: ai, sendEmail: async (m) => { mail.push(m); } });
+  await handleEvent({ type: 'customer.subscription.trial_will_end', data: { object: sub } });
+  assert.equal(mail.filter((m) => /free week ends/.test(m.subject)).length, 1);
+});
