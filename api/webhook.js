@@ -2,7 +2,7 @@
 // every error and answered 200, so when the database died, payments were reported
 // as delivered while the customer received nothing.
 import { stripe, store } from '../lib/deps.js';
-import { fulfilCheckoutSession, isPaid } from '../lib/fulfil.js';
+import { fulfilCheckoutSession, isPaid, remindTrialEnding } from '../lib/fulfil.js';
 import { forgetEntitlement } from '../lib/entitlement.js';
 import { planForPrice } from '../lib/plans.js';
 import { readPass, writePass } from '../lib/pass.js';
@@ -57,6 +57,10 @@ export async function handleEvent(event) {
       console.warn('Payment failed', { invoice: object.id, attempt: object.attempt_count });
       return;
     }
+
+    case 'customer.subscription.trial_will_end':
+      await remindTrialEnding(object, await emailForCustomer(object.customer));
+      return;
 
     case 'customer.subscription.updated':
     case 'customer.subscription.deleted': {

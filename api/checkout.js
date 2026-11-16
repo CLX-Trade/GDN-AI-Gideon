@@ -2,7 +2,7 @@
 // customer (?action=portal). The browser only ever names a plan key: which price
 // that maps to is decided here.
 import { json, query, originAllowed, isEmail, normalEmail, baseUrl, parseCookies, ipHash } from '../lib/http.js';
-import { PLANS, planForPrice } from '../lib/plans.js';
+import { PLANS, planForPrice, brisbaneDate } from '../lib/plans.js';
 import { stripe } from '../lib/deps.js';
 import { readEmail } from '../lib/session.js';
 import { rateLimit } from '../lib/quota.js';
@@ -34,6 +34,17 @@ async function checkout(req, res) {
   const ref = String(body.ref || '').replace(/[^\w.:/-]/g, '').slice(0, 120);
   const base = baseUrl(req);
 
+  // The free week is for new customers. An email already on file with Stripe pays from day one.
+  let trialDays = plan.trialDays || 0;
+  if (trialDays && email) {
+    try { if ((await findCustomerIds(email)).length) trialDays = 0; }
+    catch { trialDays = 0; }
+  }
+  const trial = trialDays ? {
+    payment_method_collection: 'always',
+    custom_text: { submit: { message: `Free for ${trialDays} days, then A$${plan.amount} a month. Your card is first charged on ${brisbaneDate(Date.now() + trialDays * 86400000)} unless you cancel before then, which you can do any time from Manage billing in Gideon. We email you a reminder 3 days before.` } },
+  } : {};
+
   try {
     const session = await stripe().checkout.sessions.create({
       mode: plan.mode,
@@ -43,7 +54,11 @@ async function checkout(req, res) {
       success_url: `${base}/api/auth?action=complete&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${base}/pricing?checkout=canceled`,
       metadata: { plan: plan.key, ref },
-      ...(plan.mode === 'subscription' ? { subscription_data: { metadata: { plan: plan.key, ref } } } : {}),
+      ...(plan.mode === 'subscription' ? { subscription_data: {
+        metadata: { plan: plan.key, ref },
+        ...(trialDays ? { trial_period_days: trialDays, trial_settings: { end_behavior: { missing_payment_method: 'cancel' } } } : {}),
+      } } : {}),
+      ...trial,
     });
     await metric('checkout_started');
     return json(res, 200, { url: session.url });
