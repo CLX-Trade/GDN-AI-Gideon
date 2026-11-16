@@ -9,6 +9,8 @@ function setBilling(isAnnual) {
   document.querySelectorAll('[data-a]').forEach((el) => { el.hidden = !isAnnual; });
   document.querySelectorAll('[data-monthly]').forEach((btn) => {
     btn.setAttribute('data-checkout', btn.getAttribute(isAnnual ? 'data-annual' : 'data-monthly'));
+    const label = btn.getAttribute(isAnnual ? 'data-label-a' : 'data-label-m');
+    if (label) btn.textContent = label;
   });
 }
 monthly.addEventListener('click', () => setBilling(false));
