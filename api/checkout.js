@@ -34,7 +34,7 @@ async function checkout(req, res) {
   const ref = String(body.ref || '').replace(/[^\w.:/-]/g, '').slice(0, 120);
   const base = baseUrl(req);
 
-  // The free week is for new customers. An email already on file with Stripe pays from day one.
+  // The free trial is for new customers. An email already on file with Stripe pays from day one.
   let trialDays = plan.trialDays || 0;
   if (trialDays && email) {
     try { if ((await findCustomerIds(email)).length) trialDays = 0; }
