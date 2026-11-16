@@ -60,7 +60,7 @@ export const workspace = page({
   <h2 id="pw-title">Keep going with Gideon</h2>
   <p id="pw-text"></p>
   <div class="modal-plans">
-    <div class="mplan"><b>Simple</b><strong>A$60</strong><small>per month after a free week. 100 queries, packs up to 5 documents. Card required, cancel any time before day 7 and pay nothing.</small><button class="btn btn-sm btn-primary btn-block" data-checkout="simple-monthly">Start 7 days free</button><div class="plan-err"></div></div>
+    <div class="mplan"><b>Simple</b><strong>A$60</strong><small>per month after 2 free weeks. 100 queries, packs up to 5 documents. Card required, cancel any time before day 14 and pay nothing.</small><button class="btn btn-sm btn-primary btn-block" data-checkout="simple-monthly">Start 2 weeks free</button><div class="plan-err"></div></div>
     <div class="mplan feat"><b>Professional</b><strong>A$210</strong><small>per month, about A$7 a day. 1,000 queries, packs up to 20 documents.</small><button class="btn btn-sm btn-ghost btn-block" data-checkout="pro-monthly">Choose Professional</button><div class="plan-err"></div></div>
   </div>
   <div class="modal-foot">
@@ -110,7 +110,7 @@ export const signin = page({
 });
 
 const PRICING_FAQ = [
-  ['How does the free week work?', 'Choose Simple monthly and enter a card. You pay nothing for 7 days and get the full Simple plan: 100 queries and pack checks up to 5 documents. Checkout shows the date of the first charge, and we email you 3 days before it. Cancel from Manage billing in your account menu before then and you are never charged. The free week is for new customers.'],
+  ['How do the 2 free weeks work?', 'Choose Simple monthly and enter a card. You pay nothing for 14 days and get the full Simple plan: 100 queries and pack checks up to 5 documents. Checkout shows the date of the first charge, and we email you 3 days before it. Cancel from Manage billing in your account menu before then and you are never charged. The free week is for new customers.'],
   ['What counts as a query?', 'One chat message, or one document in a pack check. A five-document pack uses five queries. In a live voice conversation, five spoken exchanges count as one query, unless documents are involved or the answer is long. Your counter resets each calendar month.'],
   ['What currency am I charged in?', 'Australian dollars. Your bank may show a converted amount if your card is in another currency.'],
   ['Can I cancel?', 'Yes, at any time, from Manage billing in your account menu. Access continues until the end of the period you have paid for, and you are not charged again.'],
@@ -124,16 +124,16 @@ const planCard = ({ id, name, badge, featured, monthly, annual, annualMonthly, p
   <div class="plan-badge">${badge || ''}</div>
   <h3>${name}</h3>
   <div class="plan-price"><span data-m>A$${monthly}<small>/month</small></span><span data-a hidden>A$${annual.toLocaleString('en-AU')}<small>/year</small></span></div>
-  <p class="plan-note"><span data-m>${trial ? `First 7 days free, then about A$${perDay} a day, billed monthly. Card required; cancel before day 7 and pay nothing.` : `About A$${perDay} a day. Billed monthly.`}</span><span data-a hidden>A$${annualMonthly} a month equivalent. Billed once a year.</span></p>
+  <p class="plan-note"><span data-m>${trial ? `First 2 weeks free, then about A$${perDay} a day, billed monthly. Card required; cancel before day 14 and pay nothing.` : `About A$${perDay} a day. Billed monthly.`}</span><span data-a hidden>A$${annualMonthly} a month equivalent. Billed once a year.</span></p>
   <ul class="tick-list">${features.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
-  <button class="btn btn-block ${featured || trial ? 'btn-primary' : 'btn-ghost'}" data-checkout="${id}-monthly" data-monthly="${id}-monthly" data-annual="${id}-annual"${trial ? ` data-label-m="Start 7 days free" data-label-a="Choose ${name}"` : ''}>${trial ? 'Start 7 days free' : `Choose ${name}`}</button>
+  <button class="btn btn-block ${featured || trial ? 'btn-primary' : 'btn-ghost'}" data-checkout="${id}-monthly" data-monthly="${id}-monthly" data-annual="${id}-annual"${trial ? ` data-label-m="Start 2 weeks free" data-label-a="Choose ${name}"` : ''}>${trial ? 'Start 2 weeks free' : `Choose ${name}`}</button>
   <div class="plan-err" role="alert"></div>
 </div>`;
 
 export const pricing = page({
   path: '/pricing',
   title: 'Pricing · Gideon trade document reconciliation',
-  description: 'Gideon plans from A$60 a month, with the first 7 days of Simple free. Check trade document packs and work with an AI trade analyst. Prices in Australian dollars, cancel any time.',
+  description: 'Gideon plans from A$60 a month, with the first 2 weeks of Simple free. Check trade document packs and work with an AI trade analyst. Prices in Australian dollars, cancel any time.',
   current: '/pricing',
   scripts: ['/assets/pricing.js'],
   schema: [faqSchema(PRICING_FAQ)],
@@ -142,7 +142,7 @@ export const pricing = page({
   <div class="wrap">
     <div class="eyebrow">Pricing</div>
     <h1>Less than one refused presentation.</h1>
-    <p class="lede" style="max-width:40em">Try three queries with no card, or take Simple free for 7 days. Prices are in Australian dollars. Cancel any time.</p>
+    <p class="lede" style="max-width:40em">Try three queries with no card, or take Simple free for 2 weeks. Prices are in Australian dollars. Cancel any time.</p>
     <p id="checkout-note" class="form-msg" role="status"></p>
   </div>
 </section>
@@ -153,7 +153,7 @@ export const pricing = page({
       <button id="bill-a" aria-pressed="false">Annual <span class="save">save 30%</span></button>
     </div>
     <div class="grid-3">
-      ${planCard({ id: 'simple', name: 'Simple', badge: 'First 7 days free', trial: true, monthly: 60, annual: 504, annualMonthly: 42, perDay: 2, features: ['100 queries a month', 'Pack checks up to 5 documents', 'Rule checks and AI review', 'Chat with web search', 'Files in PDF, Word and Excel', 'Live voice conversation'] })}
+      ${planCard({ id: 'simple', name: 'Simple', badge: 'First 2 weeks free', trial: true, monthly: 60, annual: 504, annualMonthly: 42, perDay: 2, features: ['100 queries a month', 'Pack checks up to 5 documents', 'Rule checks and AI review', 'Chat with web search', 'Files in PDF, Word and Excel', 'Live voice conversation'] })}
       ${planCard({ id: 'pro', name: 'Professional', badge: 'For working desks', featured: true, monthly: 210, annual: 1764, annualMonthly: 147, perDay: 7, features: ['1,000 queries a month', 'Pack checks up to 20 documents', 'Rule checks and AI review', 'Chat with web search', 'Files in PDF, Word and Excel', 'Live voice conversation'] })}
       <div class="plan">
         <div class="plan-badge"></div>
