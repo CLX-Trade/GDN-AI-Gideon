@@ -35,7 +35,8 @@ for (const entry of pages) {
 }
 
 // Served through a rewrite or from static/, so these have no generated page of their own.
-urls.push({ path: '/try', updated: '2026-11-09' }, { path: '/meeting-room', updated: '2026-11-09' });
+// /meeting-room is a gated app screen with almost no text, so it is noindex and left out.
+urls.push({ path: '/try', updated: '2026-11-18' });
 
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -51,18 +52,18 @@ const SITE_URL = 'https://www.gdn-ai.com';
 const link = (p) => `- [${p.name}](${SITE_URL}${p.path}): ${p.lede}`;
 const listed = pages.filter((p) => p.name && p.lede && p.sitemap !== false);
 const core = [
-  { name: 'Home', path: '/', lede: 'What Gideon does: it compares every field across a trade document pack and reports what does not match.' },
-  { name: 'Try Gideon free', path: '/try', lede: 'Check a document pack, ask a question, or talk to Gideon by voice. Free to try, no card.' },
+  { name: 'Home', path: '/', lede: 'What Gideon does as an AI business manager: reads documents, researches, writes and talks it through.' },
+  { name: 'Try Gideon free', path: '/try', lede: 'Ask anything, attach documents, or talk to Gideon by voice. Three free queries, no card.' },
   { name: 'Sample report', path: '/sample-report', lede: 'A full Gideon report on a fictional pack with planted errors.' },
-  { name: 'Pricing', path: '/pricing', lede: 'Plans in Australian dollars, from a day pass to annual.' },
+  { name: 'Pricing', path: '/pricing', lede: 'Plans in Australian dollars from A$60 a month, first 2 weeks of Simple free.' },
   { name: 'Free tools', path: '/tools', lede: 'Check digits and formats for IMO, container, IBAN, SWIFT/BIC, LEI and ABN/ACN numbers.' },
   { name: 'Guides', path: '/guides', lede: 'Practical guides from a working trade desk.' },
 ];
 const llms = `# Gideon
 
-> Gideon reads across a whole trade document pack (bills of lading, invoices, letters of credit, inspection certificates, storage receipts and the rest) and lists every party, quantity, date and identifier that does not reconcile, before the money moves. Built by the GDN trade desk.
+> Gideon is an AI business manager. It reads your contracts, invoices, quotes and trade documents and flags what doesn't add up, researches live with sources, writes reports, spreadsheets and letters, and talks things through on a voice call. Plans are in Australian dollars from A$60 a month, with the first 2 weeks of the Simple plan free. Built by GDN in Brisbane.
 
-Gideon does not confirm that a document is genuine. It shows where the documents in a pack disagree with each other, so you know what to check with the issuer, the bank or the terminal.
+Gideon does not confirm that a document is genuine. It shows where documents disagree with each other, so you know what to check with the issuer, the bank or the terminal. For trade document packs (bills of lading, invoices, letters of credit, inspection certificates, storage receipts) it lists every party, quantity, date and identifier that does not reconcile.
 
 ## Core pages
 

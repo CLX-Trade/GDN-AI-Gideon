@@ -282,3 +282,4 @@ textarea.input { min-height: 110px; resize: vertical; }
   .nav, .foot, .consent, .cta-band, .no-print { display: none !important; }
   body { background: #fff; color: #111; }
 }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }

@@ -3,7 +3,7 @@ import { page, esc, faqHtml, faqSchema, closingCta, CONTACT } from '../layout.js
 
 export const workspace = page({
   path: '/try',
-  title: 'Gideon · Your AI business manager',
+  title: 'Try Gideon Free · Ask Your AI Business Manager 3 Questions',
   description: 'Ask Gideon anything, attach your documents, or talk it through on a call. It reads, researches and writes for your business. Three free queries, no card.',
   bodyClass: 'app',
   bare: true,
@@ -11,6 +11,7 @@ export const workspace = page({
   scripts: ['/assets/workspace.js'],
   noindex: false,
   body: `
+<h1 class="sr-only">Try Gideon, your AI business manager, free</h1>
 <div class="ws" id="ws">
   <aside class="ws-rail">
     <a class="logo" href="/"><img src="/media/mark-96.png" width="30" height="30" alt=""><span>Gideon</span></a>
@@ -133,7 +134,7 @@ const planCard = ({ id, name, badge, featured, monthly, annual, annualMonthly, p
 export const pricing = page({
   path: '/pricing',
   title: 'Pricing · Gideon AI business manager',
-  description: 'Gideon plans from A$60 a month, with the first 2 weeks of Simple free. An AI business manager that reads your documents, researches live and writes the paperwork. Prices in Australian dollars, cancel any time.',
+  description: 'Gideon AI business manager plans from A$60 a month, with the first 2 weeks of Simple free. Prices in Australian dollars. Cancel any time.',
   current: '/pricing',
   scripts: ['/assets/pricing.js'],
   schema: [faqSchema(PRICING_FAQ)],

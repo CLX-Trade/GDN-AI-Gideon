@@ -39,7 +39,7 @@ function footer() {
       <a class="logo" href="/"><img src="/media/mark-96.png" width="30" height="30" alt="" loading="lazy"><span>Gideon</span></a>
       <p>Your AI business manager. Reads your documents, finds what doesn't add up, researches live, writes the paperwork and talks it through. Built by GDN in Brisbane.</p>
     </div>
-    <div><h4>Product</h4><a href="/try">Try Gideon</a><a href="/sample-report">Sample report</a><a href="/pricing">Pricing</a><a href="/meeting-room">Meeting Room</a><a href="/signin">Sign in</a></div>
+    <div><h4>Product</h4><a href="/try">Try Gideon</a><a href="/sample-report">Sample report</a><a href="/pricing">Pricing</a><a href="/meeting-room" rel="nofollow">Meeting Room</a><a href="/signin">Sign in</a></div>
     <div><h4>Free tools</h4><a href="/tools/imo-number-checker">IMO number</a><a href="/tools/container-number-checker">Container number</a><a href="/tools/iban-checker">IBAN</a><a href="/tools/swift-bic-checker">SWIFT / BIC</a><a href="/tools/lei-checker">LEI</a><a href="/tools/abn-acn-checker">ABN / ACN</a></div>
     <div><h4>Guides</h4><a href="/counterparty-verification-checklist">Counterparty checklist</a><a href="/guides/verify-bill-of-lading">Verify a bill of lading</a><a href="/guides/documents-that-must-match">Documents that must match</a><a href="/guides/letter-of-credit-discrepancies">L/C discrepancies</a><a href="/guides">All guides</a></div>
     <div><h4>Company</h4><a href="https://www.gdngroup.com.au" rel="noopener">GDN Group</a><a href="mailto:${CONTACT}">Contact</a><a href="/invest">Investors</a><a href="/security">Security</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a><a href="/refunds">Refunds</a></div>
@@ -69,7 +69,13 @@ ${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" hr
 <meta property="og:type" content="${ogType}">
 <meta property="og:url" content="${canonical}">
 <meta property="og:image" content="${SITE}${ogImage}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Gideon, your AI business manager">
+<meta property="og:locale" content="en_AU">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(title)}">
+<meta name="twitter:description" content="${esc(description)}">
 <meta name="theme-color" content="#050608">
 <link rel="icon" type="image/png" sizes="32x32" href="/media/favicon-32.png">
 <link rel="apple-touch-icon" href="/media/mark-180.png">
@@ -99,6 +105,15 @@ export const organizationSchema = {
   email: CONTACT,
   address: { '@type': 'PostalAddress', addressLocality: 'Brisbane', addressRegion: 'QLD', addressCountry: 'AU' },
   identifier: `ACN ${ACN}`,
+};
+
+export const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Gideon',
+  alternateName: 'GDN AI',
+  url: 'https://www.gdn-ai.com/',
+  publisher: { '@type': 'Organization', name: 'GDN Enterprise Pty Ltd' },
 };
 
 export function faqSchema(items) {
