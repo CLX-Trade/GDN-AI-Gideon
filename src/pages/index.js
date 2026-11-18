@@ -10,8 +10,8 @@ import sampleReport from './sample-report.js';
 const UPDATED = '2026-11-09';
 
 export default [
-  { path: '/', html: home, updated: UPDATED },
-  { path: '/pricing', html: pricing, updated: UPDATED },
+  { path: '/', html: home, updated: '2026-11-18' },
+  { path: '/pricing', html: pricing, updated: '2026-11-18' },
   { path: '/sample-report', html: sampleReport, updated: UPDATED },
   { path: '/workspace', html: workspace, updated: UPDATED, sitemap: false },
   { path: '/signin', html: signin, updated: UPDATED, sitemap: false },

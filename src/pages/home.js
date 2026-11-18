@@ -1,4 +1,4 @@
-import { page, organizationSchema, faqSchema, faqHtml, closingCta } from '../layout.js';
+import { page, organizationSchema, websiteSchema, faqSchema, faqHtml, closingCta } from '../layout.js';
 
 const FAQ = [
   ['What can I ask Gideon to do?', 'Anything you would hand to a sharp business manager who can read, research and write. Review a contract or a quote, compare an invoice against what was agreed, research a supplier, a market or a rule, draft an email or a letter, build a spreadsheet, or write up a report. You can type, attach files, or talk it through on a live call.'],
@@ -200,13 +200,14 @@ ${closingCta()}
 
 export default page({
   path: '/',
-  title: 'Gideon · Your AI business manager',
-  description: 'Gideon reads your contracts, invoices and quotes and tells you what doesn\'t add up, researches anything live, writes your reports, spreadsheets and letters, and talks it through on a call. First 2 weeks free.',
+  title: 'Gideon: Your AI Business Manager · First 2 Weeks Free',
+  description: 'Gideon reads your contracts, invoices and quotes, flags what doesn\'t add up, researches live and writes your reports and letters. First 2 weeks free.',
   body,
   head: '<meta name="google-site-verification" content="o0e3BD2wVL47_petaxFvtRwMI67JdsSTcNnFqZBbcbQ">',
   scripts: ['/assets/hero.js'],
   schema: [
     organizationSchema,
+    websiteSchema,
     {
       '@context': 'https://schema.org',
       '@type': 'SoftwareApplication',
