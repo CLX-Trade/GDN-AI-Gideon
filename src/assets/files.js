@@ -111,9 +111,14 @@ function extOf(name) { var m = String(name).match(/\.([a-z0-9]+)$/i); return m ?
       var docEl=document.createElement('div');docEl.id='gf-doc';
       docEl.innerHTML=css+'<div class="band"><div class="ey">GDN \u00B7 GIDEON</div><div class="ttl">'+esc(bandTitle)+'</div><div class="sub">Confidential \u00B7 '+esc(stamp())+'</div></div><div class="bd">'+badges(md(bodyText))+'<div class="ft">Prepared by Gideon \u00B7 GDN. Review before relying on this document for commercial, legal or financial decisions.</div></div>';
       overlay.appendChild(docEl);document.body.appendChild(overlay);
+      // html2canvas captures blank pages when the window is scrolled down, so render from
+      // the top (hidden behind the white overlay) and put the reader back afterwards.
+      var sx=window.scrollX||0, sy=window.scrollY||0;
+      window.scrollTo(0,0);
+      function done(){overlay.remove();window.scrollTo(sx,sy);}
       return new Promise(function(res){setTimeout(res,180);}).then(function(){
         return h2p().set({margin:[0,0,0,0],image:{type:'jpeg',quality:0.96},html2canvas:{scale:2,backgroundColor:'#ffffff'},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},pagebreak:{mode:['css','legacy'],avoid:['tr']}}).from(docEl).save(filename);
-      }).then(function(){overlay.remove();},function(e){overlay.remove();throw e;});
+      }).then(done,function(e){done();throw e;});
     });
   }
 
