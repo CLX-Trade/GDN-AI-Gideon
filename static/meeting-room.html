@@ -82,6 +82,8 @@ label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
 .turn .turn-h .who{font-weight:700;color:var(--ink);}
 .turn .turn-h .role{color:var(--ink-2);}
 .turn .turn-body{overflow-wrap:anywhere;}
+.round{margin:14px 0 8px;font-size:13px;font-weight:700;color:var(--ink-soft);overflow-wrap:anywhere;}
+.round:first-child{margin-top:0;}
 .turn .turn-body h3,.turn .turn-body h4,.turn .turn-body h5{margin:.9em 0 .35em;line-height:1.3;}
 .turn .turn-body h3{font-size:17px;}
 .turn .turn-body h4{font-size:15px;}
@@ -298,7 +300,6 @@ details.adv[open] summary{margin-bottom:12px;}
   ];
   var KEY_NAMES = { claude:'Anthropic', chatgpt:'OpenAI', gemini:'Google' };
   var running = false;
-  var lastTopic = '';  // the topic of the latest meeting, for export titles
 
   var $ = function(id){ return document.getElementById(id); };
 
@@ -537,7 +538,9 @@ details.adv[open] summary{margin-bottom:12px;}
     }
 
     var seats = readSeats();
-    lastTopic = prompt;
+    var mark = document.createElement('div'); mark.className='round';
+    mark.dataset.topic = prompt; mark.textContent = 'Topic: ' + prompt;
+    $('transcript').appendChild(mark);
     var transcript = 'USER REQUEST:\n'+prompt+'\n';
     var meetingStart = Date.now(), seatStart = meetingStart, current = 0;
     running = true;
@@ -674,8 +677,16 @@ details.adv[open] summary{margin-bottom:12px;}
   function demote(md, by){
     return String(md).replace(/^(\s{0,3})(#{1,6})(?=\s)/gm, function(m, sp, h){ return sp + '#'.repeat(Math.min(4, h.length + by)); });
   }
+  // Topics come from the "Topic:" line at the start of each meeting in the transcript,
+  // so a reloaded transcript keeps them. Older saves without those lines get no topic
+  // rather than a guess.
+  function roundTopics(){
+    return Array.prototype.map.call(document.querySelectorAll('#transcript .round'), function(r){ return (r.dataset.topic || '').replace(/\s+/g,' ').trim(); });
+  }
   function exportTitle(){
-    var topic = (lastTopic || $('prompt').value || '').trim().replace(/\s+/g,' ');
+    var rounds = roundTopics();
+    if(rounds.length > 1) return 'Meeting Room';
+    var topic = (rounds[0] || '').trim().replace(/\s+/g,' ');
     if(!topic) return 'Meeting Room';
     return 'Meeting Room: ' + (topic.length > 70 ? topic.slice(0, 67).replace(/\s+\S*$/,'') + '…' : topic);
   }
@@ -683,21 +694,29 @@ details.adv[open] summary{margin-bottom:12px;}
     var doc = $('docText').value.trim();
     var head = '# ' + exportTitle() + '\n\n';
     if(doc) return head + doc;
-    var turns = Array.prototype.filter.call(document.querySelectorAll('.turn'), function(t){
-      return !t.classList.contains('pending') && !t.classList.contains('err');
-    });
-    if(!turns.length) return '';
-    var topic = (lastTopic || $('prompt').value || '').trim();
-    var parts = turns.map(function(t){
+    var rounds = roundTopics();
+    var parts = [], turnCount = 0;
+    Array.prototype.forEach.call(document.querySelectorAll('#transcript .round, #transcript .turn'), function(t){
+      if(t.classList.contains('round')){
+        var rt = (t.dataset.topic || '').replace(/\s+/g,' ').trim();
+        if(rounds.length > 1 && rt) parts.push('**Topic:** ' + rt);
+        return;
+      }
+      if(t.classList.contains('pending') || t.classList.contains('err')) return;
       var label = t.dataset.label || t.querySelector('.who').textContent;
       var raw = t.dataset.raw || t.querySelector('.turn-body').textContent;
-      return '## ' + label + '\n\n' + demote(raw, 2);
+      parts.push('## ' + label + '\n\n' + demote(raw, 2));
+      turnCount++;
     });
+    if(!turnCount) return '';
+    var topic = rounds.length > 1 ? '' : (rounds[0] || '').trim();
     return head + (topic ? '**Topic:** ' + topic + '\n\n' : '') + parts.join('\n\n');
   }
+  // The version query skips any copy of the file maker a browser cached before the
+  // last change to it. Bump it whenever src/assets/files.js changes.
   var filesModule = null;
   function getFiles(){
-    if(!filesModule) filesModule = import('/assets/files.js').catch(function(e){ filesModule = null; throw e; });
+    if(!filesModule) filesModule = import('/assets/files.js?v=20261122b').catch(function(e){ filesModule = null; throw e; });
     return filesModule;
   }
   function exportFile(kind, btn){
