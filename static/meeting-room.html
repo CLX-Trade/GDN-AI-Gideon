@@ -81,7 +81,35 @@ label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
 .turn .turn-h{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:13px;color:var(--ink-soft);}
 .turn .turn-h .who{font-weight:700;color:var(--ink);}
 .turn .turn-h .role{color:var(--ink-2);}
-.turn .turn-body{white-space:pre-wrap;}
+.turn .turn-body{overflow-wrap:anywhere;}
+.turn .turn-body h3,.turn .turn-body h4,.turn .turn-body h5{margin:.9em 0 .35em;line-height:1.3;}
+.turn .turn-body h3{font-size:17px;}
+.turn .turn-body h4{font-size:15px;}
+.turn .turn-body h5{font-size:14px;}
+.turn .turn-body p{margin:0 0 .6em;}
+.turn .turn-body ul,.turn .turn-body ol{margin:0 0 .6em;padding-left:1.4em;}
+.turn .turn-body li{margin:.15em 0;}
+.turn .turn-body code{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:0 4px;font-size:.92em;}
+.turn .turn-body .tbl{overflow-x:auto;margin:0 0 .7em;}
+.turn .turn-body table{border-collapse:collapse;font-size:13px;min-width:60%;}
+.turn .turn-body th,.turn .turn-body td{border:1px solid var(--line);padding:5px 9px;text-align:left;vertical-align:top;background:var(--panel);}
+.turn .turn-body th{background:#E3EEFB;}
+.turn .turn-body hr{border:none;border-top:1px solid var(--line);margin:.8em 0;}
+.turn.err .turn-body{white-space:pre-wrap;}
+.turn.pending{border-style:dashed;}
+.turn.pending .turn-body{color:var(--ink-2);display:flex;align-items:center;gap:10px;}
+.dots{display:inline-flex;gap:4px;}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--accent);opacity:.3;animation:dot 1.2s infinite ease-in-out;}
+.dots i:nth-child(2){animation-delay:.2s;}
+.dots i:nth-child(3){animation-delay:.4s;}
+@keyframes dot{0%,80%,100%{opacity:.25}40%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.dots i{animation:none;opacity:.7;}}
+.progress{font-size:13px;color:var(--ink-2);margin-top:8px;}
+.pill.paid{background:#E5F6EF;border-color:#BfE6D6;color:var(--ok);font-weight:700;}
+.pill.active{background:#E3EEFB;border-color:#C5DBF5;color:var(--leather);font-weight:700;}
+details.adv{margin-top:4px;}
+details.adv summary{cursor:pointer;font-weight:700;font-size:15px;}
+details.adv[open] summary{margin-bottom:12px;}
 .turn.err{border-color:var(--err);}
 .turn.err .turn-body{color:var(--err);}
 .turn .to-doc{margin-left:auto;background:transparent;border:1px solid var(--line);color:var(--ink-soft);border-radius:6px;padding:2px 10px;font-size:12px;cursor:pointer;}
@@ -155,7 +183,9 @@ label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
     </div>
 
     <div class="card" id="keyPanel">
-      <h2>Your provider keys</h2>
+      <details class="adv" id="advKeys">
+      <summary>Advanced: add Claude, ChatGPT or Gemini with your own API keys</summary>
+      <p class="muted">Not needed. Gideon seats run on your pass with no keys. Add a key only if you want another provider's model at the table.</p>
       <div class="knote">
         Keys are kept in memory only for this tab. They are <strong>never saved</strong> to your browser storage and <strong>never sent to GDN</strong> — each seat calls its provider directly from your browser.
         Keep your keys in your own private notes so you can paste them again next time.
@@ -165,11 +195,12 @@ label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
         <div><label>OpenAI (ChatGPT) API key</label><input type="password" id="key_openai" placeholder="sk-…" autocomplete="off"></div>
         <div><label>Google (Gemini) API key</label><input type="password" id="key_gemini" placeholder="AIza…" autocomplete="off"></div>
       </div>
+      </details>
     </div>
 
     <div class="card">
       <h2>Seats</h2>
-      <p class="muted">Up to four seats. The lead speaks first; each later seat sees the running transcript and reacts in its role.</p>
+      <p class="muted">Four seats, all Gideon by default, each in its own role. The lead speaks first; each later seat reads the running transcript and reacts. A full meeting takes about 3 to 5 minutes.</p>
       <div class="seats" id="seats"></div>
     </div>
 
@@ -181,6 +212,7 @@ label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
         <button class="btn" id="runBtn">Send</button>
         <span class="muted" id="runHint">Sending your first command starts your 24-hour window.</span>
       </div>
+      <div class="progress hidden" id="progress" aria-live="polite"></div>
     </div>
 
     <div class="card">
@@ -256,12 +288,16 @@ label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
     gideon:  { label:'Gideon (by GDN)',    models:['gideon-default'] }
   };
   var ROLES = ['lead','critic','synthesizer','specialist'];
+  // Every seat starts on Gideon, which runs on the pass with no keys.
+  // Other providers stay available under Advanced for people with their own keys.
   var defaultSeats = [
-    {provider:'claude',  model:'claude-sonnet-5-5', role:'lead',        name:'Lead'},
-    {provider:'chatgpt', model:'gpt-5.6-terra',            role:'critic',      name:'Critic'},
-    {provider:'gemini',  model:'gemini-3.5-flash',         role:'synthesizer', name:'Synthesizer'},
-    {provider:'gideon',  model:'gideon-default',           role:'specialist',  name:'Specialist'}
+    {provider:'gideon', model:'gideon-default', role:'lead',        name:'Lead'},
+    {provider:'gideon', model:'gideon-default', role:'critic',      name:'Critic'},
+    {provider:'gideon', model:'gideon-default', role:'synthesizer', name:'Synthesizer'},
+    {provider:'gideon', model:'gideon-default', role:'specialist',  name:'Specialist'}
   ];
+  var KEY_NAMES = { claude:'Anthropic', chatgpt:'OpenAI', gemini:'Google' };
+  var running = false;
 
   var $ = function(id){ return document.getElementById(id); };
 
@@ -286,6 +322,8 @@ label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
       fillModels(el, seat.provider, seat.model);
       el.querySelector('.s-prov').addEventListener('change', function(e){
         fillModels(el, e.target.value, null);
+        // A non-Gideon seat needs a key, so show where to put it.
+        if(e.target.value!=='gideon' && $('advKeys')) $('advKeys').open = true;
       });
     });
   }
@@ -389,7 +427,11 @@ label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
     var j = await r.json().catch(function(){return {};});
     return j.text || '(Gideon returned no text.)';
   }
+  function missingKey(provider){
+    return new Error('No '+KEY_NAMES[provider]+' key. Add it under "Advanced" above, or switch this seat to Gideon, which needs no key.');
+  }
   async function callSeat(seat, sys, user){
+    if(seat.provider!=='gideon' && !getKey(seat.provider)) throw missingKey(seat.provider);
     if(seat.provider==='claude')  return callClaude(seat.model, sys, user);
     if(seat.provider==='chatgpt') return callOpenAI(seat.model, sys, user);
     if(seat.provider==='gemini')  return callGemini(seat.model, sys, user);
@@ -397,19 +439,84 @@ label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
   }
 
   // ---------- Transcript rendering ----------
-  function addTurn(seat, text, isErr){
+  // A placeholder turn shown while a seat is working; fillTurn() turns it into the answer.
+  function pendingTurn(seat){
     var wrap = $('transcript');
-    var el = document.createElement('div'); el.className='turn'+(isErr?' err':'');
+    var el = document.createElement('div'); el.className='turn pending';
     var head = document.createElement('div'); head.className='turn-h';
     head.innerHTML = '<span class="who">'+esc(seat.name)+'</span><span class="role">· '+esc(seat.role)+' · '+esc(seat.provider)+'/'+esc(seat.model)+'</span>';
-    var toDoc = document.createElement('button'); toDoc.className='to-doc'; toDoc.textContent='→ Document';
-    toDoc.onclick = function(){ $('docText').value += (($('docText').value?'\n\n':'')+seat.name+' ('+seat.role+'):\n'+text); };
-    head.appendChild(toDoc);
-    var body = document.createElement('div'); body.className='turn-body'; body.textContent=text;
+    var body = document.createElement('div'); body.className='turn-body';
+    body.innerHTML = '<span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span>'+esc(seat.name)+' is thinking…</span>';
     el.appendChild(head); el.appendChild(body); wrap.appendChild(el);
-    wrap.scrollIntoView({block:'end'});
+    el.scrollIntoView({block:'nearest', behavior:'smooth'});
+    return el;
   }
-  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function fillTurn(el, seat, text, isErr){
+    el.className = 'turn'+(isErr?' err':'');
+    el.dataset.raw = text;
+    el.dataset.label = seat.name+' ('+seat.role+')';
+    var head = el.querySelector('.turn-h');
+    if(!isErr){
+      var toDoc = document.createElement('button'); toDoc.className='to-doc'; toDoc.type='button'; toDoc.textContent='→ Document';
+      head.appendChild(toDoc);
+    }
+    var body = el.querySelector('.turn-body');
+    if(isErr) body.textContent = text; else body.innerHTML = renderMarkdown(text);
+  }
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+
+  // Small, safe markdown: everything is escaped first, then only headings,
+  // lists, rules, bold, italic and inline code are turned into tags. No links, no raw HTML.
+  function inlineMd(s){
+    return esc(s)
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/\*\*(?=\S)([^*]+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/(^|[^*\w])\*(?=\S)([^*\n]+?)\*(?!\w)/g, '$1<em>$2</em>');
+  }
+  function renderMarkdown(text){
+    var lines = String(text).replace(/\r\n?/g,'\n').split('\n');
+    var out = [], para = [], list = null, table = null;
+    function cells(line){ return line.trim().replace(/^\|/,'').replace(/\|$/,'').split('|').map(function(c){return c.trim();}); }
+    function flushTable(){
+      if(!table) return;
+      var html = '<table><thead><tr>'+table.head.map(function(c){return '<th>'+inlineMd(c)+'</th>';}).join('')+'</tr></thead><tbody>'+
+        table.rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+inlineMd(c)+'</td>';}).join('')+'</tr>';}).join('')+'</tbody></table>';
+      out.push('<div class="tbl">'+html+'</div>'); table=null;
+    }
+    function flushPara(){
+      // A header row followed by a |---|---| row is a table; anything else is a paragraph.
+      if(para.length>=2 && /\|/.test(para[0]) && /^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(para[1])){
+        table = { head: cells(para[0]), rows: para.slice(2).map(cells) };
+        para = []; flushTable(); return;
+      }
+      if(para.length){ out.push('<p>'+para.map(inlineMd).join('<br>')+'</p>'); para=[]; }
+    }
+    function flushList(){ if(list){ out.push('<'+list.tag+'>'+list.items.map(function(i){return '<li>'+inlineMd(i)+'</li>';}).join('')+'</'+list.tag+'>'); list=null; } }
+    lines.forEach(function(line){
+      var m;
+      if(!line.trim()){ flushPara(); flushList(); return; }
+      if((m = line.match(/^\s{0,3}(#{1,6})\s+(.*?)\s*#*\s*$/))){
+        flushPara(); flushList();
+        var level = Math.min(5, m[1].length + 2); // # -> h3, ## -> h4, ### and deeper -> h5
+        out.push('<h'+level+'>'+inlineMd(m[2])+'</h'+level+'>'); return;
+      }
+      if(/^\s{0,3}([-*_])(\s*\1){2,}\s*$/.test(line)){ flushPara(); flushList(); out.push('<hr>'); return; }
+      if((m = line.match(/^\s*[-*•]\s+(.*)$/))){
+        flushPara(); if(!list || list.tag!=='ul'){ flushList(); list={tag:'ul',items:[]}; }
+        list.items.push(m[1]); return;
+      }
+      if((m = line.match(/^\s*\d+[.)]\s+(.*)$/))){
+        flushPara(); if(!list || list.tag!=='ol'){ flushList(); list={tag:'ol',items:[]}; }
+        list.items.push(m[1]); return;
+      }
+      if(list && /^\s{2,}\S/.test(line)){ list.items[list.items.length-1] += ' '+line.trim(); return; }
+      flushList(); para.push(line);
+    });
+    flushPara(); flushList();
+    return out.join('');
+  }
+
+  function fmtElapsed(ms){ var s=Math.floor(ms/1000); return Math.floor(s/60)+':'+(s%60<10?'0':'')+(s%60); }
 
   // ---------- Turn loop ----------
   function roleInstruction(role){
@@ -430,23 +537,41 @@ label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
 
     var seats = readSeats();
     var transcript = 'USER REQUEST:\n'+prompt+'\n';
-    for(var i=0;i<seats.length;i++){
-      var seat = seats[i];
-      var sys = roleInstruction(seat.role)+' Keep it focused and useful.';
-      var user = (i===0)
-        ? prompt
-        : ('Running transcript so far:\n'+transcript+'\n\nNow add your '+seat.role+' contribution.');
-      try{
-        var out = await callSeat(seat, sys, user);
-        if(!out) out='(empty response)';
-        addTurn(seat, out, false);
-        transcript += '\n'+seat.name+' ('+seat.role+'):\n'+out+'\n';
-      }catch(err){
-        addTurn(seat, (err && err.message) || 'Provider call failed', true);
-        // continue with remaining seats
-      }
+    var meetingStart = Date.now(), seatStart = meetingStart, current = 0;
+    running = true;
+    var prog = $('progress');
+    function tickProgress(){
+      var now = Date.now();
+      prog.textContent = 'Seat '+(current+1)+' of '+seats.length+' ('+seats[current].name+') is working · '+fmtElapsed(now-seatStart)+
+        ' · meeting '+fmtElapsed(now-meetingStart)+'. Each seat takes about a minute; keep this tab open.';
     }
-    $('runBtn').disabled = false;
+    prog.classList.remove('hidden'); tickProgress();
+    var progInt = setInterval(tickProgress, 1000);
+    try{
+      for(var i=0;i<seats.length;i++){
+        current = i; seatStart = Date.now(); tickProgress();
+        var seat = seats[i];
+        var sys = roleInstruction(seat.role)+' Keep it focused and useful.';
+        var user = (i===0)
+          ? prompt
+          : ('Running transcript so far:\n'+transcript+'\n\nNow add your '+seat.role+' contribution.');
+        var el = pendingTurn(seat);
+        try{
+          var out = await callSeat(seat, sys, user);
+          if(!out) out='(empty response)';
+          fillTurn(el, seat, out, false);
+          transcript += '\n'+seat.name+' ('+seat.role+'):\n'+out+'\n';
+        }catch(err){
+          fillTurn(el, seat, (err && err.message) || 'Provider call failed', true);
+          // continue with remaining seats
+        }
+      }
+      prog.textContent = 'Meeting finished in '+fmtElapsed(Date.now()-meetingStart)+'. Send again to run another round; it is free during your window.';
+    } finally {
+      clearInterval(progInt);
+      running = false;
+      $('runBtn').disabled = false;
+    }
   }
 
   // ---------- Pass start ----------
@@ -485,15 +610,25 @@ label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
     $('gate').classList.add('hidden');
     $('room').classList.remove('hidden');
   }
+  function setPill(text, cls){
+    var p = $('passState'); p.textContent = text; p.className = 'pill'+(cls?' '+cls:'');
+  }
   function setLookAroundUI(){
     showRoom();
-    $('passState').textContent='Look around (free)';
-    $('statusLine').textContent='You can configure seats and paste keys. Your 24-hour window starts when you send your first command.';
+    var paid = passData && typeof passData.passesRemaining==='number' && passData.passesRemaining > 0;
+    if(paid){
+      setPill('Paid · ready to start', 'paid');
+      $('statusLine').textContent='Your pass is ready. The 24-hour window starts when you send your first command.';
+    } else {
+      setPill('Look around (free)');
+      $('statusLine').textContent='You can set up the seats and look around. Your 24-hour window starts when you send your first command.';
+    }
     updateSessions();
   }
   function setActiveUI(){
     showRoom();
-    $('passState').textContent='Active';
+    setPill('Active', 'active');
+    $('statusLine').textContent='Your 24-hour window is running. Run as many meetings as you like until it ends.';
     $('runHint').textContent='Window active — re-running during the window is free.';
     updateSessions();
   }
@@ -514,9 +649,9 @@ label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
 
   // ---------- Save / load / export ----------
   function gatherTranscriptText(){
-    return Array.prototype.map.call(document.querySelectorAll('.turn'), function(t){
+    return Array.prototype.map.call(document.querySelectorAll('.turn:not(.pending)'), function(t){
       var who=t.querySelector('.who').textContent;
-      var body=t.querySelector('.turn-body').textContent;
+      var body=t.dataset.raw || t.querySelector('.turn-body').textContent;
       return who+':\n'+body;
     }).join('\n\n');
   }
@@ -542,6 +677,16 @@ label{font-size:12px;color:var(--ink-2);display:block;margin-bottom:4px;}
   async function init(){
     renderSeats();
     $('runBtn').addEventListener('click', runMeeting);
+    // One handler for every "→ Document" button, so turns restored by "Load previous" work too.
+    $('transcript').addEventListener('click', function(e){
+      var b = e.target.closest && e.target.closest('.to-doc'); if(!b) return;
+      var t = b.closest('.turn'); if(!t) return;
+      var raw = t.dataset.raw || t.querySelector('.turn-body').textContent;
+      var label = t.dataset.label || t.querySelector('.who').textContent;
+      $('docText').value += (($('docText').value?'\n\n':'')+label+':\n'+raw);
+    });
+    // Leaving mid-meeting loses the turns still in progress, so ask first.
+    window.addEventListener('beforeunload', function(e){ if(running){ e.preventDefault(); e.returnValue=''; } });
     $('saveBtn').addEventListener('click', saveTranscript);
     $('loadBtn').addEventListener('click', loadTranscript);
     $('exportPdf').addEventListener('click', function(){ exportText('meeting.txt','application/pdf'); });

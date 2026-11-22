@@ -19,10 +19,11 @@ const config = JSON.parse(await readFile(join(root, 'vercel.json'), 'utf8'));
 const PORT = Number(process.env.PORT || 4178);
 
 const DEV_MEMBER = 'member@dev.test';
+const devStore = new MemoryStore();
 setDepsForTest({
-  store: new MemoryStore(),
+  store: devStore,
   stripe: fakeStripe({ customers: { [DEV_MEMBER]: { id: 'cus_dev', subs: [{ status: 'active', items: { data: [{ price: { id: PLANS['pro-monthly'].price } }] } }] } } }),
-  anthropic: fakeAnthropic({ slowMs: 12, replyText: 'A **bill of lading** does three jobs:\n\n1. It is a receipt for the goods.\n2. It evidences the contract of carriage.\n3. It is a document of title.\n\n| Check | Why |\n|---|---|\n| Shipper name | Must match the seller |\n| On board date | Must fall inside the L/C window |\n\nThis answer came from the local fake model.' }),
+  anthropic: fakeAnthropic({ slowMs: Number(process.env.DEV_SLOW_MS || 12), replyText: 'A **bill of lading** does three jobs:\n\n1. It is a receipt for the goods.\n2. It evidences the contract of carriage.\n3. It is a document of title.\n\n| Check | Why |\n|---|---|\n| Shipper name | Must match the seller |\n| On board date | Must fall inside the L/C window |\n\nThis answer came from the local fake model.' }),
   sendEmail: async (m) => { console.log(`[dev email] to ${m.to}: ${m.subject}\n${(m.html.match(/href="([^"]+)"/) || [])[1] || ''}`); },
 });
 
@@ -57,6 +58,12 @@ http.createServer(async (req, res) => {
   try {
     if (path === '/dev/member') {
       res.writeHead(302, { 'Set-Cookie': sessionCookie(DEV_MEMBER).replace('; Secure', ''), Location: '/app' });
+      return res.end();
+    }
+    if (path === '/dev/pass') {
+      // Signs in as the dev member holding one unused Meeting Room day pass.
+      await devStore.set(`pass:${DEV_MEMBER}`, { type: 'daily', passesRemaining: 1, purchasedAt: Date.now(), startedAt: null });
+      res.writeHead(302, { 'Set-Cookie': sessionCookie(DEV_MEMBER).replace('; Secure', ''), Location: '/meeting-room' });
       return res.end();
     }
     for (const r of config.redirects || []) {
