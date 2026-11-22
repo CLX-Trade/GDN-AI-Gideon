@@ -234,7 +234,7 @@ details.adv[open] summary{margin-bottom:12px;}
           <button class="btn secondary" id="exportWord">Export Word</button>
         </div>
       </div>
-      <p class="muted">Use “→ Document” on any turn to append it here.</p>
+      <p class="muted">Use “→ Document” on any turn to build a document here, and edit it as you like. Export uses this document, or the whole meeting if it is empty. <span id="exportHint" aria-live="polite"></span></p>
       <textarea id="docText" placeholder="Your working document…"></textarea>
     </div>
   </div>
@@ -298,6 +298,7 @@ details.adv[open] summary{margin-bottom:12px;}
   ];
   var KEY_NAMES = { claude:'Anthropic', chatgpt:'OpenAI', gemini:'Google' };
   var running = false;
+  var lastTopic = '';  // the topic of the latest meeting, for export titles
 
   var $ = function(id){ return document.getElementById(id); };
 
@@ -536,6 +537,7 @@ details.adv[open] summary{margin-bottom:12px;}
     }
 
     var seats = readSeats();
+    lastTopic = prompt;
     var transcript = 'USER REQUEST:\n'+prompt+'\n';
     var meetingStart = Date.now(), seatStart = meetingStart, current = 0;
     running = true;
@@ -666,11 +668,52 @@ details.adv[open] summary{margin-bottom:12px;}
          var d=localStorage.getItem('gdn_room_doc'); if(d) $('docText').value=d;
     }catch(e){}
   }
-  function exportText(filename, mime){
-    var content = $('docText').value || gatherTranscriptText();
-    var blob = new Blob([content],{type:mime});
-    var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click();
-    setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+  // ---------- Export (real PDF and Word, using the same designer as Gideon's chat) ----------
+  // Pushes every markdown heading down by `by` levels (capped at ####), so a seat's own
+  // "# Title" sits under the document title and the seat's name.
+  function demote(md, by){
+    return String(md).replace(/^(\s{0,3})(#{1,6})(?=\s)/gm, function(m, sp, h){ return sp + '#'.repeat(Math.min(4, h.length + by)); });
+  }
+  function exportTitle(){
+    var topic = (lastTopic || $('prompt').value || '').trim().replace(/\s+/g,' ');
+    if(!topic) return 'Meeting Room';
+    return 'Meeting Room: ' + (topic.length > 70 ? topic.slice(0, 67).replace(/\s+\S*$/,'') + '…' : topic);
+  }
+  function exportMarkdown(){
+    var doc = $('docText').value.trim();
+    var head = '# ' + exportTitle() + '\n\n';
+    if(doc) return head + doc;
+    var turns = Array.prototype.filter.call(document.querySelectorAll('.turn'), function(t){
+      return !t.classList.contains('pending') && !t.classList.contains('err');
+    });
+    if(!turns.length) return '';
+    var topic = (lastTopic || $('prompt').value || '').trim();
+    var parts = turns.map(function(t){
+      var label = t.dataset.label || t.querySelector('.who').textContent;
+      var raw = t.dataset.raw || t.querySelector('.turn-body').textContent;
+      return '## ' + label + '\n\n' + demote(raw, 2);
+    });
+    return head + (topic ? '**Topic:** ' + topic + '\n\n' : '') + parts.join('\n\n');
+  }
+  var filesModule = null;
+  function getFiles(){
+    if(!filesModule) filesModule = import('/assets/files.js').catch(function(e){ filesModule = null; throw e; });
+    return filesModule;
+  }
+  function exportFile(kind, btn){
+    var md = exportMarkdown();
+    var hint = $('exportHint');
+    if(!md){ hint.textContent = 'Nothing to export yet. Run a meeting first.'; return; }
+    var day = new Date(); var pad = function(n){ return (n<10?'0':'')+n; };
+    var name = 'Gideon Meeting ' + day.getFullYear() + '-' + pad(day.getMonth()+1) + '-' + pad(day.getDate()) + (kind==='pdf' ? '.pdf' : '.doc');
+    var label = btn.textContent;
+    btn.disabled = true; btn.textContent = kind==='pdf' ? 'Preparing PDF…' : 'Preparing Word…';
+    hint.textContent = '';
+    getFiles().then(function(m){ return m.generateFile(name, md); }).then(function(){
+      hint.textContent = 'Downloaded ' + name + '.';
+    }, function(e){
+      hint.textContent = (e && e.message) || 'Could not make the file. Please try again.';
+    }).then(function(){ btn.disabled = false; btn.textContent = label; });
   }
 
   // ---------- Load behaviour ----------
@@ -683,14 +726,14 @@ details.adv[open] summary{margin-bottom:12px;}
       var t = b.closest('.turn'); if(!t) return;
       var raw = t.dataset.raw || t.querySelector('.turn-body').textContent;
       var label = t.dataset.label || t.querySelector('.who').textContent;
-      $('docText').value += (($('docText').value?'\n\n':'')+label+':\n'+raw);
+      $('docText').value += (($('docText').value?'\n\n':'')+'## '+label+'\n\n'+demote(raw, 2));
     });
     // Leaving mid-meeting loses the turns still in progress, so ask first.
     window.addEventListener('beforeunload', function(e){ if(running){ e.preventDefault(); e.returnValue=''; } });
     $('saveBtn').addEventListener('click', saveTranscript);
     $('loadBtn').addEventListener('click', loadTranscript);
-    $('exportPdf').addEventListener('click', function(){ exportText('meeting.txt','application/pdf'); });
-    $('exportWord').addEventListener('click', function(){ exportText('meeting.doc','application/msword'); });
+    $('exportPdf').addEventListener('click', function(){ exportFile('pdf', this); });
+    $('exportWord').addEventListener('click', function(){ exportFile('word', this); });
     [['key_anthropic','claude'],['key_openai','chatgpt'],['key_gemini','gemini']].forEach(function(p){ var input=$(p[0]); if(input) input.addEventListener('change',function(){ refreshModels(p[1]); }); });
     var lb=$('lookBtn'); if(lb) lb.addEventListener('click', function(){ setLookAroundUI(); $('passState').textContent='Preview'; $('runHint').textContent='Preview only - book a pass to start a meeting.'; });
 
